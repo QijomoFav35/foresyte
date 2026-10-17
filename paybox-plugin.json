@@ -1,0 +1,4 @@
+{
+  "tool": "search_markets",
+  "arguments": { "query": "bitcoin" }
+}
