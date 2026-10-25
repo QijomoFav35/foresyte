@@ -1,43 +1,63 @@
 # Foresyte
 
-**Find unclaimed Polymarket winnings and claim them in one prompt.**
+**Foresyte tells you if a Polymarket market is a trap before you buy, and when to get out while you can.**
 
-Most people leave money on Polymarket because they forget to claim resolved positions. Foresyte scans any wallet, shows live markets, flags simple patterns from your history, and prepares the claim as a Polygon transaction. You approve it inside PayBox. It settles.
-
-Built for the PayBox Hackathon.
+Built for the PayBox × MoonPay hackathon finals. Tone: **inform, never block.** Every check returns `CLEAR`, `CAUTION`, or `HIGH_RISK` with plain English and real numbers from the live book and rules text.
 
 ---
 
-## What it does
+## The two traps
 
-| Tool | What it does |
-|---|---|
-| `search_markets` | Pulls live Polymarket markets with current odds |
-| `check_unclaimed` | Scans a wallet for resolved positions that have not been claimed |
-| `pattern_summary` | Looks at your own prediction history and flags simple repeatable patterns (for example, long-shot YES bets that keep losing) |
-| `propose_claim` | Builds a Polygon `redeemPositions` transaction proposal. You approve it inside PayBox |
+1. **Liquidity trap** — the app shows a cash-out price, but there are not enough buyers at your size, so you cannot exit until resolution.
+2. **Rules / timing trap** — the market resolves on what is *reported* by a deadline (often Fri–Mon or near a US holiday), not on what happened. You can be right and still lose (MicroStrategy-style weekend reporting).
 
-All four tools run through the PayBox MCP. No tab switching. No manual claims.
+After resolution, Foresyte still scans for **unclaimed winnings** and points you to claim them on Polymarket.
 
-## How it works
+---
 
-1. You ask your agent something like “check this wallet for unclaimed Polymarket winnings” or “claim anything I won.”
-2. Foresyte calls the Polymarket APIs (Gamma + data API), finds resolved but unclaimed positions, and returns the amounts.
-3. If you want to claim, it builds the exact `redeemPositions` transaction for Polygon.
-4. PayBox shows the proposal. You approve with your passkey. The claim settles.
+## Tools
 
-It never asks for a private key. It only returns an unsigned transaction proposal that PayBox handles.
+| Tool | When | What it does |
+|---|---|---|
+| `trap_check` | Before you buy | Walks the CLOB book at your exact stake; flags thin exit depth, fill slippage, wide spreads; reads resolution rules for reporting + weekend/holiday deadlines |
+| `trap_watch` | While you hold | Top open positions: P&L, sell-now proceeds, EXIT CLOSING, DEADLINE RISK, LOCK-IN notes |
+| `check_unclaimed` | After resolution | Finds `redeemable === true` positions with `currentValue > 0` and totals them |
+| `search_markets` | Discovery | Live Polymarket markets by keyword |
+| `propose_claim` | Rare | Unsigned `redeemPositions` **only if the PayBox wallet itself holds the position** |
 
-## Why it exists
+`pattern_summary` from earlier drafts is **not** in this build.
 
-Polymarket positions stay claimable after resolution. A lot of wallets leave small and large amounts unclaimed because the UI makes it easy to forget. Foresyte makes the recovery one prompt instead of hunting through resolved markets.
+---
 
-## Network hosts used
+## Sources (problem, not marketing)
+
+- WSJ analysis of ~1.6M Polymarket accounts: majority of users lose; a tiny share of wallets take most profits.
+- Kalshi public figures: unprofitable users outnumber profitable ones (~2.9:1).
+- Public trader reports of weekend / reporting-dependent resolution blowups (e.g. MicroStrategy BTC sale logged after the weekend deadline).
+- Founder experience: thin sports-book liquidity that blocked a live cash-out.
+
+Numbers change; cite the original articles when you pitch.
+
+---
+
+## Network hosts (allowlist)
 
 - `gamma-api.polymarket.com`
+- `clob.polymarket.com`
 - `data-api.polymarket.com`
 
-No secrets required.
+No secrets. No AI model calls inside the plugin. No background polling (PayBox sandboxes are fresh per call).
+
+---
+
+## Known limitations
+
+- **Claim path:** Most Polymarket accounts hold positions in a **Proxy or Safe** wallet. Calling `redeemPositions` from a PayBox EOA does not redeem those. `check_unclaimed` finds the money and links to Polymarket. `propose_claim` **refuses** unless the PayBox wallet itself holds the redeemable position.
+- Neg-risk markets and pUSD collateral adapters may need different redeem paths than the classic CTF four-arg call.
+- `trap_watch` has no stored history; "exit closing" is inferred from **current** book depth vs position size.
+- Informational only — never places, blocks, or cancels bets.
+
+---
 
 ## Local setup
 
@@ -47,26 +67,21 @@ pnpm test
 pnpm build
 ```
 
-The build produces `dist/plugin.mjs`. Upload that in the PayBox developer portal.
+Requires **Node 24** and **pnpm 11.11.0**. Upload `dist/plugin.mjs` in the PayBox developer portal, allowlist the three hosts above, run checks, Submit Project, Enable.
 
-## Tools
+MCP server name: `foresyte` · version: `1.1.0`
 
-### `check_unclaimed`
-Input: wallet address (0x…).  
-Returns: list of resolved positions that can still be claimed, with amounts.
+---
 
-### `propose_claim`
-Input: the position details from `check_unclaimed`.  
-Returns: a PayBox transaction proposal (`io.paybox/transactionProposal`) for `redeemPositions` on Polygon.
+## Smoke prompts
 
-### `search_markets`
-Input: optional query or category.  
-Returns: current live markets and odds.
+- `trap_check` — market: a thin live sports slug, outcome: Yes, stakeUsdc: 50
+- `trap_check` — market: a filing/announcement market ending Fri–Mon, outcome: Yes, stakeUsdc: 100
+- `trap_watch` — wallet: `0x…` with open positions
+- `check_unclaimed` — wallet: `0x…`
 
-### `pattern_summary`
-Input: wallet address.  
-Returns: simple flags based on the wallet’s own history (for example, high frequency of low-probability YES bets that resolved No).
+---
 
 ## Built for
 
-PayBox marketplace. The agent proposes. You approve. It settles.
+PayBox marketplace. The agent informs. You decide. You approve.
