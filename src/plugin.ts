@@ -117,47 +117,52 @@ serveStdio(() => {
   );
 
   // 4. Propose claim (EVM proposal)
-  server.registerTool(
-    "propose_claim",
-    {
-      title: "Propose Polymarket claim",
-      description: "Builds an unsigned Polygon transaction proposal to redeem a resolved position. PayBox handles approval and signing.",
-      inputSchema: z
-        .object({
-          conditionId: z.string().regex(/^0x[0-9a-fA-F]{64}$/),
-          negRisk: z.boolean().optional().default(false),
-        })
-        .strict(),
-      outputSchema: evmOutputSchema,
-      annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
-    },
-    async ({ conditionId, negRisk }) => {
-      const data = encodeFunctionData({
-        abi: [
-          {
-            name: "redeemPositions",
-            type: "function",
-            stateMutability: "nonpayable",
-            inputs: [
-              { name: "collateralToken", type: "address" },
-              { name: "parentCollectionId", type: "bytes32" },
-              { name: "conditionId", type: "bytes32" },
-              { name: "indexSets", type: "uint256[]" },
-            ],
-            outputs: [],
-          },
-        ],
-        functionName: "redeemPositions",
-        args: [USDC_E as `0x${string}`, ZERO_BYTES32 as `0x${string}`, conditionId as `0x${string}`, [1n, 2n]],
-      });
-      return proposeEvm({
-        chain: "eip155:137",
-        to: negRisk ? "0xd91E80cF2E7be2e162c6513ceD06f1dD0dA35296" : CTF,
-        value: "0",
-        data,
-      });
-    },
-  );
+server.registerTool(
+  "propose_claim",
+  {
+    title: "Propose Polymarket claim",
+    description: "Builds an unsigned Polygon redeemPositions transaction for a resolved position. PayBox handles approval and signing.",
+    inputSchema: z
+      .object({
+        conditionId: z.string().regex(/^0x[0-9a-fA-F]{64}$/),
+        negRisk: z.boolean().optional().default(false),
+      })
+      .strict(),
+    outputSchema: evmOutputSchema,
+    annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
+  },
+  async ({ conditionId, negRisk }) => {
+    const data = encodeFunctionData({
+      abi: [
+        {
+          name: "redeemPositions",
+          type: "function",
+          stateMutability: "nonpayable",
+          inputs: [
+            { name: "collateralToken", type: "address" },
+            { name: "parentCollectionId", type: "bytes32" },
+            { name: "conditionId", type: "bytes32" },
+            { name: "indexSets", type: "uint256[]" },
+          ],
+          outputs: [],
+        },
+      ],
+      functionName: "redeemPositions",
+      args: [
+        USDC_E as `0x${string}`,
+        ZERO_BYTES32 as `0x${string}`,
+        conditionId as `0x${string}`,
+        [1n, 2n],
+      ],
+    });
 
-  return server;
-}, { legacy: "reject" });
+    return proposeEvm({
+      chain: "eip155:137",
+      to: negRisk
+        ? "0xd91E80cF2E7be2e162c6513ceD06f1dD0dA35296"
+        : CTF,
+      value: "0",
+      data,
+    });
+  },
+);
