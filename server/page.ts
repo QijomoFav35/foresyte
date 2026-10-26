@@ -435,7 +435,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
 </section>
 
 <section id="proof" class="p5">
-  <h2>Check our work</h2>
+  <h2>Log</h2>
   <div class="stats">
     <div><b class="num">60</b><span>unit tests</span></div>
     <div><b class="num">3</b><span>live data sources</span></div>
