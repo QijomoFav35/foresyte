@@ -476,7 +476,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
       <div class="cta"><p>Know the worst case before you click</p><a class="pill blue small" href="#try">Check a market</a></div>
       <div class="cols">
         <div><h4>Product</h4><ul><li><a href="#try">Free check</a></li><li><a href="#pricing">Deep scan</a></li><li><a href="https://app.paybox.sh/plugins">PayBox plugin</a></li></ul></div>
-        <div><h4>Build</h4><ul><li><a href="/brand-kit">Brand Kit</a></li><li><a href="https://github.com/QijomoFav35/foresyte">GitHub</a></li><li><a href="/api/proof">Proof (JSON)</a></li><li><a href="/?format=json">API</a></li></ul></div>
+        <div><h4>Build</h4><ul><li><a href="/brand-kit">Brand Kit</a></li><li><a href="https://github.com/QijomoFav35/foresyte">GitHub</a></li></ul></div>
       </div>
     </div>
     <p class="fine"><span class="flogo">${seal(22, "foot")}<span class="word">FORESYTE</span></span>&copy; 2026 Foresyte. All rights reserved</p>
