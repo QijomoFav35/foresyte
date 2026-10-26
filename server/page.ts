@@ -19,7 +19,7 @@ export function landingPage(o: { publicUrl: string; price: string; chain: string
 <meta property="og:description" content="Know the worst case in dollars before you bet. Free check, $0.25 deep scan, inside your PayBox agent.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=IBM+Plex+Mono:wght@500;600&family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --black:#000;--panel:#0b0b0d;--raised:#141418;--line:rgba(255,255,255,.09);--line-hi:rgba(255,255,255,.16);
@@ -132,6 +132,8 @@ img{display:block;max-width:100%}
 .facts div{background:#0d0d10;border:1px solid var(--line)}
 .facts b{font-family:var(--mono);font-size:clamp(18px,3.4vw,22px)}
 .facts div{border-top:3px solid var(--line-hi)}
+.facts,.facts b,.facts span{font-family:Montserrat,"IBM Plex Sans",sans-serif;letter-spacing:0}
+.facts b{font-weight:700}
 .facts .bad{border-top-color:var(--trap);background:rgba(255,77,90,.08)}.facts .bad b{color:var(--trap)}
 .facts .meh{border-top-color:var(--careful);background:rgba(245,166,35,.08)}.facts .meh b{color:var(--careful)}
 .facts .ok{border-top-color:#3ecf8e;background:rgba(62,207,142,.07)}.facts .ok b{color:#3ecf8e}
