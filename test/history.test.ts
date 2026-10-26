@@ -75,7 +75,7 @@ test("longshots are the top leak, compared with the odds paid", () => {
   const r = analyzeHistory(closed, trades);
   assert.equal(r.bets, 60);
   assert.equal(r.leaks[0]?.key, "band:Longshot (under 15¢)");
-  assert.match(r.leaks[0]?.finding ?? "", /paid 7¢ on average across 40 bets, which prices them to win 7% of the time\. Yours won 3% \(1 of 40\)/);
+  assert.match(r.leaks[0]?.finding ?? "", /paid 7¢ on average across 40 positions, which prices them to win 7% of the time\. Yours won 3% \(1 of 40\)/);
   assert.match(r.bottomLine, /The biggest single leak is longshots/);
   // The same 40 bets are also the sports leak and the live-game leak: folded in, not repeated.
   assert.equal(r.leaks.length, 1);
@@ -88,7 +88,7 @@ test("the plan is tied to the numbers and keeps what works", () => {
   assert.equal(r.plan.length, 4);
   assert.match(r.plan[0] ?? "", /^Stop buying under 15¢/);
   assert.match(r.plan[0] ?? "", /every \$10 there has returned about \$3\.57/);
-  assert.ok(r.plan.some((p) => p.startsWith("Run trap_check before every live game bet")));
+  assert.ok(r.plan.some((p) => p.startsWith("Run trap_check before every live game trade")));
   assert.equal(r.plan.at(-1), "Keep doing what works: favorites, +$92.31 so far.");
   assert.match(r.strengths[0]?.finding ?? "", /All of them were in politics\.$/);
 });
@@ -96,7 +96,7 @@ test("the plan is tied to the numbers and keeps what works", () => {
 test("riding losers to zero is noticed when nothing was ever sold", () => {
   const { closed, trades } = wallet();
   const r = analyzeHistory(closed, trades);
-  assert.ok(r.habits.some((h) => h.key === "ride_to_zero" && /43 of your 43 losing bets rode all the way to zero; you never sold a loser/.test(h.finding)));
+  assert.ok(r.habits.some((h) => h.key === "ride_to_zero" && /43 of your 43 losing positions rode all the way to zero; you never sold a loser/.test(h.finding)));
 });
 
 test("chasing: bigger buys within a day of a loss", () => {
@@ -115,7 +115,7 @@ test("chasing: bigger buys within a day of a loss", () => {
   const chasing = [...r.leaks, ...r.habits].find((i) => i.key === "chasing");
   assert.ok(chasing);
   assert.match(chasing.finding, /your buys average \$50; otherwise \$10\. That's 5\.0x bigger/);
-  assert.match(chasing.plan ?? "", /keep your next bet at your normal size \(\$10\)/);
+  assert.match(chasing.plan ?? "", /keep your next position at your normal size \(\$10\)/);
 });
 
 test("too little history says so instead of inventing patterns", () => {

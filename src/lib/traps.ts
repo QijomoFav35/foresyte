@@ -48,45 +48,45 @@ export function assessEntry(
 
   // Trap 1: liquidity
   if (book.asks.length === 0) {
-    flags.push({ level: "HIGH_RISK", check: "no_sellers", message: `Nobody is selling ${outcome} right now, so your bet can't go through.` });
+    flags.push({ level: "HIGH_RISK", check: "no_sellers", message: `Nobody is selling ${outcome} right now, so a buy can't fill.` });
   } else if (!fill.filled) {
     flags.push({
       level: "HIGH_RISK",
       check: "cannot_fill",
-      message: `Only ${usd(fill.available)} of ${outcome} is for sale, so a ${usd(stakeUsdc)} bet can't go through in full.`,
+      message: `Only ${usd(fill.available)} of ${outcome} is for sale, so a ${usd(stakeUsdc)} buy can't fill in full.`,
     });
   }
   if (book.bids.length === 0) {
     flags.push({
       level: "HIGH_RISK",
       check: "no_buyers",
-      message: "Nobody is buying in this market right now. Once you're in, you're stuck until it ends.",
+      message: "Nobody is buying in this market right now. A position here can't be sold until bids return or the market resolves.",
     });
   } else if (depth < stakeUsdc) {
     flags.push({
       level: "HIGH_RISK",
       check: "exit_thinner_than_stake",
-      message: `Only ${usd(depth)} of buyers exist near the current price. Put in ${usd(stakeUsdc)} and you can't cash out until the market ends.`,
+      message: `Only ${usd(depth)} of buyers exist near the current price. A ${usd(stakeUsdc)} position couldn't be sold before the market resolves.`,
     });
   } else if (depth < THIN_MULTIPLE * stakeUsdc) {
     flags.push({
       level: "CAUTION",
       check: "exit_thin",
-      message: `Few buyers here (${usd(depth)} near the price). If you sell early, you'll get less than the price shown.`,
+      message: `Few buyers here (${usd(depth)} near the price). Selling early would fill below the price shown.`,
     });
   }
   if (fill.avgPrice !== null && shown !== null && shown > 0 && fill.avgPrice > shown * (1 + SLIPPAGE_LIMIT)) {
     flags.push({
       level: "CAUTION",
       check: "slippage",
-      message: `Shows ${cents(shown)}, but your size fills at ${cents(fill.avgPrice)} on average. You pay more than the price on screen.`,
+      message: `Shows ${cents(shown)}, but this size fills at ${cents(fill.avgPrice)} on average, above the price on screen.`,
     });
   }
   if (gap !== null && gap > SPREAD_LIMIT + 1e-9) {
     flags.push({
       level: "CAUTION",
       check: "wide_spread",
-      message: `The buy price and the sell price are ${cents(gap)} apart, so you start ${cents(gap)} down on every contract.`,
+      message: `The buy price and the sell price are ${cents(gap)} apart, so a position starts ${cents(gap)} down on every contract.`,
     });
   }
 
@@ -103,7 +103,7 @@ export function assessEntry(
     flags.push({
       level: "HIGH_RISK",
       check: "exit_window",
-      message: `This market ends in ${timeLeft(daysUntil(market.endDate, now))}. Near the end, buyers disappear and the rules decide who wins. This is the riskiest time to get in.`,
+      message: `This market ends in ${timeLeft(daysUntil(market.endDate, now))}. Near the end, buyers disappear and the rules decide who wins. Entries this late carry the highest risk.`,
     });
   }
 
@@ -111,10 +111,10 @@ export function assessEntry(
   const level = combine(sorted);
   let headline: string;
   if (fill.shares > 0) {
-    headline = `${VERDICT[level]} If you bet ${usd(fill.spent)} on ${outcome} and want out right away, you'd get back ${usd(sale.proceeds)}.`;
-    if (sale.unsoldShares > 0.05) headline += ` Part of your bet (${shareCount(sale.unsoldShares)} of ${shareCount(fill.shares)} contracts) would find no buyer at all.`;
+    headline = `${VERDICT[level]} Buying ${usd(fill.spent)} of ${outcome} and selling straight back would return ${usd(sale.proceeds)}.`;
+    if (sale.unsoldShares > 0.05) headline += ` Part of that position (${shareCount(sale.unsoldShares)} of ${shareCount(fill.shares)} contracts) would find no buyer at all.`;
   } else {
-    headline = `${VERDICT[level]} A ${usd(stakeUsdc)} bet on ${outcome} can't be placed: nobody is selling.`;
+    headline = `${VERDICT[level]} A ${usd(stakeUsdc)} buy of ${outcome} can't fill: nobody is selling.`;
   }
   if (level === "CLEAR") headline += " No traps found at this size.";
 
@@ -176,13 +176,13 @@ export function assessHolding(
     unsold = sale.unsoldShares;
     if (book.bids.length === 0 || bestBid(book.bids) === null) {
       thin = true;
-      flags.push({ level: "HIGH_RISK", check: "no_buyers", message: "Nobody is buying right now. You can't sell until someone wants to buy." });
+      flags.push({ level: "HIGH_RISK", check: "no_buyers", message: "Nobody is buying right now. An exit has to wait for new bids." });
     } else if (sale.unsoldShares > 0.05) {
       thin = true;
       flags.push({
         level: "HIGH_RISK",
         check: "exit_closing",
-        message: `Buyers are thinning out. Cash out now while you still can: only ${shareCount(sale.soldShares)} of your ${shareCount(position.size)} contracts can be sold right now, for about ${usd(sale.proceeds)}.`,
+        message: `Buyers are thinning out: only ${shareCount(sale.soldShares)} of your ${shareCount(position.size)} contracts can be sold right now, for about ${usd(sale.proceeds)}.`,
       });
     } else if (displayed > 0 && sale.proceeds < displayed * (1 - EXIT_DISCOUNT_LIMIT)) {
       thin = true;
@@ -217,13 +217,13 @@ export function assessHolding(
     flags.push({
       level: "HIGH_RISK",
       check: "exit_window",
-      message: `This market ends in ${timeLeft(daysUntil(endDate, now))}. Near the end, buyers disappear and the rules decide who wins. Get out now while people are still buying.`,
+      message: `This market ends in ${timeLeft(daysUntil(endDate, now))}. Near the end, buyers tend to disappear and the rules decide the result. Exits are still available now.`,
     });
   }
 
   const canLockIn = Boolean(book && sellNow > cost && (rulesRisk || thin));
   if (canLockIn) {
-    notes.push(`You could lock in about ${usd(sellNow - cost)} profit now instead of waiting on an uncertain result.`);
+    notes.push(`Selling now would lock in about ${usd(sellNow - cost)} profit before an uncertain resolution.`);
   }
 
   const sorted = sortFlags(flags);

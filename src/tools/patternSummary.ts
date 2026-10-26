@@ -79,7 +79,7 @@ export function registerPatternSummary(server: McpServer) {
     {
       title: "Review my Polymarket trading patterns",
       description:
-        "Reads the wallet's own Polymarket history (up to 200 closed bets and the last 500 trades) across every kind of market: sports, crypto, politics, economy, world affairs, culture, science. Finds where the money is made and lost by topic, by entry price (longshots to heavy favorites, compared with the odds paid) and by market type (live games, short-term crypto, price targets, deadline markets), plus habits like chasing losses, riding losers to zero and averaging down. Returns a plain-English review with the biggest leaks ranked by dollars and a short plan tied to the numbers. Describes past results; not financial advice. Read-only.",
+        "Reads the wallet's own Polymarket history (up to 200 closed positions and the last 500 trades) across every kind of market: sports, crypto, politics, economy, world affairs, culture, science. Finds where the money is made and lost by topic, by entry price (longshots to heavy favorites, compared with the odds paid) and by market type (live games, short-term crypto, price targets, deadline markets), plus habits like chasing losses, riding losers to zero and averaging down. Returns a plain-English review with the biggest leaks ranked by dollars and a short plan tied to the numbers. Describes past results; not financial advice. Read-only.",
       inputSchema,
       outputSchema,
       annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: true },

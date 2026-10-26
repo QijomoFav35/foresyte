@@ -39,13 +39,13 @@ test("sell-by date is 3 days before the end, in New York time", () => {
   assert.equal(sellByLabel(null), null);
 });
 
-test("deep scan: halftime game says bet small, with the ladder", () => {
+test("deep scan: halftime game shows the exit limit and the ladder", () => {
   const d = deepScan(sportsGame, 0, thin, 50, deep, NOW_OCT_26_2026);
   assert.equal(d.level, "HIGH_RISK");
-  assert.match(d.plan[0] ?? "", /^Bet \$\d+(\.\d+)? or less, not \$50/);
-  assert.match(d.report, /If you bet and then change your mind straight away:/);
-  assert.match(d.report, /Bet \$50, get back \$8/);
-  assert.match(d.report, /Your plan:\n1\. /);
+  assert.match(d.plan[0] ?? "", /^Exits hold up to about \$\d+(\.\d+)?, below the \$50 checked/);
+  assert.match(d.report, /Buying and selling straight back at each size:/);
+  assert.match(d.report, /\$50 in, \$8(\.\d+)? back/);
+  assert.match(d.report, /Risk read:\n1\. /);
   assert.equal(d.otherSide?.outcome, "Celtics");
 });
 
@@ -53,14 +53,14 @@ test("deep scan: Strategy market gives a sell-by date and the news warning", () 
   const book = { bids: [{ price: 0.11, size: 50000 }], asks: [{ price: 0.12, size: 50000 }] };
   const d = deepScan(strategyMay31, 0, book, 50, null, NOW_MAY_20_2026);
   assert.equal(d.sellBy, "Thursday, May 28");
-  assert.ok(d.plan.some((p) => /sell by Thursday, May 28/.test(p)));
-  assert.ok(d.plan.some((p) => /officially out before the deadline/.test(p)));
+  assert.ok(d.plan.some((p) => /window opens Thursday, May 28/.test(p)));
+  assert.ok(d.plan.some((p) => /official report before the deadline/.test(p)));
 });
 
-test("deep scan: clean deep market says the bet fits", () => {
+test("deep scan: clean deep market says the position fits", () => {
   const d = deepScan(btcPrice, 0, deep, 50, deep, NOW_OCT_26_2026);
   assert.equal(d.level, "CLEAR");
-  assert.match(d.plan[0] ?? "", /Your \$50 bet fits/);
+  assert.match(d.plan[0] ?? "", /A \$50 position fits/);
   assert.equal(d.sellBy, null);
 });
 

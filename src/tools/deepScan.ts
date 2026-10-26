@@ -15,7 +15,7 @@ const inputSchema = z
     code: z.string().max(20).optional().describe("A Foresyte request code like FSY-7K2QXM from the Foresyte page. Use this if the person gives one."),
     market: z.string().min(1).max(500).optional().describe("A Polymarket market link, if there is no code."),
     outcome: z.string().min(1).max(120).optional().describe("Outcome they would buy, e.g. Yes or No. Only with market."),
-    stakeUsdc: z.number().positive().max(1_000_000).optional().describe("How much they would bet in USDC. Only with market. Defaults to 50."),
+    stakeUsdc: z.number().positive().max(1_000_000).optional().describe("Position size to analyze, in USDC. Only with market. Defaults to 50."),
     payWith: z.enum(["solana", "base"]).optional().describe("Pay in USDC on solana (default) or base. Use base only if the person asks or has no USDC on Solana."),
   })
   .strict();
@@ -26,7 +26,7 @@ export function registerDeepScan(server: McpServer) {
     {
       title: "Foresyte deep scan (0.10 USDC)",
       description:
-        "Paid, 0.10 USDC over x402, on Solana by default or Base if the person prefers. The full Foresyte report for one Polymarket market: what you'd get back at every bet size, the biggest bet you can still get out of, the last day to sell, the other side, and a numbered plain-English plan. " +
+        "Paid, 0.10 USDC over x402, on Solana by default or Base if the person prefers. The full Foresyte report for one Polymarket market: what you'd get back at every position size, the largest size that can still exit, the start of the 3-day deadline window, the other side, and a numbered plain-English risk read. " +
         "Use it when the person pastes a Foresyte code (FSY-XXXXXX) or asks for a deep scan of a market. Use the free trap_check for a quick verdict. " +
         "This returns a payment proposal; after PayBox pays and the request returns, show the person the 'report' field exactly as written, without rewording or adding numbers.",
       inputSchema,

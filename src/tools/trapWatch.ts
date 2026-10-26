@@ -96,17 +96,17 @@ export function registerTrapWatch(server: McpServer) {
         const urgent = done.filter((d) => d.level === "HIGH_RISK").length;
         lines.push(
           risky > 0
-            ? `${urgent > 0 ? `${urgent} of your bets ${urgent === 1 ? "is" : "are"} in a trap.` : "Some of your bets need watching."} Foresyte checked your ${done.length} biggest open bets.`
-            : `All clear. No traps on your ${done.length} biggest open bets right now.`,
+            ? `${urgent > 0 ? `${urgent} of your positions ${urgent === 1 ? "is" : "are"} in a trap.` : "Some of your positions need watching."} Foresyte checked your ${done.length} largest open positions.`
+            : `All clear. No traps on your ${done.length} largest open positions right now.`,
         );
         for (const d of done) {
           lines.push("", `${VERDICT[d.level]} ${d.title} (you hold ${d.outcome}). The app shows ${usd(d.displayedValue)}; selling everything now gets you about ${usd(d.sellNow)}.`);
           for (const f of d.flags) lines.push(`- ${f.message}`);
           for (const n of d.notes) lines.push(`- ${n}`);
-          lines.push(`What to do: ${d.whatToDo}`, d.link);
+          lines.push(`Risk read: ${d.whatToDo}`, d.link);
         }
-        if (skipped > 0) lines.push("", `Ran out of time before checking ${skipped} more bet${skipped === 1 ? "" : "s"}. Ask again to check them.`);
-        lines.push("", `Checked ${nowIso()} using Polymarket's live prices. Not betting advice.`);
+        if (skipped > 0) lines.push("", `Ran out of time before checking ${skipped} more position${skipped === 1 ? "" : "s"}. Ask again to check them.`);
+        lines.push("", `Checked ${nowIso()} using Polymarket's live prices. Not financial advice.`);
 
         return okResult(lines.join("\n"), {
           level,

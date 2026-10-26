@@ -32,22 +32,22 @@ export function timeLeft(days: number | null): string {
 
 const has = (flags: Flag[], ...checks: string[]) => flags.some((f) => checks.includes(f.check));
 
-// One clear next step for someone about to bet.
+// Risk read for someone looking at a market before buying. Describes the risk; it never tells anyone to trade.
 export function whatToDoBeforeBuying(level: RiskLevel, flags: Flag[]): string {
-  if (has(flags, "exit_window")) return "Don't buy this close to the end. If you do, bet only what you are fine losing.";
-  if (has(flags, "no_sellers", "cannot_fill")) return "Use a smaller amount, or skip this market.";
-  if (has(flags, "no_buyers", "exit_thinner_than_stake")) return "Skip it, or bet only what you are fine losing completely. You may not be able to sell.";
-  if (has(flags, "reporting_deadline_near_weekend")) return "Skip it unless you are sure the news will be out before the deadline.";
-  if (level === "CAUTION") return "Bet small, and decide now when you will sell.";
-  return "Go ahead if you like the bet.";
+  if (has(flags, "exit_window")) return "The market is in its final 3 days, when buyers tend to disappear and the rules decide the result. Entries this late carry the highest risk.";
+  if (has(flags, "no_sellers", "cannot_fill")) return "Not enough contracts are for sale at this size. A smaller size may fill.";
+  if (has(flags, "no_buyers", "exit_thinner_than_stake")) return "Exit liquidity is below this size. A position this large may not be sellable before the market resolves.";
+  if (has(flags, "reporting_deadline_near_weekend")) return "The result depends on a report landing before a weekend or holiday deadline. Being right about the event may not be enough.";
+  if (level === "CAUTION") return "Moderate risk at this size. The exit price and timing are worth knowing before entry.";
+  return "No traps found at this size.";
 }
 
-// One clear next step for someone already holding.
+// Risk read for someone already holding a position.
 export function whatToDoWhileHolding(level: RiskLevel, flags: Flag[], canLockIn: boolean): string {
-  if (has(flags, "exit_window")) return "Sell now while people are still buying.";
-  if (has(flags, "no_buyers")) return "Nobody is buying right now. Check again soon and sell when buyers come back.";
-  if (has(flags, "exit_closing")) return "Sell what you can now. Buyers are running out.";
-  if (canLockIn) return "Think about selling now to keep your profit.";
-  if (level === "CAUTION") return "Keep an eye on it, and plan when you will sell.";
-  return "Nothing to do right now.";
+  if (has(flags, "exit_window")) return "Inside the final 3 days with a risky market. Exits are still available now and tend to thin out from here.";
+  if (has(flags, "no_buyers")) return "No buyers right now. An exit has to wait for new bids.";
+  if (has(flags, "exit_closing")) return "Buyers are running out. Only part of this position can be sold at current prices.";
+  if (canLockIn) return "Selling now would lock in the profit shown before an uncertain resolution.";
+  if (level === "CAUTION") return "Worth watching. The exit price and timing can change quickly.";
+  return "No traps on this position right now.";
 }

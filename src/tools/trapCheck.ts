@@ -45,7 +45,7 @@ export function registerTrapCheck(server: McpServer) {
     {
       title: "Is this Polymarket market a trap?",
       description:
-        "Run before buying. Checks a Polymarket market at the user's stake for the liquidity trap (not enough buyers to cash out, real fill price worse than shown, wide spread) and the rules trap (pays on what is reported by a deadline that falls on a weekend or holiday, added clarifications, vague wording). Returns CLEAR, CAUTION or HIGH_RISK with the worst case first and every number behind it. Read-only; never places a bet.",
+        "Run before buying. Checks a Polymarket market at the user's stake for the liquidity trap (not enough buyers to cash out, real fill price worse than shown, wide spread) and the rules trap (pays on what is reported by a deadline that falls on a weekend or holiday, added clarifications, vague wording). Returns CLEAR, CAUTION or HIGH_RISK with the worst case first and every number behind it. Read-only; never places a trade.",
       inputSchema,
       outputSchema,
       annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: true },
@@ -74,11 +74,11 @@ export function registerTrapCheck(server: McpServer) {
         lines.push(
           "",
           ruleLine,
-          `What to do: ${result.whatToDo}`,
+          `Risk read: ${result.whatToDo}`,
           "",
           `Market: ${market.question}`,
           link,
-          `Checked ${nowIso()} using Polymarket's live prices. Not betting advice.`,
+          `Checked ${nowIso()} using Polymarket's live prices. Not financial advice.`,
         );
         return okResult(lines.join("\n"), {
           level: result.level,

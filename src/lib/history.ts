@@ -204,7 +204,7 @@ function dateLabel(ms: number): string {
 }
 
 function record(g: GroupStats): string {
-  return g.resolved ? `won ${g.wins} of ${g.resolved}` : `${g.bets} bets, none resolved`;
+  return g.resolved ? `won ${g.wins} of ${g.resolved}` : `${g.bets} positions, none resolved`;
 }
 
 export function analyzeHistory(closed: ClosedBet[], trades: Trade[]): HistoryReport {
@@ -258,7 +258,7 @@ export function analyzeHistory(closed: ClosedBet[], trades: Trade[]): HistoryRep
         members: memberSet((b) => b.band === g.name),
         where: `at ${g.name.split(" (")[0]?.toLowerCase()} prices`,
         dollars: -g.net,
-        finding: `${g.name.split(" (")[0]}s. You paid ${cents(g.avgEntry)} on average across ${g.bets} bets, which prices them to win ${pct(g.avgEntry)} of the time. Yours won ${pct(actual)} (${g.wins} of ${g.resolved}). Net: ${usd(g.net)} on ${usd(g.staked)}.`,
+        finding: `${g.name.split(" (")[0]}s. You paid ${cents(g.avgEntry)} on average across ${g.bets} positions, which prices them to win ${pct(g.avgEntry)} of the time. Yours won ${pct(actual)} (${g.wins} of ${g.resolved}). Net: ${usd(g.net)} on ${usd(g.staked)}.`,
         plan: g.name.startsWith("Longshot")
           ? `Stop buying under 15¢ unless you can say in one sentence why the market is wrong. At your hit rate, every ${usd(10)} there has returned about ${usd(10 + (10 * g.net) / Math.max(g.staked, 1))}.`
           : `Before buying at ${g.name.split("(")[1]?.replace(")", "") ?? "these prices"}, write down why the price is wrong. Your record there trails the odds by ${pct(g.avgEntry - actual)}.`,
@@ -287,8 +287,8 @@ export function analyzeHistory(closed: ClosedBet[], trades: Trade[]): HistoryRep
         members: memberSet((b) => b.category === g.name),
         where: `in ${g.name.toLowerCase()}`,
         dollars: -g.net,
-        finding: `${g.name}: ${usd(g.net)} over ${g.bets} bets on ${usd(g.staked)} staked (${record(g)}).`,
-        plan: `Cut ${g.name.toLowerCase()} bets to half your usual size until your record there turns. It has cost you ${usd(-g.net)}.`,
+        finding: `${g.name}: ${usd(g.net)} over ${g.bets} positions on ${usd(g.staked)} staked (${record(g)}).`,
+        plan: `Cut ${g.name.toLowerCase()} positions to half your usual size until your record there turns. It has cost you ${usd(-g.net)}.`,
       });
     } else if (g.net > 0 && g.net / Math.max(g.staked, 1) > 0.05) {
       strengths.push({
@@ -298,14 +298,14 @@ export function analyzeHistory(closed: ClosedBet[], trades: Trade[]): HistoryRep
         members: memberSet((b) => b.category === g.name),
         where: `in ${g.name.toLowerCase()}`,
         dollars: g.net,
-        finding: `${g.name}: ${signed(g.net)} over ${g.bets} bets (${record(g)}). This is where your judgment pays.`,
+        finding: `${g.name}: ${signed(g.net)} over ${g.bets} positions (${record(g)}). This is where your judgment pays.`,
       });
     }
   }
 
   // Market kinds: some formats punish retail more than others.
   const kindPlan: Record<string, string> = {
-    "Live game": "Run trap_check before every live game bet. Live books thin out fast, and you can't cash out at halftime if nobody is buying.",
+    "Live game": "Run trap_check before every live game trade. Live books thin out fast, and you can't cash out at halftime if nobody is buying.",
     "Short-term crypto up/down": "Drop short-term up/down markets. They reward reaction speed measured in seconds, and your record there is negative.",
     "Price target": "On price-target markets, compare the price you pay with how far the asset must move and how much time is left before you buy.",
     "Deadline (\"by date\")": "Run trap_check on every \"by date\" market. If it pays on what's reported, a weekend deadline can beat you even when you're right.",
@@ -320,7 +320,7 @@ export function analyzeHistory(closed: ClosedBet[], trades: Trade[]): HistoryRep
         members: memberSet((b) => b.kind === g.name),
         where: KIND_WHERE[g.name],
         dollars: -g.net,
-        finding: `${g.name} markets: ${usd(g.net)} over ${g.bets} bets (${record(g)}).`,
+        finding: `${g.name} markets: ${usd(g.net)} over ${g.bets} positions (${record(g)}).`,
         plan: kindPlan[g.name],
       });
     }
@@ -341,8 +341,8 @@ export function analyzeHistory(closed: ClosedBet[], trades: Trade[]): HistoryRep
         key: "chasing",
         label: "chasing losses",
         dollars: (a - o) * afterLoss.length,
-        finding: `Chasing. In the 24 hours after a losing bet closes, your buys average ${usd(a)}; otherwise ${usd(o)}. That's ${(a / o).toFixed(1)}x bigger right when you're most tempted to win it back.`,
-        plan: `After a loss, keep your next bet at your normal size (${usd(o)}) or wait a day.`,
+        finding: `Chasing. In the 24 hours after a losing position closes, your buys average ${usd(a)}; otherwise ${usd(o)}. That's ${(a / o).toFixed(1)}x bigger right when you're most tempted to win it back.`,
+        plan: `After a loss, keep your next position at your normal size (${usd(o)}) or wait a day.`,
       });
     }
   }
@@ -356,7 +356,7 @@ export function analyzeHistory(closed: ClosedBet[], trades: Trade[]): HistoryRep
       key: "ride_to_zero",
       label: "riding losers to zero",
       dollars: rode.reduce((s, b) => s + b.stake, 0) * 0.25,
-      finding: `${rode.length} of your ${losers.length} losing bets rode all the way to zero; you ${rode.length === losers.length ? "never sold" : "rarely sell"} a loser before it resolved.`,
+      finding: `${rode.length} of your ${losers.length} losing positions rode all the way to zero; you ${rode.length === losers.length ? "never sold" : "rarely sell"} a loser before it resolved.`,
       plan: "Decide your exit before you buy, and use trap_watch to see what selling would return while there are still buyers.",
     });
   }
@@ -442,17 +442,17 @@ export function analyzeHistory(closed: ClosedBet[], trades: Trade[]): HistoryRep
   const topLeak = mergedLeaks[0];
   let bottomLine: string;
   if (!enoughData) {
-    bottomLine = `Only ${bets.length} closed bet${bets.length === 1 ? "" : "s"} on record, too few to find patterns yet.`;
+    bottomLine = `Only ${bets.length} closed position${bets.length === 1 ? "" : "s"} on record, too few to find patterns yet.`;
   } else {
-    bottomLine = `You're ${net >= 0 ? "up" : "down"} ${usd(Math.abs(net))} on ${usd(staked)} staked (${net >= 0 ? "+" : "-"}${pct(Math.abs(roi))}), and won ${wins} of ${resolved.length} bets that resolved.`;
+    bottomLine = `You're ${net >= 0 ? "up" : "down"} ${usd(Math.abs(net))} on ${usd(staked)} staked (${net >= 0 ? "+" : "-"}${pct(Math.abs(roi))}), and won ${wins} of ${resolved.length} positions that resolved.`;
     if (topLeak) bottomLine += ` The biggest single leak is ${topLeak.label}, at ${usd(topLeak.dollars)}.`;
     else if (net >= 0) bottomLine += " No single leak stands out.";
   }
   const shareLine = !enoughData
     ? ""
     : topLeak
-      ? `Foresyte read my last ${bets.length} Polymarket bets: ${topLeak.label} cost me ${usd(topLeak.dollars)}. Drop your wallet and see yours.`
-      : `Foresyte read my last ${bets.length} Polymarket bets: ${net >= 0 ? "up" : "down"} ${usd(Math.abs(net))}, no single leak. Drop your wallet and see yours.`;
+      ? `Foresyte read my last ${bets.length} Polymarket positions: ${topLeak.label} cost me ${usd(topLeak.dollars)}. Drop your wallet and see yours.`
+      : `Foresyte read my last ${bets.length} Polymarket positions: ${net >= 0 ? "up" : "down"} ${usd(Math.abs(net))}, no single leak. Drop your wallet and see yours.`;
 
   return {
     enoughData,
@@ -478,14 +478,14 @@ export function analyzeHistory(closed: ClosedBet[], trades: Trade[]): HistoryRep
 
 // The plain-English report the agent shows.
 export function renderReport(r: HistoryReport): string {
-  if (!r.enoughData) return `${r.bottomLine} Come back after a few more bets close.`;
+  if (!r.enoughData) return `${r.bottomLine} Come back after a few more positions close.`;
   const lines: string[] = [];
-  lines.push(`Your Polymarket review: ${r.bets} closed bets${r.from && r.to ? `, ${r.from} to ${r.to}` : ""}.`, "", `Bottom line. ${r.bottomLine}`);
+  lines.push(`Your Polymarket review: ${r.bets} closed positions${r.from && r.to ? `, ${r.from} to ${r.to}` : ""}.`, "", `Bottom line. ${r.bottomLine}`);
 
   const shown = r.categories.filter((c) => c.bets >= 3).sort((a, b) => b.net - a.net);
   if (shown.length) {
     lines.push("", "Where your money goes, by topic:");
-    for (const c of shown) lines.push(`- ${c.name}: ${signed(c.net)} over ${c.bets} bets (${record(c)})`);
+    for (const c of shown) lines.push(`- ${c.name}: ${signed(c.net)} over ${c.bets} positions (${record(c)})`);
   }
   if (r.leaks.length) {
     lines.push("", "Your biggest leaks:");
@@ -503,6 +503,6 @@ export function renderReport(r: HistoryReport): string {
     lines.push("", "Your plan:");
     r.plan.forEach((p, i) => lines.push(`${i + 1}. ${p}`));
   }
-  lines.push("", `Based on your last ${r.bets} closed bets and ${r.trades} trades. This describes your own past results; it isn't financial advice.`);
+  lines.push("", `Based on your last ${r.bets} closed positions and ${r.trades} trades. This describes your own past results; it isn't financial advice.`);
   return lines.join("\n");
 }

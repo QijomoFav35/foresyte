@@ -12,9 +12,9 @@ test("thin in-play game: HIGH_RISK, worst case first", () => {
   assert.equal(r.level, "HIGH_RISK");
   assert.equal(r.flags[0]?.check, "exit_thinner_than_stake");
   assert.match(r.flags[0]?.message ?? "", /Only \$8 of buyers/);
-  assert.match(r.headline, /^This is a trap\. If you bet \$50 on Lakers and want out right away, you'd get back \$8\./);
+  assert.match(r.headline, /^This is a trap\. Buying \$50 of Lakers and selling straight back would return \$8\./);
   assert.match(r.headline, /99\.0 of 119\.0 contracts\) would find no buyer/);
-  assert.match(r.whatToDo, /You may not be able to sell/);
+  assert.match(r.whatToDo, /may not be sellable before the market resolves/);
 });
 
 test("deep book, event-based rules: CLEAR", () => {
@@ -42,7 +42,7 @@ test("slippage and wide spread are flagged with real cents", () => {
   const book = { bids: [{ price: 0.3, size: 20000 }], asks: [{ price: 0.5, size: 10 }, { price: 0.7, size: 1000 }] };
   const r = assessEntry(btcPrice, 0, book, 50, NOW_OCT_26_2026);
   const byCheck = Object.fromEntries(r.flags.map((f) => [f.check, f.message]));
-  assert.match(byCheck.slippage ?? "", /Shows 50¢, but your size fills at 6\d¢ on average/);
+  assert.match(byCheck.slippage ?? "", /Shows 50¢, but this size fills at 6\d¢ on average/);
   assert.match(byCheck.wide_spread ?? "", /20¢ apart/);
 });
 
@@ -51,7 +51,7 @@ test("no buyers and no sellers are both HIGH_RISK", () => {
   assert.ok(noBids.flags.some((f) => f.check === "no_buyers" && f.level === "HIGH_RISK"));
   const noAsks = assessEntry(btcPrice, 0, { bids: deep.bids, asks: [] }, 50, NOW_OCT_26_2026);
   assert.equal(noAsks.level, "HIGH_RISK");
-  assert.match(noAsks.headline, /can't be placed: nobody is selling/);
+  assert.match(noAsks.headline, /can't fill: nobody is selling/);
 });
 
 test("a stake larger than all asks cannot fill", () => {
@@ -60,10 +60,10 @@ test("a stake larger than all asks cannot fill", () => {
   assert.equal(r.filled, false);
 });
 
-test("holding: buyers thinning out says cash out now", () => {
+test("holding: buyers thinning out shows how much can still be sold", () => {
   const h = assessHolding(position({}), { bids: [{ price: 0.55, size: 30 }], asks: [] }, null, "https://polymarket.com/event/x");
   assert.equal(h.level, "HIGH_RISK");
-  assert.match(h.flags[0]?.message ?? "", /Cash out now while you still can: only 30\.0 of your 100\.0 contracts/);
+  assert.match(h.flags[0]?.message ?? "", /Buyers are thinning out: only 30\.0 of your 100\.0 contracts/);
   assert.ok(!h.notes.some((n) => n.includes("lock in")), "no lock-in when selling now loses money");
 });
 
@@ -115,7 +115,7 @@ test("plain English: no agent words in what a person reads", () => {
   const r = assessEntry(btcPrice, 0, deep, 50, NOW_OCT_26_2026);
   assert.match(r.headline, /^Looks safe at this size\./);
   assert.doesNotMatch(r.headline, /HIGH_RISK|CAUTION|CLEAR/);
-  assert.equal(r.whatToDo, "Go ahead if you like the bet.");
+  assert.equal(r.whatToDo, "No traps found at this size.");
 });
 
 test("exit window: buying a Strategy-style market 2 days before the end is flagged", () => {
@@ -123,14 +123,14 @@ test("exit window: buying a Strategy-style market 2 days before the end is flagg
   assert.equal(r.level, "HIGH_RISK");
   assert.ok(r.flags.some((f) => f.check === "exit_window"));
   assert.match(r.flags.find((f) => f.check === "exit_window")?.message ?? "", /ends in 2 days/);
-  assert.match(r.whatToDo, /^Don't buy this close to the end/);
+  assert.match(r.whatToDo, /^The market is in its final 3 days/);
 });
 
-test("exit window: holding a Strategy-style market 2 days out says get out now", () => {
+test("exit window: holding a Strategy-style market 2 days out says exits are still open", () => {
   const h = assessHolding(position({}), deepStrategy, strategyMay31, "x", NOW_MAY_29_2026);
   assert.equal(h.level, "HIGH_RISK");
-  assert.match(h.flags.find((f) => f.check === "exit_window")?.message ?? "", /Get out now while people are still buying/);
-  assert.equal(h.whatToDo, "Sell now while people are still buying.");
+  assert.match(h.flags.find((f) => f.check === "exit_window")?.message ?? "", /Exits are still available now/);
+  assert.match(h.whatToDo, /^Inside the final 3 days/);
 });
 
 test("exit window: the same market 11 days out is not in the window", () => {

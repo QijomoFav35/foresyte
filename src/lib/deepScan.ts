@@ -1,9 +1,9 @@
 // The paid deep scan. Everything trap_check does, plus what a careful trader works out by hand:
-//   - an exit ladder: bet $X, change your mind, what do you get back?
-//   - the biggest bet you can still get out of
+//   - an exit ladder: buy $X, sell straight back, what comes back?
+//   - the largest size that can still exit
 //   - the latest day to sell before the deadline danger zone
 //   - the other side of the market
-//   - a numbered plan in plain English
+//   - a numbered risk read in plain English
 // Pure: takes data already fetched, no network. Unit-tested.
 
 import { sellProceeds, walkAsks, type Level } from "./book.ts";
@@ -31,7 +31,7 @@ export type DeepScan = {
   headline: string;
   entry: EntryAssessment;
   ladder: LadderStep[];
-  safeBetUsdc: number; // biggest bet you can buy and sell straight back losing at most 10%
+  safeBetUsdc: number; // largest size you can buy and sell straight back losing at most 10%
   sellBy: string | null; // e.g. "Thursday, May 28"
   otherSide: { outcome: string; level: EntryAssessment["level"]; headline: string } | null;
   plan: string[];
@@ -55,7 +55,7 @@ function exitable(step: LadderStep): boolean {
   return step.canBuyAll && step.stuckShares < 0.05 && step.lossPct <= SAFE_LOSS;
 }
 
-// Largest bet (to the dollar) you could make and still sell straight back losing at most 10%.
+// Largest size (to the dollar) that can be bought and sold straight back losing at most 10%.
 export function safeBet(book: Book, cap = 1_000_000): number {
   if (!exitable(roundTrip(book, 1))) return 0;
   let lo = 1;
@@ -108,44 +108,44 @@ export function deepScan(
   const plan: string[] = [];
   const days = daysUntil(market.endDate, now);
   if (entry.flags.some((f) => f.check === "exit_window")) {
-    plan.push("Don't buy now. The market is in its last 3 days, when buyers disappear.");
+    plan.push("The market is in its final 3 days, when buyers tend to disappear.");
   } else if (safe === 0) {
-    plan.push("Don't bet here. Even $1 can't be sold back without losing more than 10%.");
+    plan.push("Even $1 can't be sold straight back within 10% of its cost.");
   } else if (safe < stakeUsdc) {
-    plan.push(`Bet ${usd(safe)} or less, not ${usd(stakeUsdc)}. Above ${usd(safe)} you may not be able to get out.`);
+    plan.push(`Exits hold up to about ${usd(safe)}, below the ${usd(stakeUsdc)} checked. Above ${usd(safe)}, a position may not be sellable.`);
   } else {
-    plan.push(`Your ${usd(stakeUsdc)} bet fits. You could go up to about ${usd(safe)} and still get out.`);
+    plan.push(`A ${usd(stakeUsdc)} position fits this book. Exits hold up to about ${usd(safe)}.`);
   }
-  if (sellBy === "now") plan.push("If you already hold it, sell now while people are still buying.");
-  else if (sellBy) plan.push(`If you buy, sell by ${sellBy} at the latest. After that, the rules and missing buyers decide it.`);
+  if (sellBy === "now") plan.push("Already inside the deadline window: exits are available now and tend to thin out from here.");
+  else if (sellBy) plan.push(`The 3-day deadline window opens ${sellBy}. From then, the rules and thin buyers drive the outcome.`);
   if (entry.rules.basis === "confirmation") {
-    plan.push("Only bet if you are sure the news will be officially out before the deadline, not just that the event will happen.");
+    plan.push("Settlement depends on an official report before the deadline, not only on the event happening.");
   }
   if (entry.spreadCents !== null && entry.spreadCents > 5) {
-    plan.push(`Buy with a limit order${entry.shownPrice ? ` at ${cents(entry.shownPrice)} or lower` : ""}, not at whatever price is there. The buy and sell prices are far apart.`);
+    plan.push(`The buy and sell prices are far apart. A limit order${entry.shownPrice ? ` at ${cents(entry.shownPrice)} or lower` : ""} avoids paying the full spread.`);
   }
   if (otherSide && otherSide.level !== "HIGH_RISK" && entry.level === "HIGH_RISK" && !entry.flags.some((f) => f.check.startsWith("reporting") || f.check === "exit_window")) {
-    plan.push(`The ${otherSide.outcome} side is easier to get out of. Look at it if you want this market.`);
+    plan.push(`The ${otherSide.outcome} side has deeper exit liquidity.`);
   }
   if (days !== null && days > EXIT_WINDOW_DAYS && entry.level !== "HIGH_RISK") {
-    plan.push("Run Foresyte again before you sell. Buyers change hour by hour.");
+    plan.push("Buyers change hour by hour, so a fresh check before selling reflects the current book.");
   }
 
   const lines: string[] = [entry.headline, ""];
   if (entry.flags.length) lines.push("Why:", ...entry.flags.map((f) => `- ${f.message}`), "");
-  lines.push("If you bet and then change your mind straight away:");
+  lines.push("Buying and selling straight back at each size:");
   for (const step of ladder) {
     if (!step.canBuyAll) {
-      lines.push(`- ${usd(step.betUsdc)}: not enough for sale to place this bet.`);
+      lines.push(`- ${usd(step.betUsdc)}: not enough contracts for sale to fill this size.`);
       continue;
     }
     const stuck = step.stuckShares >= 0.05 ? ", and part of it can't be sold at all" : "";
-    lines.push(`- Bet ${usd(step.betUsdc)}, get back ${usd(step.getBackUsdc)} (lose ${Math.round(step.lossPct * 100)}%${stuck}).`);
+    lines.push(`- ${usd(step.betUsdc)} in, ${usd(step.getBackUsdc)} back (${Math.round(step.lossPct * 100)}% lost${stuck}).`);
   }
-  lines.push("", safe > 0 ? `Biggest bet you can still get out of: about ${usd(safe)}.` : "Biggest bet you can still get out of: none. Even $1 is stuck.");
-  if (sellBy) lines.push(sellBy === "now" ? "Latest day to sell: today." : `Latest day to sell: ${sellBy}.`);
+  lines.push("", safe > 0 ? `Largest size that can still exit: about ${usd(safe)}.` : "Largest size that can still exit: none. Even $1 is stuck.");
+  if (sellBy) lines.push(sellBy === "now" ? "Deadline window: open now." : `Deadline window opens: ${sellBy}.`);
   if (otherSide) lines.push(`Other side (${otherSide.outcome}): ${otherSide.headline}`);
-  lines.push("", "Your plan:", ...plan.map((p, i) => `${i + 1}. ${p}`));
+  lines.push("", "Risk read:", ...plan.map((p, i) => `${i + 1}. ${p}`));
 
   return {
     level: entry.level,

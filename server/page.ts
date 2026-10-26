@@ -16,9 +16,9 @@ export function landingPage(o: { publicUrl: string; price: string; chain: string
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Foresyte</title>
-<meta name="description" content="Paste a Polymarket link. Foresyte tells you if the bet is a trap before you place it, and when to get out.">
-<meta property="og:title" content="Foresyte: is this Polymarket bet a trap?">
-<meta property="og:description" content="Know the worst case in dollars before you bet. Free check, $0.10 deep scan, inside your PayBox agent.">
+<meta name="description" content="Paste a Polymarket link. Foresyte tells you if the contract is a trap before you buy it, and how the exit holds up.">
+<meta property="og:title" content="Foresyte: is this Polymarket contract a trap?">
+<meta property="og:description" content="Know the worst case in dollars before you buy. Free check, $0.10 deep scan, inside your PayBox agent.">
 <link rel="icon" href="${faviconDataUri()}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -320,7 +320,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
   <div class="hero-in">
   <div class="say">
     <h1>Know if a contract is a trap <em>before you place it</em></h1>
-    <p>Paste any Polymarket link and see the worst case in dollars, plus when to get out</p>
+    <p>Paste any Polymarket link and see the worst case in dollars, plus how the exit holds up to the deadline</p>
     <div class="btns"><a class="pill blue" href="#try">Check a market</a><a class="pill ghost" href="https://app.paybox.sh/plugins">Add to PayBox &#8599;</a></div>
   </div>
 
@@ -371,7 +371,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
       <p class="big num">$3.8M</p>
       <h3>Right, and still lost</h3>
       <p class="cap">Strategy sold 32 BTC between May 26 and 31, but the filing only came out on Monday June 1, and a note added to the rules that day said confirmation after the deadline didn't count<br>Yes went from 81% to almost zero, 1,838 accounts were cleared and one trader reports losing $500K</p>
-      <p class="fix"><b>Foresyte</b> flags a market decided by what gets reported by a Sunday deadline as a trap, warns when a note is added to the rules, and gives you a last day to sell</p>
+      <p class="fix"><b>Foresyte</b> flags a market decided by what gets reported by a Sunday deadline as a trap, warns when a note is added to the rules, and shows when the 3-day deadline window opens</p>
       <a class="src-l" href="https://theblock.co/post/403312/polymarket-faces-backlash-strategy-bitcoin-sale">Source: The Block &#8599;</a>
     </article>
     <article class="card trap">
@@ -403,7 +403,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
       <p class="big num">$2.07M</p>
       <h3>Right half the time, down $2M</h3>
       <p class="cap">A whale won 51% of 53 trades yet lost $2.07M, with an average stake near $400K and a worst single loss of $1.58M<br>Winning half the time isn't enough when you pay high prices for small upside</p>
-      <p class="fix"><b>Foresyte</b> compares what a wallet paid with how often it actually won at that price, flags bigger bets after losses, and the deep scan shows the biggest bet you can still get out of</p>
+      <p class="fix"><b>Foresyte</b> compares what a wallet paid with how often it actually won at that price, flags bigger buys after losses, and the deep scan shows the largest size that can still exit</p>
       <a class="src-l" href="https://coinpedia.org/crypto-live-news/polymarket-trader-loses-2m-despite-winning-bets/">Source: Coinpedia &#8599;</a>
     </article>
   </div>
@@ -422,7 +422,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
     <div class="card tier paid">
       <h3>Deep scan</h3>
       <p class="cost num">${price}</p>
-      <ul><li>The biggest bet you can still get out of</li><li>The last day to sell</li><li>The other side of the market</li><li>A step-by-step plan</li></ul>
+      <ul><li>The largest size that can still exit</li><li>When the 3-day deadline window opens</li><li>The other side of the market</li><li>A step-by-step plan</li></ul>
     </div>
     </div>
   </div>
@@ -437,7 +437,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
       <tr><td>Real price at your amount</td><td class="n">Do the math yourself</td><td class="y">In dollars</td></tr>
       <tr><td>Can you sell before it ends?</td><td class="n">Not shown</td><td class="y">Checked first</td></tr>
       <tr><td>Decided by event or by report?</td><td class="n">In the fine print</td><td class="y">Flagged</td></tr>
-      <tr><td>When to get out</td><td class="n">Not shown</td><td class="y">Last day to sell</td></tr>
+      <tr><td>Deadline risk window</td><td class="n">Not shown</td><td class="y">Flagged with the date</td></tr>
       <tr><td>Inside your AI agent</td><td class="n">No</td><td class="y">Yes</td></tr>
     </tbody>
   </table></div>
@@ -468,13 +468,13 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
   <h2>FAQ</h2>
   <div class="faq">
     <details><summary>Is this financial advice?</summary><p>No, Foresyte shows how a market looks right now (who is buying, what you'd get back, how the rules decide it) and the call is yours, you can still lose your whole stake</p></details>
-    <details><summary>Polymarket already shows a price, why isn't that enough?</summary><p>That price is for a small amount, a bigger bet eats through the cheap contracts and costs more, and selling pays less when few people are buying, Foresyte works it out at your exact amount</p></details>
+    <details><summary>Polymarket already shows a price, why isn't that enough?</summary><p>That price is for a small amount, a bigger buy eats through the cheap contracts and costs more, and selling pays less when few people are buying, Foresyte works it out at your exact amount</p></details>
     <details><summary>Where do the numbers come from?</summary><p>Polymarket's public data, read the moment you ask, nothing is cached and the AI never makes up a number</p></details>
     <details><summary>What is the 3-day rule?</summary><p>In the last 3 days of a market buyers tend to vanish and the rules start deciding it, so if a risky market is in that window Foresyte tells you to get out</p></details>
-    <details><summary>Will it alert me while I hold a bet?</summary><p>Not in the background yet, ask your agent to check your positions any time and always before you sell</p></details>
+    <details><summary>Will it alert me while I hold a position?</summary><p>Not in the background yet, ask your agent to check your positions any time and always before you sell</p></details>
     <details><summary>How do I pay ${price}?</summary><p>Right in your PayBox chat, your agent shows the price, you approve and USDC moves on ${chain} over x402, no account or card, and if the scan can't run you aren't charged</p></details>
     <details><summary>Can my own agent pay?</summary><p>Yes, any agent with an x402 wallet can call the deep scan link and pay for itself</p></details>
-    <details><summary>Does Foresyte place bets or hold my money?</summary><p>No, it only reads public data, it never places bets, never asks for keys and never holds funds</p></details>
+    <details><summary>Does Foresyte place trades or hold my money?</summary><p>No, it only reads public data, it never places trades, never asks for keys and never holds funds</p></details>
   </div>
 </section>
 </main>
