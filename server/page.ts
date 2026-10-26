@@ -254,7 +254,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
   </picture>
   <div class="hero-in">
   <div class="say">
-    <h1>Know if a bet is a trap <em>before you place it</em></h1>
+    <h1>Know if a contract is a trap <em>before you place it</em></h1>
     <p>Paste any Polymarket link and see the worst case in dollars, plus when to get out</p>
     <div class="btns"><a class="pill white" href="#try">Check a market</a><a class="pill ghost" href="https://app.paybox.sh/plugins">Add to PayBox &#8599;</a></div>
   </div>
