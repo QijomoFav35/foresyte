@@ -57,51 +57,65 @@ img,svg{display:block;max-width:100%}
 .pill:disabled{opacity:.55;cursor:wait;transform:none}
 
 /* hero */
-.hero{padding:40px 0 0}
+.hero{padding:20px 0 0}
+.hero-top{display:grid;gap:24px}
+.hero-art{margin:0;border-radius:var(--r-md);overflow:hidden;background:#1e3a4c;aspect-ratio:16/10}
+.hero-art img{width:100%;height:100%;object-fit:cover;object-position:42% 40%}
 .badge{display:inline-flex;align-items:center;gap:8px;background:var(--panel);border-radius:var(--r-pill);padding:7px 14px 7px 8px;font-size:14px;font-weight:600;color:var(--soft)}
 .badge b{background:var(--blue);color:#fff;border-radius:var(--r-pill);padding:3px 9px;font-size:12px}
-h1{font-weight:900;font-size:clamp(44px,12vw,108px);line-height:.92;letter-spacing:-.055em;margin-top:20px;max-width:11ch}
-.lede{color:var(--muted);font-size:clamp(17px,2.4vw,20px);max-width:50ch;margin-top:18px}
+h1{font-weight:900;font-size:clamp(44px,12vw,104px);line-height:.92;letter-spacing:-.055em;margin-top:18px;max-width:11ch}
+.lede{color:var(--muted);font-size:clamp(17px,2.4vw,20px);max-width:46ch;margin-top:18px}
 
-/* the live check */
-.check{margin-top:32px;background:var(--panel);border-radius:var(--r-md);padding:18px}
-.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.fields .market,.fields .go{grid-column:1/-1}
-label{display:block;font-size:13px;font-weight:600;color:var(--muted);margin:0 0 6px 2px}
-input{width:100%;background:var(--raised);border:1px solid transparent;color:#fff;border-radius:var(--r-sm);padding:13px 14px;font:500 16px Figtree,sans-serif;min-height:48px}
-input::placeholder{color:#777}
-input:focus{border-color:var(--blue);outline:none}
-.go .pill{width:100%}
-.hint{color:var(--muted);font-size:14px;margin:12px 2px 0}
-
-.result{display:none;margin-top:22px;padding-top:22px;border-top:1px solid var(--line)}
-.result.on{display:block;animation:rise .35s ease-out}
-@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.verdict{font-weight:900;font-size:clamp(38px,10vw,84px);line-height:.95;letter-spacing:-.05em}
+/* the chat box */
+.chat{margin-top:32px;background:var(--panel);border-radius:var(--r-md);display:flex;flex-direction:column;overflow:hidden}
+.chat-head{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line);font-size:14px;color:var(--muted)}
+.chat-head b{color:#fff;font-size:15px}
+.chat-head .live{width:8px;height:8px;border-radius:50%;background:#3ecf8e;box-shadow:0 0 0 4px rgba(62,207,142,.15)}
+.log{display:flex;flex-direction:column;gap:14px;padding:18px;min-height:280px;max-height:min(68vh,620px);overflow-y:auto;overscroll-behavior:contain;scroll-behavior:smooth}
+.msg{max-width:100%;border-radius:18px;padding:14px 16px;animation:rise .3s ease-out}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.msg.bot{background:var(--raised);align-self:flex-start;border-bottom-left-radius:6px}
+.msg.me{background:var(--blue);align-self:flex-end;border-bottom-right-radius:6px;max-width:88%;font-weight:600;overflow-wrap:anywhere}
+.msg.me small{display:block;font-weight:500;color:#dbe4ff;font-size:13px;margin-top:2px}
+.msg.intro p{color:var(--soft)}
+.msg.intro ul{margin:10px 0 0 18px;color:var(--muted);font-size:15px;display:grid;gap:4px}
+.typing{display:flex;gap:5px;padding:16px 18px}
+.typing i{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:blink 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+.verdict{font-weight:900;font-size:clamp(30px,7vw,48px);line-height:1;letter-spacing:-.045em}
 .verdict.trap{color:var(--trap)}.verdict.careful{color:var(--careful)}.verdict.safe{color:var(--blue-hi)}
-.worst{font-size:clamp(17px,2.6vw,23px);font-weight:600;margin-top:12px;max-width:44ch}
-.why{list-style:none;margin-top:18px;display:grid;gap:10px;max-width:68ch}
-.why li{padding-left:20px;position:relative;color:var(--soft)}
+.worst{font-size:clamp(16px,2.2vw,19px);font-weight:600;margin-top:10px;max-width:52ch}
+.why{list-style:none;margin-top:14px;display:grid;gap:8px;max-width:64ch}
+.why li{padding-left:18px;position:relative;color:var(--soft);font-size:15px}
 .why li:before{content:"";position:absolute;left:0;top:.6em;width:8px;height:8px;border-radius:50%;background:var(--careful)}
 .why li.t:before{background:var(--trap)}
-.facts{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
-.facts b{display:block;font-size:clamp(22px,4vw,28px);font-weight:800;letter-spacing:-.03em}
-.facts span{color:var(--muted);font-size:14px;line-height:1.35;display:block}
-.todo{margin-top:20px;font-weight:700;font-size:17px}
-.meta{color:var(--muted);font-size:14px;margin-top:10px;overflow-wrap:anywhere}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.facts div{background:var(--panel);border-radius:var(--r-sm);padding:10px 12px}
+.facts b{display:block;font-size:clamp(20px,4vw,24px);font-weight:800;letter-spacing:-.03em}
+.facts span{color:var(--muted);font-size:13px;line-height:1.35;display:block}
+.todo{margin-top:14px;font-weight:700}
+.meta{color:var(--muted);font-size:13.5px;margin-top:8px;overflow-wrap:anywhere}
+.offer{margin-top:16px;padding-top:14px;border-top:1px solid #333;display:grid;gap:10px}
+.offer p{color:var(--soft);font-size:15px}
+.offer .pill{justify-self:start}
 .err{color:var(--careful);font-weight:600}
-.choices{margin-top:12px;display:grid;gap:8px}
+.choices{margin-top:10px;display:grid;gap:6px}
 .choices button{all:unset;cursor:pointer;color:var(--blue-hi);font-weight:600;padding:4px 0}
-
-.upsell{margin-top:22px;background:var(--blue);border-radius:var(--r-md);padding:18px;display:grid;gap:14px}
-.upsell[hidden]{display:none}
-.upsell p{color:#eef2ff;max-width:58ch}.upsell b{color:#fff}
-.upsell .pill{justify-self:start}
-.code{display:none;margin-top:14px;background:var(--black);border-radius:var(--r-md);padding:18px}
-.code.on{display:block}
-.code .big{font-weight:900;font-size:clamp(30px,8vw,46px);letter-spacing:.02em;color:var(--blue-hi)}
-.prompt{display:grid;gap:10px;margin-top:14px}
-.prompt output{background:var(--raised);border-radius:var(--r-sm);padding:14px;font-weight:600;overflow-wrap:anywhere}
+.code-big{font-weight:900;font-size:clamp(28px,7vw,40px);letter-spacing:.02em;color:var(--blue-hi)}
+.prompt{display:grid;gap:10px;margin-top:12px}
+.prompt output{background:var(--black);border-radius:var(--r-sm);padding:12px 14px;font-weight:600;overflow-wrap:anywhere}
+.composer{border-top:1px solid var(--line);padding:12px;display:grid;gap:10px;background:var(--panel)}
+.composer .link{position:relative}
+.composer input{width:100%;background:var(--raised);border:1px solid transparent;color:#fff;border-radius:var(--r-pill);padding:12px 16px;font:500 16px Figtree,sans-serif;min-height:48px}
+.composer input::placeholder{color:#7d7d7d}
+.composer input:focus{border-color:var(--blue);outline:none}
+.opts{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end}
+.opts label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:0 0 4px 14px}
+.send{width:48px;height:48px;border-radius:50%;border:0;background:var(--blue);color:#fff;display:grid;place-items:center;cursor:pointer;transition:background .12s}
+.send:hover{background:#5179ff}.send:disabled{opacity:.5;cursor:wait}
+.send svg{width:20px;height:20px}
+.hint{color:var(--muted);font-size:13px;margin:10px 4px 0}
 
 /* sections */
 section{padding-top:var(--section);scroll-margin-top:72px}
@@ -226,6 +240,24 @@ footer .founder{color:#fff;font-weight:700;font-size:16px;margin-bottom:8px}
   .endpoints .row{grid-template-columns:1fr 70px;column-gap:16px}
   .endpoints .row span{grid-column:1/-1}
 }
+@media (min-width:640px){
+  .facts{grid-template-columns:repeat(3,1fr)}
+  .prompt{grid-template-columns:1fr auto}
+  .opts{grid-template-columns:160px 160px auto}
+  .offer{grid-template-columns:1fr auto;align-items:center}
+  .offer .pill{justify-self:end}
+  .msg{max-width:92%}
+}
+@media (min-width:900px){
+  .hero{padding-top:40px}
+  .hero-top{grid-template-columns:1fr 1.05fr;align-items:center;gap:40px}
+  .hero-art{order:2;aspect-ratio:1/1}
+  .hero-art img{object-position:36% 40%}
+  .composer{grid-template-columns:1fr auto;align-items:end;padding:14px}
+  .composer .link input{margin-top:0}
+  .opts{grid-template-columns:120px 120px auto}
+  .log{padding:22px}
+}
 </style>
 </head>
 <body>
@@ -239,27 +271,38 @@ footer .founder{color:#fff;font-weight:700;font-size:16px;margin-bottom:8px}
 
 <main class="wrap">
 <header class="hero">
-  <span class="badge"><b>Finalist</b>PayBox Hackathon, Chapter 1</span>
-  <h1>Is this bet a trap?</h1>
-  <p class="lede">Paste any Polymarket link. Foresyte tells you the worst case in dollars before you put money in, and when to get out once you have.</p>
-
-  <form class="check" id="check" autocomplete="off">
-    <div class="fields">
-      <div class="market"><label for="m">Polymarket link</label><input id="m" name="market" required inputmode="url" placeholder="https://polymarket.com/event/..."></div>
-      <div><label for="o">You'd buy</label><input id="o" name="outcome" placeholder="Yes"></div>
-      <div><label for="s">Amount in $</label><input id="s" name="stake" type="number" min="1" step="1" value="50" inputmode="numeric"></div>
-      <div class="go"><button class="pill blue" id="go" type="submit">Check it free</button></div>
+  <div class="hero-top">
+    <figure class="hero-art">
+      <picture>
+        <source type="image/webp" srcset="/hero-760.webp 760w, /hero-1280.webp 1280w" sizes="(min-width:900px) 55vw, 100vw">
+        <img src="/hero-1280.webp" width="1280" height="757" alt="Engraved illustration of a blue bird beside a face playing a golden flute" fetchpriority="high">
+      </picture>
+    </figure>
+    <div class="hero-copy">
+      <span class="badge"><b>Finalist</b>PayBox Hackathon, Chapter 1</span>
+      <h1>Is this bet a trap?</h1>
+      <p class="lede">Paste any Polymarket link. Foresyte tells you the worst case in dollars before you put money in, and when to get out once you have.</p>
     </div>
-    <p class="hint">No wallet, no sign-up. The same check your PayBox agent runs.</p>
+  </div>
 
-    <div class="result" id="result" aria-live="polite"></div>
-
-    <div class="upsell" id="upsell" hidden>
-      <p><b>See your full plan.</b> What you'd get back at every amount, the biggest bet you can still get out of, and the last day to sell.</p>
-      <button class="pill white" id="scan-btn" type="button">Get a deep scan for ${price}</button>
+  <div class="chat" id="try">
+    <div class="chat-head"><span class="live" aria-hidden="true"></span><b>Foresyte</b><span>Free check, live Polymarket data</span></div>
+    <div class="log" id="log" aria-live="polite">
+      <div class="msg bot intro">
+        <p>Paste a Polymarket link and tell me what you'd bet. I'll tell you:</p>
+        <ul><li>if you can get your money back out</li><li>the price you'd really pay at your amount</li><li>if the rules can make you lose even when you're right</li></ul>
+      </div>
     </div>
-    <div class="code" id="code" aria-live="polite"></div>
-  </form>
+    <form class="composer" id="check" autocomplete="off">
+      <div class="link"><label class="sr" for="m">Polymarket link</label><input id="m" name="market" required inputmode="url" placeholder="Paste a Polymarket link"></div>
+      <div class="opts">
+        <div><label for="o">You'd buy</label><input id="o" name="outcome" placeholder="Yes"></div>
+        <div><label for="s">Amount in $</label><input id="s" name="stake" type="number" min="1" step="1" value="50" inputmode="numeric"></div>
+        <button class="send" id="go" type="submit" aria-label="Check it"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7"/></svg></button>
+      </div>
+    </form>
+  </div>
+  <p class="hint">Free, no wallet, no sign-up. The same check your PayBox agent runs.</p>
 </header>
 
 <section id="traps">
@@ -388,7 +431,7 @@ footer .founder{color:#fff;font-weight:700;font-size:16px;margin-bottom:8px}
 
 <section class="close">
   <h2>Know the worst case before you click.</h2>
-  <div class="ctas"><a class="pill blue" href="#check">Check a market</a><a class="pill ghost" href="https://app.paybox.sh/plugins">Add to PayBox</a></div>
+  <div class="ctas"><a class="pill blue" href="#try">Check a market</a><a class="pill ghost" href="https://app.paybox.sh/plugins">Add to PayBox</a></div>
 </section>
 </main>
 
@@ -396,7 +439,7 @@ footer .founder{color:#fff;font-weight:700;font-size:16px;margin-bottom:8px}
   <div class="wrap">
     <div class="cols">
       <div><p class="founder">Built by someone who couldn't cash out at halftime.</p><p>Information, not betting advice. Not affiliated with Polymarket.</p></div>
-      <div><h4>Product</h4><ul><li><a href="#check">Free check</a></li><li><a href="#scan">Deep scan</a></li><li><a href="https://app.paybox.sh/plugins">PayBox plugin</a></li></ul></div>
+      <div><h4>Product</h4><ul><li><a href="#try">Free check</a></li><li><a href="#scan">Deep scan</a></li><li><a href="https://app.paybox.sh/plugins">PayBox plugin</a></li></ul></div>
       <div><h4>Read</h4><ul><li><a href="#traps">The traps</a></li><li><a href="#faq">FAQ</a></li><li><a href="#sources">Sources</a></li></ul></div>
       <div><h4>Source</h4><ul><li><a href="https://github.com/QijomoFav35/foresyte">GitHub</a></li><li><a href="/api/proof">Proof (JSON)</a></li><li><a href="/?format=json">API</a></li></ul></div>
     </div>
@@ -409,15 +452,26 @@ const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":
 const money = (n) => n == null ? "n/a" : "$" + (n >= 100 ? Math.round(n).toLocaleString("en-US") : Number(n).toFixed(2).replace(/\\.00$/, ""));
 const tone = { HIGH_RISK: "trap", CAUTION: "careful", CLEAR: "safe" };
 let last = null;
+const log = $("log");
 
 function fields() { return { market: $("m").value.trim(), outcome: $("o").value.trim(), stake: $("s").value || "50" }; }
 
-function render(d) {
+function add(cls, html) {
+  const el = document.createElement("div");
+  el.className = "msg " + cls;
+  el.innerHTML = html;
+  log.appendChild(el);
+  log.scrollTop = log.scrollHeight;
+  return el;
+}
+function typing() { return add("bot typing", "<i></i><i></i><i></i>"); }
+function shortLink(u) { const t = u.replace("https://", "").replace("http://", "").replace("www.", ""); return t.length > 60 ? t.slice(0, 60) + "..." : t; }
+
+function verdictHtml(d) {
   const worst = d.headline.replace(d.verdict, "").trim();
   const why = d.reasons.map((r) => '<li class="' + (r.level === "HIGH_RISK" ? "t" : "c") + '">' + esc(r.message) + "</li>").join("");
   const fill = d.numbers.fillPriceCents == null ? "n/a" : d.numbers.fillPriceCents + "¢";
-  $("result").innerHTML =
-    '<p class="verdict ' + tone[d.level] + '">' + esc(d.verdict) + "</p>" +
+  return '<p class="verdict ' + tone[d.level] + '">' + esc(d.verdict) + "</p>" +
     '<p class="worst">' + esc(worst) + "</p>" +
     (why ? '<ul class="why">' + why + "</ul>" : "") +
     '<div class="facts num">' +
@@ -426,18 +480,27 @@ function render(d) {
       "<div><b>" + fill + "</b><span>your real price (shown " + (d.numbers.shownPriceCents ?? "n/a") + "¢)</span></div>" +
     "</div>" +
     '<p class="todo">What to do: ' + esc(d.whatToDo) + "</p>" +
-    '<p class="meta">' + esc(d.market.question) + ". Decided by " + esc(d.rules.decidedBy) + (d.rules.deadline ? ", ends " + esc(d.rules.deadline) : "") + ".</p>";
-  $("result").classList.add("on");
-  $("upsell").hidden = false;
+    '<p class="meta">' + esc(d.market.question) + ". Decided by " + esc(d.rules.decidedBy) + (d.rules.deadline ? ", ends " + esc(d.rules.deadline) : "") + ".</p>" +
+    '<div class="offer"><p>Want the full plan? What you&rsquo;d get back at every amount, the biggest bet you can still get out of, and the last day to sell.</p>' +
+    '<button class="pill blue small" type="button" data-scan>Get a deep scan for ${price}</button></div>';
 }
 
-function showError(d) {
+function render(d) {
+  const el = add("bot", verdictHtml(d));
+  el.querySelector("[data-scan]").addEventListener("click", (e) => deepScanCode(e.currentTarget));
+}
+
+function errorHtml(d) {
   let html = '<p class="err">' + esc(d.error || "That didn't work. Check the link and try again.") + "</p>";
   if (d.options) html += '<div class="choices">' + d.options.map((o) => '<button type="button" data-slug="' + esc(o.slug) + '">' + esc(o.question) + "</button>").join("") + "</div>";
-  $("result").innerHTML = html;
-  $("result").classList.add("on");
-  $("upsell").hidden = true;
-  $("result").querySelectorAll("[data-slug]").forEach((b) => b.addEventListener("click", () => { $("m").value = b.dataset.slug; $("check").requestSubmit(); }));
+  return html;
+}
+function showError(d, el) {
+  el = el || add("bot", "");
+  el.className = "msg bot";
+  el.innerHTML = errorHtml(d);
+  el.querySelectorAll("[data-slug]").forEach((b) => b.addEventListener("click", () => { $("m").value = b.dataset.slug; $("check").requestSubmit(); }));
+  log.scrollTop = log.scrollHeight;
 }
 
 async function copy(text, btn) {
@@ -449,34 +512,40 @@ $("check").addEventListener("submit", async (e) => {
   e.preventDefault();
   const f = fields();
   if (!f.market) return;
-  $("go").disabled = true; $("go").textContent = "Checking...";
-  $("code").classList.remove("on");
+  add("me", "Is this a trap? $" + esc(f.stake) + " on " + esc(f.outcome || "the first outcome") + "<small>" + esc(shortLink(f.market)) + "</small>");
+  const wait = typing();
+  $("go").disabled = true;
   try {
     const q = new URLSearchParams(f); if (!f.outcome) q.delete("outcome");
     const res = await fetch("/api/check?" + q, { headers: { accept: "application/json" } });
     const d = await res.json();
-    if (!res.ok) showError(d); else { last = d; render(d); }
-  } catch { showError({ error: "Couldn't reach Foresyte. Check your connection and try again." }); }
-  $("go").disabled = false; $("go").textContent = "Check it free";
+    wait.remove();
+    if (!res.ok) showError(d); else { last = { ...d, input: f }; render(d); }
+  } catch { showError({ error: "Couldn't reach Foresyte. Check your connection and try again." }, wait); }
+  $("go").disabled = false;
 });
 
-$("scan-btn").addEventListener("click", async () => {
-  const f = fields();
-  $("scan-btn").disabled = true;
+async function deepScanCode(btn) {
+  const f = last?.input || fields();
+  btn.disabled = true;
+  add("me", "Deep scan, please.");
+  const wait = typing();
   try {
     const res = await fetch("/api/code", { method: "POST", headers: { "content-type": "application/json", accept: "application/json" }, body: JSON.stringify({ market: f.market, outcome: last?.outcome || f.outcome || undefined, stake: Number(f.stake) }) });
     const d = await res.json();
-    if (!res.ok) { showError(d); return; }
-    $("code").innerHTML =
-      '<p class="big">' + esc(d.code) + "</p>" +
+    if (!res.ok) { showError(d, wait); return; }
+    wait.className = "msg bot";
+    wait.innerHTML =
+      "<p>Here's your code:</p>" +
+      '<p class="code-big">' + esc(d.code) + "</p>" +
       "<p>Paste this into your PayBox chat. Your agent shows the " + esc(d.price) + " price, you approve it, and the deep scan comes back in the chat.</p>" +
-      '<div class="prompt"><output id="ptext">' + esc(d.prompt) + '</output><button class="pill blue" type="button" id="copy-code">Copy prompt</button></div>' +
+      '<div class="prompt"><output>' + esc(d.prompt) + '</output><button class="pill blue small" type="button">Copy prompt</button></div>' +
       '<p class="meta">The code lasts 24 hours. Agents with their own wallet can pay at ' + esc(d.payUrl) + "</p>";
-    $("code").classList.add("on");
-    $("copy-code").addEventListener("click", (e) => copy(d.prompt, e.currentTarget));
-  } catch { showError({ error: "Couldn't make a code. Try again." }); }
-  finally { $("scan-btn").disabled = false; }
-});
+    wait.querySelector(".prompt button").addEventListener("click", (e) => copy(d.prompt, e.currentTarget));
+    log.scrollTop = log.scrollHeight;
+  } catch { showError({ error: "Couldn't make a code. Try again." }, wait); }
+  finally { btn.disabled = false; }
+}
 
 document.querySelectorAll("[data-copy]").forEach((b) => b.addEventListener("click", () => copy($(b.dataset.copy).textContent, b)));
 

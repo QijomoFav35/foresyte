@@ -33,6 +33,9 @@ app.use((req, res, next) => {
   next();
 });
 
+// The hero picture and any other static files. Cached for a week.
+app.use(express.static(new URL("./public", import.meta.url).pathname, { maxAge: "7d", index: false }));
+
 const wantsHtml = (req: express.Request) => req.query.format !== "json" && req.accepts(["json", "html"]) === "html";
 
 function payUrl(r: ScanRequest | { code: string }): string {
