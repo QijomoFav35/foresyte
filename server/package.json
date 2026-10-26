@@ -1,0 +1,23 @@
+{
+  "name": "foresyte-server",
+  "version": "1.2.0",
+  "private": true,
+  "description": "Foresyte web service: free trap check, request codes, and the paid deep scan over x402 (USDC on Base).",
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "tsx index.ts",
+    "dev": "tsx watch index.ts"
+  },
+  "dependencies": {
+    "@payai/facilitator": "^2.4.5",
+    "@x402/core": "^2.27.0",
+    "@x402/evm": "^2.27.0",
+    "@x402/express": "^2.27.0",
+    "express": "^5.1.0",
+    "tsx": "^4.23.15"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3"
+  }
+}

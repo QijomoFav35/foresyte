@@ -8,10 +8,11 @@ import { registerTrapWatch } from "./tools/trapWatch.ts";
 import { registerCheckUnclaimed } from "./tools/unclaimed.ts";
 import { registerProposeClaim } from "./tools/proposeClaim.ts";
 import { registerPatternSummary } from "./tools/patternSummary.ts";
+import { registerDeepScan } from "./tools/deepScan.ts";
 
 serveStdio(() => {
   const server = new McpServer(
-    { name: "foresyte", version: "1.1.0" },
+    { name: "foresyte", version: "1.2.0" },
     { supportedProtocolVersions: ["2026-07-28"] },
   );
   registerTrapCheck(server);
@@ -19,5 +20,6 @@ serveStdio(() => {
   registerCheckUnclaimed(server);
   registerProposeClaim(server);
   registerPatternSummary(server);
+  registerDeepScan(server);
   return server;
 });

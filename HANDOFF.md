@@ -1,0 +1,56 @@
+# Foresyte: handoff (read this first)
+
+Any model or person continuing this work: start here. Last updated Oct 26, 2026, by Claude.
+
+## What Foresyte is
+A PayBox (MoonPay) plugin that tells you if a Polymarket bet is a trap before you place it, and when to get out.
+Finals: demo video on X tagging @PayBox by **Wed Oct 28**; winners revealed **Fri Oct 30**. 13 finalists, top 3 win.
+
+The two traps (real stories, the whole pitch rests on them):
+1. **Liquidity trap: you can't get out.** The founder's $50 basketball bet: winning at halftime, nobody buying, couldn't cash out, lost it.
+2. **Rules trap: you can be right and still lose.** Strategy (MicroStrategy) "sells any bitcoin by May 31, 2026": sale happened, deadline was a Sunday, 8-K filed Monday June 1, market resolved No. ~$500k lost by one trader, ~$6M total. Site glitched, no buyers near the end.
+
+## State of the code
+- `main` = v1.1.0 (commit 5c3c4e4), live on PayBox.
+- Branch **`v1.2-plain-english`** = everything below (v1.2.0). Merge to main once `pnpm test` passes.
+
+| Piece | File | Status |
+| --- | --- | --- |
+| trap_check (before you buy) | src/tools/trapCheck.ts, src/lib/traps.ts | Done, plain English |
+| trap_watch (while you hold) | src/tools/trapWatch.ts | Done, plain English |
+| 3-day exit-window rule | src/lib/traps.ts + src/lib/plain.ts | Done: rules or liquidity risk within 3 days of the end = HIGH_RISK, "Get out now" |
+| Plain-English layer | src/lib/plain.ts | Done: "This is a trap." / "Be careful." / "Looks safe at this size." + "What to do:" |
+| Deep scan logic (paid) | src/lib/deepScan.ts | Done: exit ladder, biggest bet you can get out of, sell-by date, other side, numbered plan |
+| Request codes FSY-XXXXXX | src/lib/codes.ts | Done |
+| deep_scan plugin tool | src/tools/deepScan.ts | Done: returns x402 proposal (0.25 USDC, Base). **FORESYTE_URL must match the Render URL** |
+| Web server | server/ (index.ts, scan.ts, page.ts, store.ts, config.ts) | Written, **not yet run** (no npm access where it was written) |
+| Render setup | render.yaml | Written |
+| check_unclaimed / propose_claim / pattern_summary | src/tools/ | From v1.1.0. Polymarket now auto-claims, so unclaimed is out of the pitch |
+
+Unit tests: 60 pass (`node --test test/*.test.ts`). All math is in pure functions in src/lib (no npm dependencies), shared by the plugin and the server.
+
+## How payment works (x402, confirmed)
+Copied from TrueBill (github.com/big14way/truebill), a PayBox finalist tested end to end on Base mainnet:
+Express 5 + `@x402/express` v2, exact scheme, `@payai/facilitator`, USDC on Base (eip155:8453). No API keys.
+1. Page: paste link → free check → "Get a deep scan" → code FSY-XXXXXX + prompt "Use the Foresyte plugin to run a deep scan with code FSY-XXXXXX."
+2. Person pastes prompt in PayBox chat → plugin `deep_scan` returns x402 proposal → PayBox shows $0.25 → person approves → paid GET /api/deep-scan → report.
+3. Agents with their own wallet call GET /api/deep-scan directly (402 → pay → 200).
+A guard before the paywall refuses bad codes or links for free, so nobody pays for a scan that can't run.
+
+## Next steps, in order
+1. On the founder's PC (Ubuntu/WSL, ~/foresyte): `git fetch origin && git checkout v1.2-plain-english && pnpm install && pnpm test`. Fix any typecheck error.
+2. Run the server locally: `cd server && npm install && PUBLIC_URL=http://localhost:3000 PAY_TO=<base address> npm start`, open http://localhost:3000, paste a live Polymarket link. Fix anything broken.
+3. Deploy: Render → New → Blueprint → this repo. Set PUBLIC_URL (the onrender.com URL) and PAY_TO. Starter plan ($7/mo).
+4. Set `FORESYTE_URL` in src/tools/deepScan.ts to that URL; `pnpm test`; upload dist/plugin.mjs to developer.paybox.sh; allowlist gamma-api.polymarket.com, clob.polymarket.com, data-api.polymarket.com **and the Render host**; Submit Project → Enable.
+5. Three real paid deep scans from PayBox (needs ~$2 USDC on Base in the PayBox wallet). Their tx hashes show at /api/proof: this is the on-chain proof.
+6. README rewrite (proof first, like Roster Finance), then the 90 s video, post on X tagging @PayBox by Wed Oct 28.
+Later, if time: The Desk (paid topic scan: 10 worst traps + 10 safest markets in a topic), Trap Index number.
+
+## Design (page)
+Spotify-inspired: pure black, #181818 panels, white text, Polymarket blue #3D6BFF as the one accent, red #F3424B only for "This is a trap.", amber #F5A623 for "Be careful.". Font Figtree, very bold tight headlines. The hero is the live check; the verdict appears in huge type. Founder may send his own colours: swap the CSS variables at the top of server/page.ts.
+
+## Founder preferences
+- Decisive, ready-to-use files. No long question lists, no hedging, no pivoting away from the agreed plan.
+- Everything a person reads must be plain English a 10-year-old understands. Agents get exact numbers in structuredContent.
+- Always end a session with commit + push; GitHub is the checkpoint.
+- Benchmark: Stocklana (Solana) winner Roster Finance: one real pain, worst case shown first, proof for every claim, honest limits.
