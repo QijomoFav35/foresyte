@@ -76,7 +76,26 @@ img{display:block;max-width:100%}
 .chat{background:var(--panel);border-radius:var(--r-md);display:flex;flex-direction:column;overflow:hidden}
 .chat-head{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line);font-size:14px;color:var(--muted)}
 .chat-head b{color:#fff;font-size:15px}
-.chat-head .live{width:7px;height:7px;border-radius:50%;background:#3ecf8e}
+.chat-head .live{display:inline-block;width:7px;height:7px;border-radius:50%;background:#3ecf8e;margin-right:6px;vertical-align:1px}
+.av{flex:none;width:28px;height:28px;border-radius:50%;background:#4d7bff;color:#fff;display:grid;place-items:center;font:700 12px/1 Montserrat,sans-serif}
+.av.big{width:38px;height:38px;font-size:15px}
+.who-head{display:grid;gap:2px;margin-right:auto}
+.who-head b{font-size:15px;color:#fff}.who-head span{font-size:12.5px;color:var(--muted)}
+.free{font:700 11px/1 Montserrat,sans-serif;letter-spacing:.08em;color:#4d7bff;border:1px solid rgba(77,123,255,.5);border-radius:999px;padding:6px 10px}
+.line{display:flex;gap:10px;align-items:flex-end}
+.line.me{justify-content:flex-end}
+.stack{display:grid;gap:6px;min-width:0;max-width:min(100%,600px)}
+.line.me .stack{justify-items:end;max-width:85%}
+.who{font-size:12px;color:var(--muted);padding:0 4px}.who b{color:#d6dcea;font-weight:600;margin-right:6px}
+.line .msg{max-width:100%}
+.checks{margin:8px 0 0 18px;display:grid;gap:4px;color:#c4cbdb;font-size:15px}
+.quick{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px}
+.quick button{all:unset;cursor:pointer;font:600 13.5px/1 Montserrat,sans-serif;color:#9db4ff;border:1px solid rgba(77,123,255,.45);border-radius:999px;padding:9px 13px}
+.quick button:hover{background:rgba(77,123,255,.12)}
+.quick button:focus-visible{outline:2px solid #9db4ff;outline-offset:2px}
+.tag-l{font:600 12px/1 Montserrat,sans-serif;color:var(--muted);margin-bottom:10px}
+.why-l{font:600 12px/1 Montserrat,sans-serif;color:var(--muted);margin-top:16px}
+.why-l + .why{margin-top:8px}
 .log{display:flex;flex-direction:column;gap:14px;padding:18px;min-height:200px;max-height:min(55vh,520px);overflow-y:auto;overscroll-behavior:contain;scroll-behavior:smooth}
 .msg{max-width:100%;border-radius:18px;padding:14px 16px;animation:rise .3s ease-out}
 @keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
@@ -100,7 +119,8 @@ img{display:block;max-width:100%}
 .facts div{background:var(--panel);border-radius:var(--r-sm);padding:10px 12px}
 .facts b{display:block;font-size:clamp(20px,4vw,24px);font-weight:700;letter-spacing:-.03em}
 .facts span{color:var(--muted);font-size:13px;line-height:1.35;display:block}
-.todo{margin-top:14px;font-weight:700}
+.todo{margin-top:14px;font-weight:600;background:rgba(77,123,255,.1);border-left:3px solid #4d7bff;border-radius:6px;padding:11px 13px;color:#fff}
+.todo b{display:block;font-size:12px;color:#9db4ff;margin-bottom:3px}
 .meta{color:var(--muted);font-size:13.5px;margin-top:8px;overflow-wrap:anywhere}
 .offer{margin-top:16px;padding-top:14px;border-top:1px solid #333;display:grid;gap:10px}
 .offer p{color:var(--soft);font-size:15px}
@@ -128,7 +148,7 @@ img{display:block;max-width:100%}
 
 .chat{background:#000;border:1px solid rgba(77,123,255,.45);box-shadow:none}
 .chat-head{border-color:var(--line)}
-.msg.bot{background:#15151a;border:1px solid var(--line)}
+.msg.bot{background:#0b0e18;border:1px solid rgba(77,123,255,.2)}
 .facts div{background:#0d0d10;border:1px solid var(--line)}
 .facts b{font-size:clamp(18px,3.4vw,22px)}
 .facts div{border-top:3px solid var(--line-hi)}
@@ -271,12 +291,19 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
   </div>
 
   <div class="chat" id="try">
-    <div class="chat-head"><span class="live" aria-hidden="true"></span><b>Foresyte</b><span>free, live data</span></div>
+    <div class="chat-head">
+      <span class="av big" aria-hidden="true">F</span>
+      <div class="who-head"><b>Foresyte</b><span><i class="live"></i>Online, reads live Polymarket data</span></div>
+      <span class="free">Free</span>
+    </div>
     <div class="log" id="log" aria-live="polite">
-      <div class="msg bot intro">
-        <p>Drop a Polymarket link and your amount, I'll check</p>
-        <ul><li>if you can get your money back out</li><li>the price you'd really pay at your amount</li><li>if the rules can make you lose even when you're right</li></ul>
-      </div>
+      <div class="line bot"><span class="av" aria-hidden="true">F</span><div class="stack"><span class="who"><b>Foresyte</b></span>
+        <div class="msg bot">Hi, paste a Polymarket link and tell me how much you'd put in</div>
+        <div class="msg bot">I'll check three things for you
+          <ul class="checks"><li>Can you get your money back out</li><li>The price you'd really pay at your amount</li><li>Can the rules make you lose even when you're right</li></ul>
+        </div>
+        <div class="quick"><button type="button" data-fill="Is this a trap? $50 on Yes ">Is this a trap? $50 on Yes</button><button type="button" data-fill="Check $250 on No ">Check $250 on No</button></div>
+      </div></div>
     </div>
     <form class="composer" id="check" autocomplete="off">
       <div class="ask">
@@ -431,12 +458,17 @@ function fields() {
 }
 
 function add(cls, html) {
-  const el = document.createElement("div");
-  el.className = "msg " + cls;
-  el.innerHTML = html;
-  log.appendChild(el);
+  const me = cls.startsWith("me");
+  const time = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  const line = document.createElement("div");
+  line.className = "line " + (me ? "me" : "bot");
+  line.innerHTML = (me ? "" : '<span class="av" aria-hidden="true">F</span>') +
+    '<div class="stack"><span class="who">' + (me ? "You " : "<b>Foresyte</b>") + time + '</span><div class="msg ' + cls + '"></div></div>';
+  const bubble = line.querySelector(".msg");
+  bubble.innerHTML = html;
+  log.appendChild(line);
   log.scrollTop = log.scrollHeight;
-  return el;
+  return bubble;
 }
 function typing() { return add("bot typing", "<i></i><i></i><i></i>"); }
 function shortLink(u) { const t = u.replace("https://", "").replace("http://", "").replace("www.", ""); return t.length > 60 ? t.slice(0, 60) + "..." : t; }
@@ -451,15 +483,16 @@ function verdictHtml(d) {
   const buyersTone = n.buyersNearPriceUsdc < stake ? "bad" : n.buyersNearPriceUsdc < stake * 2 ? "meh" : "ok";
   const slip = n.fillPriceCents && n.shownPriceCents ? n.fillPriceCents / n.shownPriceCents - 1 : null;
   const priceTone = slip == null ? "bad" : slip > 0.15 ? "bad" : slip > 0.05 ? "meh" : "ok";
-  return '<p class="verdict ' + tone[d.level] + '">' + esc(d.verdict) + "</p>" +
+  return '<p class="tag-l">Verdict for $' + esc(d.stakeUsdc) + " on " + esc(d.outcome) + "</p>" +
+    '<p class="verdict ' + tone[d.level] + '">' + esc(d.verdict) + "</p>" +
     '<p class="worst">' + esc(worst) + "</p>" +
-    (why ? '<ul class="why">' + why + "</ul>" : "") +
     '<div class="facts num">' +
       '<div class="' + backTone + '"><b>' + money(d.numbers.sellBackNowUsdc) + "</b><span>back if you sell right away</span></div>" +
       '<div class="' + buyersTone + '"><b>' + money(d.numbers.buyersNearPriceUsdc) + "</b><span>of buyers near the price</span></div>" +
       '<div class="' + priceTone + '"><b>' + fill + "</b><span>your real price (shown " + (d.numbers.shownPriceCents ?? "n/a") + "¢)</span></div>" +
     "</div>" +
-    '<p class="todo">What to do: ' + esc(d.whatToDo) + "</p>" +
+    (why ? '<p class="why-l">Why</p><ul class="why">' + why + "</ul>" : "") +
+    '<p class="todo"><b>What to do</b>' + esc(d.whatToDo) + "</p>" +
     '<p class="meta">' + esc(d.market.question) + "<br>Decided by " + esc(d.rules.decidedBy) + (d.rules.deadline ? ", ends " + esc(d.rules.deadline) : "") + "</p>" +
     '<div class="offer"><p>Want the full plan? Your money back at every amount, the biggest bet you can still exit and the last day to sell</p>' +
     '<button class="pill blue small" type="button" data-scan>Get a deep scan for ${price}</button></div>';
@@ -501,12 +534,15 @@ $("check").addEventListener("submit", async (e) => {
     const q = new URLSearchParams({ market: f.market, stake: f.stake }); if (f.outcome) q.set("outcome", f.outcome);
     const res = await fetch("/api/check?" + q, { headers: { accept: "application/json" } });
     const d = await res.json();
-    wait.remove();
+    wait.closest(".line").remove();
     if (!res.ok) showError(d); else { last = { ...d, input: f }; render(d); }
   } catch { showError({ error: "Couldn't reach Foresyte, check your connection and try again" }, wait); }
   $("go").disabled = false;
 });
 
+document.querySelectorAll("[data-fill]").forEach((b) => b.addEventListener("click", () => {
+  $("q").value = b.dataset.fill; $("q").focus();
+}));
 $("q").addEventListener("keydown", (e) => {
   if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); $("check").requestSubmit(); }
 });
