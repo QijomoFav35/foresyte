@@ -1,0 +1,61 @@
+// Smoke test for a running Foresyte server. No wallet needed, nothing is paid.
+// Usage: npm run smoke -- http://localhost:3000 "<a live Polymarket market link>"
+// Checks: health, free check, request code, the x402 402 challenge (price, network, payTo), and that bad requests are refused before the paywall.
+
+const base = (process.argv[2] || "http://localhost:3000").replace(/\/+$/, "");
+const market = process.argv[3];
+let failed = 0;
+
+function ok(name: string, cond: boolean, detail = "") {
+  console.log(`${cond ? "PASS" : "FAIL"}  ${name}${detail ? `  (${detail})` : ""}`);
+  if (!cond) failed++;
+}
+
+async function get(path: string, init?: RequestInit) {
+  const res = await fetch(base + path, { headers: { accept: "application/json" }, ...init });
+  let body: any = null;
+  try { body = await res.json(); } catch {}
+  return { res, body };
+}
+
+const h = await get("/health");
+ok("health answers", h.res.ok && h.body?.ok === true, h.body?.network);
+
+const page = await fetch(base + "/", { headers: { accept: "text/html" } });
+ok("page serves HTML", page.ok && (await page.text()).includes("Is this bet a trap?"));
+
+const bad = await get("/api/deep-scan?code=FSY-ZZZZZZ");
+ok("unknown code refused for free (404, not 402)", bad.res.status === 404);
+const head = await fetch(base + "/api/deep-scan?code=FSY-ZZZZZZ", { method: "POST" });
+ok("non-GET refused (405)", head.status === 405);
+
+if (!market) {
+  console.log("\nSkipping live checks: pass a live Polymarket link as the second argument.");
+} else {
+  const q = new URLSearchParams({ market, stake: "50" });
+  const c = await get(`/api/check?${q}`);
+  ok("free check returns a verdict", c.res.ok && typeof c.body?.verdict === "string", c.body?.verdict ?? c.body?.error);
+  if (c.res.ok) console.log(`      ${c.body.headline}\n      What to do: ${c.body.whatToDo}`);
+
+  const code = await get("/api/code", { method: "POST", headers: { "content-type": "application/json", accept: "application/json" }, body: JSON.stringify({ market, stake: 50 }) });
+  ok("request code created", code.res.status === 201 && /^FSY-[A-Z2-9]{6}$/.test(code.body?.code ?? ""), code.body?.code ?? code.body?.error);
+
+  if (code.body?.code) {
+    const lookup = await get(`/api/code/${code.body.code}`);
+    ok("code lookup works", lookup.res.ok && lookup.body?.request?.stakeUsdc === 50);
+
+    const paid = await fetch(code.body.payUrl, { headers: { accept: "application/json" } });
+    ok("deep scan asks for payment (402)", paid.status === 402, `HTTP ${paid.status}`);
+    const header = paid.headers.get("payment-required");
+    let challenge: any = null;
+    try { challenge = header ? JSON.parse(Buffer.from(header, "base64").toString("utf8")) : await paid.json(); } catch {}
+    const accept = challenge?.accepts?.[0];
+    ok("402 names the exact scheme", accept?.scheme === "exact", accept?.scheme);
+    ok("402 is on Base", typeof accept?.network === "string" && accept.network.startsWith("eip155:"), accept?.network);
+    ok("402 price is 0.25 USDC (250000)", String(accept?.amount ?? accept?.maxAmountRequired) === "250000", String(accept?.amount ?? accept?.maxAmountRequired));
+    ok("402 pays your PAY_TO address", typeof accept?.payTo === "string" && accept.payTo.startsWith("0x"), accept?.payTo);
+  }
+}
+
+console.log(failed ? `\n${failed} check(s) failed.` : "\nAll checks passed.");
+process.exit(failed ? 1 : 0);

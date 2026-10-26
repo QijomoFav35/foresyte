@@ -40,6 +40,8 @@ A guard before the paywall refuses bad codes or links for free, so nobody pays f
 ## Next steps, in order
 1. On the founder's PC (Ubuntu/WSL, ~/foresyte): `git fetch origin && git checkout v1.2-plain-english && pnpm install && pnpm test`. Fix any typecheck error.
 2. Run the server locally: `cd server && npm install && PUBLIC_URL=http://localhost:3000 PAY_TO=<base address> npm start`, open http://localhost:3000, paste a live Polymarket link. Fix anything broken.
+   Then in a second terminal: `cd server && npm run smoke -- http://localhost:3000 "<live Polymarket link>"`. It checks the free routes, the request code, and the x402 402 challenge (price 250000, Base, payTo) without paying.
+   Optional full payment test on Base Sepolia (free test USDC from faucet.circle.com): start the server with `NETWORK=testnet`, then `TEST_BUYER_KEY=0x<throwaway test key> npm run buy -- "<payUrl>"`. Also confirm a failed scan (bad market after payment) is NOT settled.
 3. Deploy: Render → New → Blueprint → this repo. Set PUBLIC_URL (the onrender.com URL) and PAY_TO. Starter plan ($7/mo).
 4. Set `FORESYTE_URL` in src/tools/deepScan.ts to that URL; `pnpm test`; upload dist/plugin.mjs to developer.paybox.sh; allowlist gamma-api.polymarket.com, clob.polymarket.com, data-api.polymarket.com **and the Render host**; Submit Project → Enable.
 5. Three real paid deep scans from PayBox (needs ~$2 USDC on Base in the PayBox wallet). Their tx hashes show at /api/proof: this is the on-chain proof.
@@ -47,6 +49,8 @@ A guard before the paywall refuses bad codes or links for free, so nobody pays f
 Later, if time: The Desk (paid topic scan: 10 worst traps + 10 safest markets in a topic), Trap Index number.
 
 ## Design (page)
+Structure follows Roster Finance + LEAPSY: sticky anchor nav, finalist badge, live check in the hero, two problem timelines (what happened vs with Foresyte), 4-step deep-scan flow + free/paid cards, comparison table, agent endpoints + copy prompt, live proof ledger from /api/proof, FAQ (all claims live here), dated sources, closing line. Mobile first; breakpoints at 640px and 900px.
+
 Spotify-inspired: pure black, #181818 panels, white text, Polymarket blue #3D6BFF as the one accent, red #F3424B only for "This is a trap.", amber #F5A623 for "Be careful.". Font Figtree, very bold tight headlines. The hero is the live check; the verdict appears in huge type. Founder may send his own colours: swap the CSS variables at the top of server/page.ts.
 
 ## Founder preferences
