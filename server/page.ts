@@ -71,7 +71,7 @@ h1{font-weight:900;font-size:clamp(44px,12vw,104px);line-height:.92;letter-spaci
 .chat-head{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line);font-size:14px;color:var(--muted)}
 .chat-head b{color:#fff;font-size:15px}
 .chat-head .live{width:8px;height:8px;border-radius:50%;background:#3ecf8e;box-shadow:0 0 0 4px rgba(62,207,142,.15)}
-.log{display:flex;flex-direction:column;gap:14px;padding:18px;min-height:280px;max-height:min(68vh,620px);overflow-y:auto;overscroll-behavior:contain;scroll-behavior:smooth}
+.log{display:flex;flex-direction:column;gap:14px;padding:18px;min-height:200px;max-height:min(55vh,520px);overflow-y:auto;overscroll-behavior:contain;scroll-behavior:smooth}
 .msg{max-width:100%;border-radius:18px;padding:14px 16px;animation:rise .3s ease-out}
 @keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .msg.bot{background:var(--raised);align-self:flex-start;border-bottom-left-radius:6px}
@@ -106,15 +106,18 @@ h1{font-weight:900;font-size:clamp(44px,12vw,104px);line-height:.92;letter-spaci
 .prompt{display:grid;gap:10px;margin-top:12px}
 .prompt output{background:var(--black);border-radius:var(--r-sm);padding:12px 14px;font-weight:600;overflow-wrap:anywhere}
 .composer{border-top:1px solid var(--line);padding:12px;display:grid;gap:10px;background:var(--panel)}
-.composer .link{position:relative}
-.composer input{width:100%;background:var(--raised);border:1px solid transparent;color:#fff;border-radius:var(--r-pill);padding:12px 16px;font:500 16px Figtree,sans-serif;min-height:48px}
-.composer input::placeholder{color:#7d7d7d}
-.composer input:focus{border-color:var(--blue);outline:none}
-.opts{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end}
-.opts label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:0 0 4px 14px}
-.send{width:48px;height:48px;border-radius:50%;border:0;background:var(--blue);color:#fff;display:grid;place-items:center;cursor:pointer;transition:background .12s}
+.ask{display:flex;align-items:flex-end;gap:8px;background:var(--raised);border:1px solid #3a3a3a;border-radius:22px;padding:8px 8px 8px 16px;transition:border-color .12s}
+.ask:focus-within{border-color:var(--blue)}
+.ask textarea{flex:1;min-width:0;background:transparent;border:0;outline:none;resize:none;color:#fff;font:500 16px/1.45 Figtree,sans-serif;padding:7px 0;max-height:160px}
+.ask textarea::placeholder{color:#8a8a8a}
+.send{flex:none;width:42px;height:42px;border-radius:50%;border:0;background:var(--blue);color:#fff;display:grid;place-items:center;cursor:pointer;transition:background .12s}
 .send:hover{background:#5179ff}.send:disabled{opacity:.5;cursor:wait}
 .send svg{width:20px;height:20px}
+.chips{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:0 6px;font-size:13px;color:var(--muted)}
+.chips label{display:flex;align-items:center;gap:6px;font-weight:600}
+.chips input{width:76px;background:var(--raised);border:1px solid transparent;color:#fff;border-radius:var(--r-pill);padding:6px 10px;font:600 14px Figtree,sans-serif;min-height:34px}
+.chips input:focus{border-color:var(--blue);outline:none}
+.chips span{margin-left:auto}
 .hint{color:var(--muted);font-size:13px;margin:10px 4px 0}
 
 /* sections */
@@ -243,7 +246,6 @@ footer .founder{color:#fff;font-weight:700;font-size:16px;margin-bottom:8px}
 @media (min-width:640px){
   .facts{grid-template-columns:repeat(3,1fr)}
   .prompt{grid-template-columns:1fr auto}
-  .opts{grid-template-columns:160px 160px auto}
   .offer{grid-template-columns:1fr auto;align-items:center}
   .offer .pill{justify-self:end}
   .msg{max-width:92%}
@@ -253,9 +255,6 @@ footer .founder{color:#fff;font-weight:700;font-size:16px;margin-bottom:8px}
   .hero-top{grid-template-columns:1fr 1.05fr;align-items:center;gap:40px}
   .hero-art{order:2;aspect-ratio:1/1}
   .hero-art img{object-position:36% 40%}
-  .composer{grid-template-columns:1fr auto;align-items:end;padding:14px}
-  .composer .link input{margin-top:0}
-  .opts{grid-template-columns:120px 120px auto}
   .log{padding:22px}
 }
 </style>
@@ -294,11 +293,15 @@ footer .founder{color:#fff;font-weight:700;font-size:16px;margin-bottom:8px}
       </div>
     </div>
     <form class="composer" id="check" autocomplete="off">
-      <div class="link"><label class="sr" for="m">Polymarket link</label><input id="m" name="market" required inputmode="url" placeholder="Paste a Polymarket link"></div>
-      <div class="opts">
-        <div><label for="o">You'd buy</label><input id="o" name="outcome" placeholder="Yes"></div>
-        <div><label for="s">Amount in $</label><input id="s" name="stake" type="number" min="1" step="1" value="50" inputmode="numeric"></div>
+      <div class="ask">
+        <label class="sr" for="q">Ask Foresyte</label>
+        <textarea id="q" name="q" rows="2" required placeholder="Paste a Polymarket link, or ask: Is this a trap? $50 on Yes https://polymarket.com/event/..."></textarea>
         <button class="send" id="go" type="submit" aria-label="Check it"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7"/></svg></button>
+      </div>
+      <div class="chips">
+        <label>Amount $<input id="s" name="stake" type="number" min="1" step="1" value="50" inputmode="numeric"></label>
+        <label>You'd buy<input id="o" name="outcome" placeholder="Yes"></label>
+        <span>Press Enter to send</span>
       </div>
     </form>
   </div>
@@ -454,7 +457,19 @@ const tone = { HIGH_RISK: "trap", CAUTION: "careful", CLEAR: "safe" };
 let last = null;
 const log = $("log");
 
-function fields() { return { market: $("m").value.trim(), outcome: $("o").value.trim(), stake: $("s").value || "50" }; }
+// Read the message like a chat: find the link, an amount ($50, 50 usd) and Yes/No. Words in the message win over the small fields.
+function fields() {
+  const text = $("q").value.trim();
+  const link = (text.match(/https?:\\/\\/[^\\s]+/i) || [])[0] || (text.match(/\\b[a-z0-9]+(?:-[a-z0-9]+){2,}\\b/i) || [])[0] || "";
+  const amt = text.match(/\\$\\s?(\\d[\\d,]*(?:\\.\\d+)?)/) || text.match(/(\\d[\\d,]*(?:\\.\\d+)?)\\s?(?:usd|usdc|dollars?)\\b/i);
+  const side = text.match(/\\bon\\s+(yes|no)\\b/i) || text.match(/\\b(yes|no)\\b/i);
+  return {
+    text,
+    market: link.replace(/[).,]+$/, ""),
+    outcome: side ? side[1][0].toUpperCase() + side[1].slice(1).toLowerCase() : $("o").value.trim(),
+    stake: amt ? amt[1].replace(/,/g, "") : ($("s").value || "50"),
+  };
+}
 
 function add(cls, html) {
   const el = document.createElement("div");
@@ -499,7 +514,7 @@ function showError(d, el) {
   el = el || add("bot", "");
   el.className = "msg bot";
   el.innerHTML = errorHtml(d);
-  el.querySelectorAll("[data-slug]").forEach((b) => b.addEventListener("click", () => { $("m").value = b.dataset.slug; $("check").requestSubmit(); }));
+  el.querySelectorAll("[data-slug]").forEach((b) => b.addEventListener("click", () => { $("q").value = b.dataset.slug + " $" + ($("s").value || "50"); $("check").requestSubmit(); }));
   log.scrollTop = log.scrollHeight;
 }
 
@@ -511,12 +526,14 @@ async function copy(text, btn) {
 $("check").addEventListener("submit", async (e) => {
   e.preventDefault();
   const f = fields();
-  if (!f.market) return;
-  add("me", "Is this a trap? $" + esc(f.stake) + " on " + esc(f.outcome || "the first outcome") + "<small>" + esc(shortLink(f.market)) + "</small>");
+  if (!f.text) return;
+  add("me", esc(f.text.replace(f.market, "").trim() || "Is this a trap?") + (f.market ? "<small>" + esc(shortLink(f.market)) + "</small>" : ""));
+  $("q").value = "";
+  if (!f.market) { showError({ error: "Paste a Polymarket link in your message so I know which market to check." }); return; }
   const wait = typing();
   $("go").disabled = true;
   try {
-    const q = new URLSearchParams(f); if (!f.outcome) q.delete("outcome");
+    const q = new URLSearchParams({ market: f.market, stake: f.stake }); if (f.outcome) q.set("outcome", f.outcome);
     const res = await fetch("/api/check?" + q, { headers: { accept: "application/json" } });
     const d = await res.json();
     wait.remove();
@@ -524,6 +541,11 @@ $("check").addEventListener("submit", async (e) => {
   } catch { showError({ error: "Couldn't reach Foresyte. Check your connection and try again." }, wait); }
   $("go").disabled = false;
 });
+
+$("q").addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); $("check").requestSubmit(); }
+});
+$("q").addEventListener("input", (e) => { const t = e.currentTarget; t.style.height = "auto"; t.style.height = Math.min(t.scrollHeight, 160) + "px"; });
 
 async function deepScanCode(btn) {
   const f = last?.input || fields();
