@@ -149,6 +149,7 @@ section h2{color:var(--text)}
 .p1,.p2,.p3,.p4,.p5,.p6{--bg:#000;--panel:#05070d;--text:#fff;--accent:#4d7bff;--soft:#d6dcea;--muted:#8d97ad;--line:rgba(77,123,255,.18);--line-hi:rgba(77,123,255,.4)}
 section + section{border-top:1px solid rgba(77,123,255,.14)}
 h2{font-weight:700;font-size:clamp(28px,5vw,40px);line-height:1.08;letter-spacing:-.02em;max-width:20ch}
+h2.one{max-width:none;white-space:nowrap;font-size:clamp(19px,5.6vw,40px)}
 .sub{color:var(--muted);margin-top:10px;max-width:56ch}
 .card{border:1px solid var(--line);border-radius:var(--r-md);background:var(--panel);padding:22px}
 .grid2{display:grid;gap:14px;margin-top:28px}
@@ -323,7 +324,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
 </section>
 
 <section id="pricing" class="p3">
-  <h2>Check free, go deep for ${price}</h2>
+  <h2 class="one">Check free, go deep for ${price}</h2>
   <div class="grid2">
     <div class="card tier">
       <h3>Quick check</h3>
