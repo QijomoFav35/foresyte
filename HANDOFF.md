@@ -63,3 +63,7 @@ Spotify-inspired: pure black, #181818 panels, white text, Polymarket blue #3D6BF
 - Page: founder's engraved bird-and-flute picture is the hero image (server/public/hero-*.webp). The free check is a chat box: one message field that reads plain sentences ("Is this a trap? $50 on Yes <link>"), verdict comes back as a reply, deep-scan code as the next reply.
 - Possible palette switch to the picture's peacock blue + antique gold: founder hasn't decided.
 - Still to do, in order: run `pnpm test` and the server on the founder's PC, `npm run smoke`, testnet `npm run buy`, deploy on Render, set FORESYTE_URL, point paybox-plugin.json sample call at trap_check, upload plugin 1.2.0, 3 real paid scans, README, video by Wed Oct 28.
+
+## Trap case cards (Oct 26, 22:45), all verified against news sources
+Strategy bitcoin ($3.8M cleared, 1,838 accounts; The Block), Zelenskyy suit ($237M volume; Decrypt), Ukraine minerals ($7M, ~25% of UMA votes one holder; Cointelegraph), Paris temperature ($1.4M over two days; Boston Globe/CNN), oversized whale ($2.07M in 35 days, 51% win rate; Coinpedia).
+Left out: "BTC daily markers secret rule edit" (no source found), unclaimed winnings (Polymarket auto-claims now). No trader names on the site. No full stops in page copy (founder's style).

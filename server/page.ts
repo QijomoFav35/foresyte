@@ -181,8 +181,17 @@ h2{font-weight:700;font-size:clamp(28px,5vw,40px);line-height:1.08;letter-spacin
 .steps li:before{content:counter(s);grid-row:span 2;width:32px;height:32px;border-radius:50%;border:1px solid var(--accent);background:rgba(77,123,255,.12);display:grid;place-items:center;font:700 14px Montserrat,sans-serif;color:var(--accent)}
 .steps b{font-size:17px}.steps span{color:var(--muted);font-size:15px}
 
+.cases{display:grid;gap:14px;margin-top:28px}
+.trap{display:flex;flex-direction:column}
+.trap .where{font-size:13px;color:var(--muted);font-weight:600}
+.trap .big{margin:10px 0 8px}
+.trap h3{margin-bottom:10px}
+.trap .cap{line-height:1.6}
+.trap .fix{flex:1}
+.src-l{display:inline-block;margin-top:14px;font-size:13px;font-weight:600;color:var(--accent);text-decoration:none}
+.src-l:hover{text-decoration:underline}
 .trap h3{font-size:20px;font-weight:700;letter-spacing:-.02em}
-.trap .big{font-size:clamp(40px,8vw,56px);font-weight:700;line-height:1;margin:18px 0 6px;color:var(--trap)}
+.trap .big{font-size:clamp(40px,8vw,56px);font-weight:700;line-height:1;color:var(--trap)}
 .trap .cap{color:var(--muted);font-size:15px}
 .trap .fix{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);color:var(--soft);font-size:15.5px}
 .trap .fix b{color:var(--accent)}
@@ -252,6 +261,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
   .offer .pill{justify-self:end}
   .msg{max-width:92%}
   .grid2{grid-template-columns:1fr 1fr}
+  .cases{grid-template-columns:1fr 1fr}
   .tcol + .tcol h2{margin-top:0}
   .steps{grid-template-columns:repeat(2,1fr);gap:22px}
   .stats{grid-template-columns:repeat(4,1fr)}
@@ -267,6 +277,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
   .hero{padding:140px 0 56px}
   .log{padding:22px}
   .steps{grid-template-columns:repeat(4,1fr)}
+  .cases{grid-template-columns:repeat(3,1fr)}
   .card{padding:28px}
 }
 </style>
@@ -337,18 +348,47 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
 
 <section id="traps" class="p2">
   <h2>Previously Recorded Traps</h2>
-  <div class="grid2">
+  <p class="sub">Real Polymarket losses from the last two years, and what Foresyte checks for each</p>
+  <div class="cases">
     <article class="card trap">
-      <h3>You can't get out</h3>
-      <p class="big num">$8</p>
-      <p class="cap">of buyers on a game someone put $50 on, winning at halftime with no way to sell, then lost it all</p>
-      <p class="fix"><b>Foresyte</b> checks the buyers at your amount before you bet and warns you when they start running out</p>
+      <p class="where">Strategy bitcoin market, 2026</p>
+      <p class="big num">$3.8M</p>
+      <h3>Right, and still lost</h3>
+      <p class="cap">Strategy sold 32 BTC between May 26 and 31, but the filing only came out on Monday June 1, and a note added to the rules that day said confirmation after the deadline didn't count<br>Yes went from 81% to almost zero, 1,838 accounts were cleared and one trader reports losing $500K</p>
+      <p class="fix"><b>Foresyte</b> flags a market decided by what gets reported by a Sunday deadline as a trap, warns when a note is added to the rules, and gives you a last day to sell</p>
+      <a class="src-l" href="https://theblock.co/post/403312/polymarket-faces-backlash-strategy-bitcoin-sale">Source: The Block &#8599;</a>
     </article>
     <article class="card trap">
-      <h3>You can be right and still lose</h3>
-      <p class="big num">$500K</p>
-      <p class="cap">lost on the Strategy bitcoin market, the sale happened but the filing landed after a Sunday deadline</p>
-      <p class="fix"><b>Foresyte</b> flags markets decided by a report instead of the event and gives you a last day to sell</p>
+      <p class="where">Zelenskyy suit market, 2025</p>
+      <p class="big num">$237M</p>
+      <h3>A word nobody defined</h3>
+      <p class="cap">The market asked if he'd be seen wearing a suit before July and settled on a consensus of credible reporting<br>He wore a black jacket and matching trousers at a NATO event, many outlets called it a suit, a first Yes was challenged and the vote settled No</p>
+      <p class="fix"><b>Foresyte</b> flags markets settled by credible reporting instead of the event itself, and any note added after the market opened</p>
+      <a class="src-l" href="https://decrypt.co/329210/polymarket-rules-no-237m-bet-zelenskyys">Source: Decrypt &#8599;</a>
+    </article>
+    <article class="card trap">
+      <p class="where">Ukraine minerals market, 2025</p>
+      <p class="big num">$7M</p>
+      <h3>A quarter of the votes, one voter</h3>
+      <p class="cap">The market resolved Yes even though no deal had been accepted<br>A researcher traced about 25% of the deciding votes to one large holder across three accounts, and no refunds were given</p>
+      <p class="fix"><b>Foresyte</b> flags markets where a reporting judgment decides the result, the kind a vote can swing, so you size them knowing that</p>
+      <a class="src-l" href="https://cointelegraph.com/news/polymarket-trump-ukraine-bet-whale-governance-attack">Source: Cointelegraph &#8599;</a>
+    </article>
+    <article class="card trap">
+      <p class="where">Paris temperature markets, 2026</p>
+      <p class="big num">$1.4M</p>
+      <h3>One sensor, one spike</h3>
+      <p class="cap">On two April evenings the airport sensor that settled the daily high jumped several degrees for under an hour and set the day's high<br>Météo-France filed a police complaint and Polymarket moved the market to another airport</p>
+      <p class="fix"><b>Foresyte</b> shows your worst case in dollars and, in the deep scan, what you'd get back at every amount, so a single reading never takes more than you planned to risk</p>
+      <a class="src-l" href="https://www.bostonglobe.com/2026/04/24/world/france-investigates-temperature-spikes-that-led-big-payouts-polymarket/">Source: Boston Globe &#8599;</a>
+    </article>
+    <article class="card trap">
+      <p class="where">One whale's 35 days, 2026</p>
+      <p class="big num">$2.07M</p>
+      <h3>Right half the time, down $2M</h3>
+      <p class="cap">A whale won 51% of 53 trades yet lost $2.07M, with an average stake near $400K and a worst single loss of $1.58M<br>Winning half the time isn't enough when you pay high prices for small upside</p>
+      <p class="fix"><b>Foresyte</b> compares what a wallet paid with how often it actually won at that price, flags bigger bets after losses, and the deep scan shows the biggest bet you can still get out of</p>
+      <a class="src-l" href="https://coinpedia.org/crypto-live-news/polymarket-trader-loses-2m-despite-winning-bets/">Source: Coinpedia &#8599;</a>
     </article>
   </div>
 </section>
