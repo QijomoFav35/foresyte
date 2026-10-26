@@ -13,7 +13,7 @@ test("thin in-play game: HIGH_RISK, worst case first", () => {
   assert.equal(r.flags[0]?.check, "exit_thinner_than_stake");
   assert.match(r.flags[0]?.message ?? "", /Only \$8 of buyers/);
   assert.match(r.headline, /^This is a trap\. If you bet \$50 on Lakers and want out right away, you'd get back \$8\./);
-  assert.match(r.headline, /99\.0 of 119\.0 shares\) would find no buyer/);
+  assert.match(r.headline, /99\.0 of 119\.0 contracts\) would find no buyer/);
   assert.match(r.whatToDo, /You may not be able to sell/);
 });
 
@@ -63,7 +63,7 @@ test("a stake larger than all asks cannot fill", () => {
 test("holding: buyers thinning out says cash out now", () => {
   const h = assessHolding(position({}), { bids: [{ price: 0.55, size: 30 }], asks: [] }, null, "https://polymarket.com/event/x");
   assert.equal(h.level, "HIGH_RISK");
-  assert.match(h.flags[0]?.message ?? "", /Cash out now while you still can: only 30\.0 of your 100\.0 shares/);
+  assert.match(h.flags[0]?.message ?? "", /Cash out now while you still can: only 30\.0 of your 100\.0 contracts/);
   assert.ok(!h.notes.some((n) => n.includes("lock in")), "no lock-in when selling now loses money");
 });
 
@@ -155,6 +155,6 @@ test("whale: a $500,000 position with $40,000 of buyers can't get out", () => {
   const book = { bids: [{ price: 0.55, size: 50_000 }, { price: 0.45, size: 30_000 }], asks: [] };
   const h = assessHolding(whale, book, strategyMay31, "x", NOW_MAY_29_2026);
   assert.equal(h.level, "HIGH_RISK");
-  assert.match(h.flags.map((f) => f.message).join(" "), /only 80,000 of your 1,000,000 shares can be sold right now, for about \$41,000/);
+  assert.match(h.flags.map((f) => f.message).join(" "), /only 80,000 of your 1,000,000 contracts can be sold right now, for about \$41,000/);
   assert.equal(Math.round(h.unsoldShares), 920_000);
 });

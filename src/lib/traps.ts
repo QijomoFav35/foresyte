@@ -86,7 +86,7 @@ export function assessEntry(
     flags.push({
       level: "CAUTION",
       check: "wide_spread",
-      message: `The buy price and the sell price are ${cents(gap)} apart, so you start ${cents(gap)} down on every share.`,
+      message: `The buy price and the sell price are ${cents(gap)} apart, so you start ${cents(gap)} down on every contract.`,
     });
   }
 
@@ -112,7 +112,7 @@ export function assessEntry(
   let headline: string;
   if (fill.shares > 0) {
     headline = `${VERDICT[level]} If you bet ${usd(fill.spent)} on ${outcome} and want out right away, you'd get back ${usd(sale.proceeds)}.`;
-    if (sale.unsoldShares > 0.05) headline += ` Part of your bet (${shareCount(sale.unsoldShares)} of ${shareCount(fill.shares)} shares) would find no buyer at all.`;
+    if (sale.unsoldShares > 0.05) headline += ` Part of your bet (${shareCount(sale.unsoldShares)} of ${shareCount(fill.shares)} contracts) would find no buyer at all.`;
   } else {
     headline = `${VERDICT[level]} A ${usd(stakeUsdc)} bet on ${outcome} can't be placed: nobody is selling.`;
   }
@@ -182,7 +182,7 @@ export function assessHolding(
       flags.push({
         level: "HIGH_RISK",
         check: "exit_closing",
-        message: `Buyers are thinning out. Cash out now while you still can: only ${shareCount(sale.soldShares)} of your ${shareCount(position.size)} shares can be sold right now, for about ${usd(sale.proceeds)}.`,
+        message: `Buyers are thinning out. Cash out now while you still can: only ${shareCount(sale.soldShares)} of your ${shareCount(position.size)} contracts can be sold right now, for about ${usd(sale.proceeds)}.`,
       });
     } else if (displayed > 0 && sale.proceeds < displayed * (1 - EXIT_DISCOUNT_LIMIT)) {
       thin = true;
