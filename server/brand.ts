@@ -19,12 +19,7 @@ const EYE = `<path d="M37 53Q50 42.5 63 53Q50 63.5 37 53Z" fill="none" stroke-wi
 
 // The full seal, for the nav and the brand kit
 export function seal(size: number, id = "s"): string {
-  return `<svg width="${size}" height="${size}" viewBox="0 0 100 100" fill="${GOLD}" stroke="${GOLD}" aria-hidden="true">
-<defs><mask id="${id}m"><rect width="100" height="100" fill="#fff"/><polygon points="${TRI}" fill="#000" stroke="#000" stroke-width="5"/></mask></defs>
-<circle cx="50" cy="50" r="47" fill="none" stroke-width="2.6"/><circle cx="50" cy="50" r="36" fill="none" stroke-width="1.4"/>
-<g stroke="none">${dots}</g>
-<path d="${rays}" stroke-width="1.1" mask="url(#${id}m)"/>
-<polygon points="${TRI}" fill="none" stroke-width="3.2" stroke-linejoin="round"/>${EYE}</svg>`;
+  return `<svg width="${size}" height="${size}" viewBox="0 0 100 100" fill="${GOLD}" stroke="${GOLD}" aria-hidden="true"><defs><mask id="${id}m"><rect width="100" height="100" fill="#fff"/><polygon points="${TRI}" fill="#000" stroke="#000" stroke-width="5"/></mask></defs><circle cx="50" cy="50" r="47" fill="none" stroke-width="2.6"/><circle cx="50" cy="50" r="36" fill="none" stroke-width="1.4"/><g stroke="none">${dots}</g><path d="${rays}" stroke-width="1.1" mask="url(#${id}m)"/><polygon points="${TRI}" fill="none" stroke-width="3.2" stroke-linejoin="round"/>${EYE}</svg>`;
 }
 
 // Tab icon: the seal on navy
