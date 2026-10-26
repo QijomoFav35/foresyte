@@ -169,7 +169,8 @@ section h2{color:var(--text)}
 .p1,.p2,.p3,.p4,.p5,.p6{--bg:#000;--panel:#05070d;--text:#fff;--accent:#4d7bff;--soft:#d6dcea;--muted:#8d97ad;--line:rgba(77,123,255,.18);--line-hi:rgba(77,123,255,.4)}
 section + section{border-top:1px solid rgba(77,123,255,.14)}
 h2{font-weight:700;font-size:clamp(28px,5vw,40px);line-height:1.08;letter-spacing:-.02em;max-width:20ch}
-.tcol{display:grid;gap:16px;align-content:start}
+.tcol{display:grid;gap:16px;grid-template-rows:auto 1fr}
+.tcol .tier{height:100%}
 .tcol h2{max-width:none}
 .tcol + .tcol h2{margin-top:20px}
 .sub{color:var(--muted);margin-top:10px;max-width:56ch}
@@ -406,7 +407,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
     <div class="card tier paid">
       <h3>Deep scan</h3>
       <p class="cost num">${price}</p>
-      <ul><li>Your money back at $10 to $25,000</li><li>The biggest bet you can still get out of</li><li>The last day to sell</li><li>The other side of the market</li><li>A step-by-step plan</li></ul>
+      <ul><li>The biggest bet you can still get out of</li><li>The last day to sell</li><li>The other side of the market</li><li>A step-by-step plan</li></ul>
     </div>
     </div>
   </div>
