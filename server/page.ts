@@ -19,7 +19,7 @@ export function landingPage(o: { publicUrl: string; price: string; chain: string
 <meta property="og:description" content="Know the worst case in dollars before you bet. Free check, $0.25 deep scan, inside your PayBox agent.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=IBM+Plex+Mono:wght@500;600&family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,500&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
 :root{
   --black:#000;--panel:#0b0b0d;--raised:#141418;--line:rgba(255,255,255,.09);--line-hi:rgba(255,255,255,.16);
@@ -30,14 +30,14 @@ export function landingPage(o: { publicUrl: string; price: string; chain: string
   --gutter:20px;--section:88px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{background:var(--black);color:var(--text);font:400 17px/1.6 "IBM Plex Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased;scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html{background:var(--black);color:var(--text);font:400 17px/1.6 Montserrat,system-ui,sans-serif;-webkit-font-smoothing:antialiased;scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{background:var(--black);min-height:100vh;overflow-x:hidden}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
 a{color:inherit}
 img{display:block;max-width:100%}
 :focus-visible{outline:2px solid var(--blue-hi);outline-offset:3px;border-radius:4px}
 .wrap{width:100%;max-width:1080px;margin:0 auto;padding:0 var(--gutter)}
-.num{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.num{font-variant-numeric:tabular-nums}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 /* nav */
@@ -50,7 +50,7 @@ img{display:block;max-width:100%}
 .links a{text-decoration:none}.links a:hover{color:#fff}
 
 /* buttons */
-.pill{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:var(--r-pill);font:700 15px/1 "IBM Plex Sans",sans-serif;padding:14px 22px;min-height:46px;cursor:pointer;text-decoration:none;transition:background .15s,box-shadow .15s;white-space:nowrap}
+.pill{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:var(--r-pill);font:700 15px/1 Montserrat,sans-serif;padding:14px 22px;min-height:46px;cursor:pointer;text-decoration:none;transition:background .15s,box-shadow .15s;white-space:nowrap}
 .pill.blue{background:var(--blue);color:#fff}
 .pill.blue:hover{background:#5179ff}
 .pill.ghost{background:transparent;color:#fff;box-shadow:inset 0 0 0 1px var(--line-hi)}.pill.ghost:hover{box-shadow:inset 0 0 0 1px #fff}
@@ -114,14 +114,14 @@ img{display:block;max-width:100%}
 .composer{border-top:1px solid var(--line);padding:12px;display:grid;gap:10px;background:var(--panel)}
 .ask{display:flex;align-items:flex-end;gap:8px;background:var(--raised);border:1px solid #3a3a3a;border-radius:22px;padding:8px 8px 8px 16px;transition:border-color .12s}
 .ask:focus-within{border-color:var(--blue)}
-.ask textarea{flex:1;min-width:0;background:transparent;border:0;outline:none;resize:none;color:#fff;font:500 16px/1.45 "IBM Plex Sans",sans-serif;padding:7px 0;max-height:160px}
+.ask textarea{flex:1;min-width:0;background:transparent;border:0;outline:none;resize:none;color:#fff;font:500 16px/1.45 Montserrat,sans-serif;padding:7px 0;max-height:160px}
 .ask textarea::placeholder{color:#8a8a8a}
 .send{flex:none;width:42px;height:42px;border-radius:50%;border:0;background:var(--blue);color:#fff;display:grid;place-items:center;cursor:pointer;transition:background .12s}
 .send:hover{background:#5179ff}.send:disabled{opacity:.5;cursor:wait}
 .send svg{width:20px;height:20px}
 .chips{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:0 6px;font-size:13px;color:var(--muted)}
 .chips label{display:flex;align-items:center;gap:6px;font-weight:600}
-.chips input{width:76px;background:var(--raised);border:1px solid transparent;color:#fff;border-radius:var(--r-pill);padding:6px 10px;font:600 14px "IBM Plex Sans",sans-serif;min-height:34px}
+.chips input{width:76px;background:var(--raised);border:1px solid transparent;color:#fff;border-radius:var(--r-pill);padding:6px 10px;font:600 14px Montserrat,sans-serif;min-height:34px}
 .chips input:focus{border-color:var(--blue);outline:none}
 .chips span{margin-left:auto}
 .hint{color:var(--muted);font-size:13px;margin:10px 4px 0}
@@ -130,9 +130,8 @@ img{display:block;max-width:100%}
 .chat-head{border-color:var(--line)}
 .msg.bot{background:#15151a;border:1px solid var(--line)}
 .facts div{background:#0d0d10;border:1px solid var(--line)}
-.facts b{font-family:var(--mono);font-size:clamp(18px,3.4vw,22px)}
+.facts b{font-size:clamp(18px,3.4vw,22px)}
 .facts div{border-top:3px solid var(--line-hi)}
-.facts,.facts b,.facts span{font-family:Montserrat,"IBM Plex Sans",sans-serif;letter-spacing:0}
 .facts b{font-weight:700}
 .facts .bad{border-top-color:var(--trap);background:rgba(255,77,90,.08)}.facts .bad b{color:var(--trap)}
 .facts .meh{border-top-color:var(--careful);background:rgba(245,166,35,.08)}.facts .meh b{color:var(--careful)}
@@ -151,7 +150,7 @@ h2{font-weight:700;font-size:clamp(28px,5vw,40px);line-height:1.08;letter-spacin
 
 .steps{display:grid;gap:10px;margin-top:28px;list-style:none;counter-reset:s}
 .steps li{counter-increment:s;display:grid;grid-template-columns:36px 1fr;gap:4px 14px;align-items:start}
-.steps li:before{content:counter(s);grid-row:span 2;width:32px;height:32px;border-radius:50%;border:1px solid var(--line-hi);display:grid;place-items:center;font:700 14px var(--mono);color:var(--blue-hi)}
+.steps li:before{content:counter(s);grid-row:span 2;width:32px;height:32px;border-radius:50%;border:1px solid var(--line-hi);display:grid;place-items:center;font:700 14px Montserrat,sans-serif;color:var(--blue-hi)}
 .steps b{font-size:17px}.steps span{color:var(--muted);font-size:15px}
 
 .trap h3{font-size:20px;font-weight:700;letter-spacing:-.02em}
@@ -204,7 +203,7 @@ pre{background:#060608;border:1px solid var(--line);border-radius:var(--r-sm);pa
 .faq details{border-bottom:1px solid var(--line)}
 .faq summary{list-style:none;cursor:pointer;padding:18px 36px 18px 0;font-weight:600;font-size:17px;position:relative}
 .faq summary::-webkit-details-marker{display:none}
-.faq summary:after{content:"+";position:absolute;right:4px;top:50%;transform:translateY(-50%);font:500 22px var(--mono);color:var(--muted)}
+.faq summary:after{content:"+";position:absolute;right:4px;top:50%;transform:translateY(-50%);font:500 22px Montserrat,sans-serif;color:var(--muted)}
 .faq details[open] summary:after{content:"−"}
 .faq details p{color:var(--soft);padding:0 0 18px;max-width:64ch;font-size:16px}
 
