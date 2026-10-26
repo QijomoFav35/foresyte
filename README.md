@@ -1,10 +1,10 @@
 # Foresyte
 
-**Know if a Polymarket market is a trap before you buy, and when to get out while you can.**
+**Know if a Polymarket bet is a trap before you place it.**
 
 `43` unit tests on fixtures · `5` tools · read-only by default · no keys, ever · a PayBox plugin
 
-Foresyte is a PayBox plugin. Ask your agent "is this market a trap?" and Foresyte reads Polymarket's live order book and rules, computes every number, and answers CLEAR, CAUTION or HIGH_RISK with the worst case first. The agent explains; Foresyte computes. It never places, blocks or signs a bet.
+Ask your agent "is this a trap?" and Foresyte reads Polymarket's live order book and rules, computes every number, and answers CLEAR, CAUTION or HIGH_RISK. Every answer follows one rule: **the worst case comes first, in dollars.** What you'd actually get back, and how you could lose even if you're right, before you click. The agent explains; Foresyte computes. It never places, blocks or signs a bet.
 
 ---
 
@@ -16,15 +16,18 @@ More than 70% of Polymarket users lose money, and 0.1% of accounts took 67% of t
 
 **The rules trap: you can be right and still lose.** Polymarket's "MicroStrategy sells any Bitcoin by May 31?" market. Strategy sold 32 BTC between May 26 and May 31, 2026. May 31 was a Sunday. The 8-K disclosing the sale was filed Monday, June 1. Polymarket added a note that confirmation outside the timeframe does not count, and the market resolved No. One trader says he lost about $500,000; two traders have sued.
 
-## 2. The tools
+## 2. One promise, proved at every moment
 
-| Tool | When | What it tells you |
+| Moment | Tool | How it proves the promise |
 | --- | --- | --- |
-| `trap_check` | Before you buy | At your stake: what you'd actually pay per share, what you'd get back selling right away, how many buyers sit near the price, the spread, and whether the rules pay on the event or on a report due by a weekend or holiday deadline |
-| `trap_watch` | While you hold | For your five largest open positions: paper P&L, what selling everything now actually returns, whether buyers are thinning out, deadline risk, and when locking in profit beats waiting |
-| `pattern_summary` | Any time | A plain-English review of your own history across every kind of market: where you make and lose money by topic, by entry price compared with the odds you paid, and by market type; habits like chasing losses or riding losers to zero; your biggest leaks ranked by dollars; and a short plan tied to those numbers |
-| `check_unclaimed` | After it resolves | Winning positions you haven't claimed, the total, and the link to claim each one |
-| `propose_claim` | After it resolves | An unsigned claim for PayBox approval, only when the winnings sit in the PayBox wallet itself |
+| Before you bet | `trap_check` | It is the promise. At your stake: what you'd actually pay per share, what you'd get back selling right away, how many buyers sit near the price, the spread, and whether the rules pay on the event or on a report due by a weekend or holiday deadline |
+| While you hold | `trap_watch` | A trap can close after you buy. For your five largest open positions: what selling everything now actually returns, whether buyers are thinning out, deadline risk, and when locking in profit beats waiting |
+| Your history | `pattern_summary` | What traps have already cost you. A plain-English review across every kind of market: results by topic, by entry price against the odds you paid, and by market type; habits like chasing losses; your biggest leaks ranked by dollars; and a short plan tied to those numbers |
+| After it resolves | `check_unclaimed` | The last trap: money you won and never collected, with the link to claim each one |
+
+`propose_claim` prepares a one-tap claim for PayBox approval when the winnings sit in the PayBox wallet itself.
+
+**Next: The Desk.** Every live market in a topic run through the same checks, sold to agents for $0.25 per call over x402: today's 10 safest liquid markets and 10 worst traps, each with its worst case in dollars. Not live yet.
 
 ## 3. How each verdict is decided
 
