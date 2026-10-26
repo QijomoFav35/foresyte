@@ -64,7 +64,7 @@ img{display:block;max-width:100%}
 .hero:after{content:"";position:absolute;inset:0;z-index:-1;background:rgba(0,0,0,.66)}
 .hero-in{width:100%;max-width:820px;margin:0 auto;padding:0 var(--gutter);text-align:center}
 .say h1{font-weight:700;font-size:clamp(38px,7.6vw,80px);line-height:1.02;letter-spacing:-.025em;color:#fff}
-.say h1 em{font-style:italic;font-weight:500;color:#fff;letter-spacing:-.02em}
+.say h1 em{font-style:italic;font-weight:500;color:#6f95ff;letter-spacing:-.02em}
 .say p{color:#e6e6ea;font-size:clamp(17px,2.2vw,20px);max-width:44ch;margin:20px auto 0}
 .btns{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:28px}
 .pill.white{background:#fff;color:#000}.pill.white:hover{background:#e8e8e8}
@@ -126,7 +126,7 @@ img{display:block;max-width:100%}
 .chips span{margin-left:auto}
 .hint{color:var(--muted);font-size:13px;margin:10px 4px 0}
 
-.chat{background:#0b0b0d;border:1px solid #26262b;box-shadow:none}
+.chat{background:#000;border:1px solid rgba(77,123,255,.45);box-shadow:none}
 .chat-head{border-color:var(--line)}
 .msg.bot{background:#15151a;border:1px solid var(--line)}
 .facts div{background:#0d0d10;border:1px solid var(--line)}
@@ -145,14 +145,9 @@ img{display:block;max-width:100%}
 section{padding:var(--section) 0;scroll-margin-top:64px;position:relative;background:var(--bg);color:var(--text);box-shadow:0 0 0 100vmax var(--bg);clip-path:inset(0 -100vmax)}
 section h2{color:var(--text)}
 /* palette: one shade per section, darkest at the top */
-.p1,.p2,.p3,.p4,.p5,.p6{--text:#fff;--accent:#9db4ff;--soft:#dce3ef;--muted:#98a9c4;--line:rgba(152,169,196,.16);--line-hi:rgba(152,169,196,.3)}
-/* one colour, #111522, getting a touch lighter each section */
-.p1{--bg:#111522;--panel:#181d2d}
-.p2{--bg:#131828;--panel:#1a2031}
-.p3{--bg:#151b2c;--panel:#1c2335}
-.p4{--bg:#171e30;--panel:#1e2639}
-.p5{--bg:#192034;--panel:#20293d}
-.p6{--bg:#1b2337;--panel:#222b40}
+/* black and blue: every section black, blue for borders, highlights and actions */
+.p1,.p2,.p3,.p4,.p5,.p6{--bg:#000;--panel:#05070d;--text:#fff;--accent:#4d7bff;--soft:#d6dcea;--muted:#8d97ad;--line:rgba(77,123,255,.18);--line-hi:rgba(77,123,255,.4)}
+section + section{border-top:1px solid rgba(77,123,255,.14)}
 h2{font-weight:700;font-size:clamp(28px,5vw,40px);line-height:1.08;letter-spacing:-.02em;max-width:20ch}
 .sub{color:var(--muted);margin-top:10px;max-width:56ch}
 .card{border:1px solid var(--line);border-radius:var(--r-md);background:var(--panel);padding:22px}
@@ -160,7 +155,7 @@ h2{font-weight:700;font-size:clamp(28px,5vw,40px);line-height:1.08;letter-spacin
 
 .steps{display:grid;gap:10px;margin-top:28px;list-style:none;counter-reset:s}
 .steps li{counter-increment:s;display:grid;grid-template-columns:36px 1fr;gap:4px 14px;align-items:start}
-.steps li:before{content:counter(s);grid-row:span 2;width:32px;height:32px;border-radius:50%;border:1px solid var(--line-hi);display:grid;place-items:center;font:700 14px Montserrat,sans-serif;color:var(--accent)}
+.steps li:before{content:counter(s);grid-row:span 2;width:32px;height:32px;border-radius:50%;border:1px solid var(--accent);background:rgba(77,123,255,.12);display:grid;place-items:center;font:700 14px Montserrat,sans-serif;color:var(--accent)}
 .steps b{font-size:17px}.steps span{color:var(--muted);font-size:15px}
 
 .trap h3{font-size:20px;font-weight:700;letter-spacing:-.02em}
@@ -174,7 +169,7 @@ h2{font-weight:700;font-size:clamp(28px,5vw,40px);line-height:1.08;letter-spacin
 .tier ul{list-style:none;display:grid;gap:8px;color:var(--soft);font-size:15.5px}
 .tier li{padding-left:22px;position:relative}
 .tier li:before{content:"";position:absolute;left:2px;top:.55em;width:9px;height:5px;border-left:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(-45deg)}
-.tier.paid{border-color:var(--accent);background:var(--panel)}
+.tier.paid{border-color:var(--accent);background:#060b1f}
 .tier.paid .cost{color:var(--accent)}
 
 .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:28px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--panel)}
@@ -188,7 +183,7 @@ table{border-collapse:collapse;width:100%}
 
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-top:28px;background:var(--line);border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
 .stats div{background:var(--panel);padding:18px 20px}
-.stats b{display:block;font-size:clamp(26px,5vw,34px);font-weight:700}
+.stats b{color:var(--accent);display:block;font-size:clamp(26px,5vw,34px);font-weight:700}
 .stats span{color:var(--muted);font-size:14px}
 .ledger{margin-top:14px}
 .ledger .row{display:grid;gap:2px;padding:12px 0;border-top:1px solid var(--line);font-size:15px}
@@ -271,7 +266,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
   <div class="say">
     <h1>Know if a contract is a trap <em>before you place it</em></h1>
     <p>Paste any Polymarket link and see the worst case in dollars, plus when to get out</p>
-    <div class="btns"><a class="pill white" href="#try">Check a market</a><a class="pill ghost" href="https://app.paybox.sh/plugins">Add to PayBox &#8599;</a></div>
+    <div class="btns"><a class="pill blue" href="#try">Check a market</a><a class="pill ghost" href="https://app.paybox.sh/plugins">Add to PayBox &#8599;</a></div>
   </div>
 
   <div class="chat" id="try">
