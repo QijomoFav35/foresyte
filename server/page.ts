@@ -105,6 +105,8 @@ img{display:block;max-width:100%}
 .more summary::-webkit-details-marker{display:none}
 .more summary:after{content:"+";font-weight:500}
 .more[open] summary:after{content:"−"}
+.disc{margin-top:10px;font-size:12.5px;color:var(--muted)}
+footer .legal{display:block;margin-top:10px;font-size:12.5px;line-height:1.6;max-width:80ch}
 .next{margin-top:12px;font-size:13.5px;color:var(--muted)}
 .log{display:flex;flex-direction:column;gap:14px;padding:18px;min-height:200px;max-height:min(55vh,520px);overflow-y:auto;overscroll-behavior:contain;scroll-behavior:smooth}
 .msg{max-width:100%;border-radius:18px;padding:14px 16px;animation:rise .3s ease-out}
@@ -326,11 +328,12 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
     </div>
     <div class="log" id="log" aria-live="polite">
       <div class="line bot"><span class="av" aria-hidden="true">${seal(22, "av")}</span><div class="stack"><span class="who"><b>Foresyte</b></span>
-        <div class="msg bot">Hi, paste a Polymarket link and tell me how much you'd put in</div>
-        <div class="msg bot">I'll check three things for you
-          <ul class="checks"><li>Can you get your money back out</li><li>The price you'd really pay at your amount</li><li>Can the rules make you lose even when you're right</li></ul>
+        <div class="msg bot">Hi, paste a Polymarket link and an amount to analyze, and I'll show how that market behaves at that size</div>
+        <div class="msg bot">The analysis covers three things
+          <ul class="checks"><li>How many buyers sit near the price at that size</li><li>The real fill price versus the price shown</li><li>Whether the rules settle on the event or on a report</li></ul>
+          <p class="disc">Analysis only, not financial advice</p>
         </div>
-        <div class="quick"><button type="button" data-fill="Is this a trap? $50 on Yes ">Is this a trap? $50 on Yes</button><button type="button" data-fill="Check $250 on No ">Check $250 on No</button></div>
+        <div class="quick"><button type="button" data-fill="Analyze $50 on Yes ">Analyze $50 on Yes</button><button type="button" data-fill="Analyze $250 on No ">Analyze $250 on No</button></div>
       </div></div>
     </div>
     <form class="composer" id="check" autocomplete="off">
@@ -481,7 +484,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
         <div><h4>Build</h4><ul><li><a href="/brand-kit">Brand Kit</a></li><li><a href="https://github.com/QijomoFav35/foresyte">GitHub</a></li></ul></div>
       </div>
     </div>
-    <p class="fine"><span class="flogo">${seal(22, "foot")}<span class="word">FORESYTE</span></span>&copy; 2026 Foresyte. All rights reserved</p>
+    <p class="fine"><span class="flogo">${seal(22, "foot")}<span class="word">FORESYTE</span></span>&copy; 2026 Foresyte. All rights reserved<br><span class="legal">Analysis only, not financial advice. Prediction markets carry substantial risk, including total loss of your stake. Foresyte reads public market data only; it does not place trades, hold funds or ask for keys, and is not affiliated with Polymarket</span></p>
   </div>
 </footer>
 
@@ -555,7 +558,7 @@ function verdictHtml(d) {
       '<div class="' + buyersTone + '"><b>' + money(d.numbers.buyersNearPriceUsdc) + "</b><span>of buyers near the price</span></div>" +
       '<div class="' + priceTone + '"><b>' + fill + "</b><span>your real price (shown " + (d.numbers.shownPriceCents ?? "n/a") + "¢)</span></div>" +
     "</div>" +
-    '<p class="todo"><b>What to do</b>' + esc(d.whatToDo) + "</p>" +
+    '<p class="todo"><b>Risk read</b>' + esc(d.whatToDo) + "</p>" +
     '<details class="more"><summary>Details</summary>' +
       (why ? '<p class="why-l">Why</p><ul class="why">' + why + "</ul>" : "") +
       '<p class="meta">' + esc(d.market.question) + "<br>Decided by " + esc(d.rules.decidedBy) + (d.rules.deadline ? ", ends " + esc(d.rules.deadline) : "") + "</p>" +
