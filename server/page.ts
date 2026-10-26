@@ -58,19 +58,22 @@ img{display:block;max-width:100%}
 .pill:disabled{opacity:.55;cursor:wait}
 
 /* hero */
-.hero{position:relative;isolation:isolate;width:100vw;margin-left:calc(50% - 50vw);min-height:100svh;display:flex;align-items:flex-end;padding:96px 0 28px;overflow:hidden}
+.hero{position:relative;isolation:isolate;width:100vw;margin-left:calc(50% - 50vw);min-height:100svh;display:flex;align-items:center;padding:112px 0 40px;overflow:hidden}
 .hero-bg{position:absolute;inset:0;z-index:-2}
 .hero-bg img{width:100%;height:100%;object-fit:cover;object-position:45% 35%}
-.hero-in{width:100%;max-width:1240px;margin:0 auto;padding:0 var(--gutter);display:grid;gap:22px;align-items:end}
-.say{max-width:640px}
-.say h1{display:inline;font-weight:900;font-size:clamp(34px,7.4vw,72px);line-height:1.18;letter-spacing:-.045em;background:#000;color:#fff;padding:.02em .22em;box-decoration-break:clone;-webkit-box-decoration-break:clone}
-.say h1 span{color:var(--blue-hi)}
-.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:18px}
-.tags li{list-style:none;background:#000;color:var(--soft);font:500 13px/1 var(--mono);padding:8px 10px;border-radius:4px}
-.tags li b{color:#3ecf8e;font-weight:500}
+.hero:after{content:"";position:absolute;inset:0;z-index:-1;background:rgba(0,0,0,.66)}
+.hero-in{width:100%;max-width:820px;margin:0 auto;padding:0 var(--gutter);text-align:center}
+.say h1{font-weight:800;font-size:clamp(38px,7.6vw,80px);line-height:1.02;letter-spacing:-.045em;color:#fff}
+.say h1 em{font-style:italic;font-weight:500;color:#fff;letter-spacing:-.035em}
+.say p{color:#e6e6ea;font-size:clamp(17px,2.2vw,20px);max-width:44ch;margin:20px auto 0}
+.btns{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:28px}
+.pill.white{background:#fff;color:#000}.pill.white:hover{background:#e8e8e8}
+.hero .chat{margin:44px auto 0;max-width:720px;text-align:left;scroll-margin-top:84px}
+.cue{display:block;margin-top:28px;color:#bdbdc4;font-size:14px;text-decoration:none}
+.cue:hover{color:#fff}
 
 /* the chat box */
-.chat{margin-top:0;background:var(--panel);border-radius:var(--r-md);display:flex;flex-direction:column;overflow:hidden}
+.chat{background:var(--panel);border-radius:var(--r-md);display:flex;flex-direction:column;overflow:hidden}
 .chat-head{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line);font-size:14px;color:var(--muted)}
 .chat-head b{color:#fff;font-size:15px}
 .chat-head .live{width:7px;height:7px;border-radius:50%;background:#3ecf8e}
@@ -227,9 +230,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
 @media (min-width:900px){
   :root{--section:120px}
   .links{display:flex}
-  .hero{padding:110px 0 40px}
-  .hero-in{grid-template-columns:1fr minmax(380px,460px);gap:40px}
-  .say{align-self:end;padding-bottom:6px}
+  .hero{padding:140px 0 56px}
   .log{padding:22px}
   .steps{grid-template-columns:repeat(4,1fr)}
   .card{padding:28px}
@@ -253,8 +254,9 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
   </picture>
   <div class="hero-in">
   <div class="say">
-    <h1>Know if a Polymarket bet is a <span>trap</span> before you place it</h1>
-    <ul class="tags"><li><b>&#9679;</b> live order books</li><li>free check</li><li>no wallet needed</li><li>works in PayBox</li></ul>
+    <h1>Know if a bet is a trap <em>before you place it</em></h1>
+    <p>Paste any Polymarket link and see the worst case in dollars, plus when to get out</p>
+    <div class="btns"><a class="pill white" href="#try">Check a market</a><a class="pill ghost" href="https://app.paybox.sh/plugins">Add to PayBox &#8599;</a></div>
   </div>
 
   <div class="chat" id="try">
@@ -278,6 +280,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
       </div>
     </form>
   </div>
+  <a class="cue" href="#how">Scroll to see how it works &#8595;</a>
   </div>
 </header>
 
