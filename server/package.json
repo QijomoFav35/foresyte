@@ -2,7 +2,7 @@
   "name": "foresyte-server",
   "version": "1.2.0",
   "private": true,
-  "description": "Foresyte web service: free trap check, request codes, and the paid deep scan over x402 (USDC on Solana).",
+  "description": "Foresyte web service: free trap check, request codes, and the paid deep scan over x402 (USDC on Solana or Base).",
   "type": "module",
   "engines": {
     "node": ">=22"
@@ -19,12 +19,14 @@
     "@x402/express": "^2.27.0",
     "express": "^5.1.0",
     "tsx": "^4.23.15",
-    "@x402/svm": "^2.27.0"
+    "@x402/svm": "^2.27.0",
+    "@x402/evm": "^2.27.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
     "@x402/fetch": "^2.27.0",
     "@solana/kit": "^3.0.0",
-    "@scure/base": "^1.2.6"
+    "@scure/base": "^1.2.6",
+    "viem": "^2.57.2"
   }
 }

@@ -411,7 +411,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
     </div>
     </div>
   </div>
-  <p class="sub">Paid in USDC on ${chain} over x402, approve it in PayBox or let your agent pay from its own wallet</p>
+  <p class="sub">Paid in USDC on ${chain} over x402, Solana by default, approve it in PayBox or let your agent pay from its own wallet</p>
 </section>
 
 <section id="compare" class="p4">
@@ -625,7 +625,7 @@ fetch("/api/proof", { headers: { accept: "application/json" } }).then((r) => r.j
   $("paid-count").textContent = d.scans.length;
   $("ledger").innerHTML = d.scans.slice(0, 10).map((s) =>
     '<div class="row"><b>' + esc(s.market) + "</b><span>" + esc(s.verdict) + " " + new Date(s.at).toLocaleString() + "</span>" +
-    (s.explorer ? '<a href="' + esc(s.explorer) + '">View payment on ${chain}</a>' : "") + "</div>").join("");
+    (s.explorer ? '<a href="' + esc(s.explorer) + '">View payment</a>' : "") + "</div>").join("");
 }).catch(() => {});
 </script>
 </body>

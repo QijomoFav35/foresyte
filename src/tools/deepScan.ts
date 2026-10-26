@@ -8,7 +8,7 @@ import { errorResult, messageOf } from "./common.ts";
 // No network call here: PayBox fetches the live 402 price, shows it to the person, and pays on approval.
 export const FORESYTE_URL = "https://foresyte.onrender.com"; // change to the Render URL after deploy, and allowlist its host
 const PRICE_ATOMIC = "250000"; // 0.25 USDC (6 decimals)
-const SOLANA = "solana:mainnet" as const; // PayBox pays USDC on Solana
+const CHAINS = { solana: "solana:mainnet", base: "eip155:8453" } as const; // USDC on either; Solana is the default
 
 const inputSchema = z
   .object({
@@ -16,6 +16,7 @@ const inputSchema = z
     market: z.string().min(1).max(500).optional().describe("A Polymarket market link, if there is no code."),
     outcome: z.string().min(1).max(120).optional().describe("Outcome they would buy, e.g. Yes or No. Only with market."),
     stakeUsdc: z.number().positive().max(1_000_000).optional().describe("How much they would bet in USDC. Only with market. Defaults to 50."),
+    payWith: z.enum(["solana", "base"]).optional().describe("Pay in USDC on solana (default) or base. Use base only if the person asks or has no USDC on Solana."),
   })
   .strict();
 
@@ -25,14 +26,14 @@ export function registerDeepScan(server: McpServer) {
     {
       title: "Foresyte deep scan (0.25 USDC)",
       description:
-        "Paid, 0.25 USDC on Solana over x402. The full Foresyte report for one Polymarket market: what you'd get back at every bet size, the biggest bet you can still get out of, the last day to sell, the other side, and a numbered plain-English plan. " +
+        "Paid, 0.25 USDC over x402, on Solana by default or Base if the person prefers. The full Foresyte report for one Polymarket market: what you'd get back at every bet size, the biggest bet you can still get out of, the last day to sell, the other side, and a numbered plain-English plan. " +
         "Use it when the person pastes a Foresyte code (FSY-XXXXXX) or asks for a deep scan of a market. Use the free trap_check for a quick verdict. " +
         "This returns a payment proposal; after PayBox pays and the request returns, show the person the 'report' field exactly as written, without rewording or adding numbers.",
       inputSchema,
       outputSchema: x402OutputSchema,
       annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: false, openWorldHint: true },
     },
-    async ({ code, market, outcome, stakeUsdc }) => {
+    async ({ code, market, outcome, stakeUsdc, payWith }) => {
       try {
         let url: string;
         if (code) {
@@ -46,7 +47,7 @@ export function registerDeepScan(server: McpServer) {
         } else {
           return errorResult("Give a Foresyte code (FSY-XXXXXX) or a Polymarket market link.");
         }
-        return proposeX402({ chain: SOLANA, url, maxAmount: PRICE_ATOMIC });
+        return proposeX402({ chain: CHAINS[payWith ?? "solana"], url, maxAmount: PRICE_ATOMIC });
       } catch (error) {
         return errorResult(`Couldn't prepare the deep scan: ${messageOf(error)}`);
       }

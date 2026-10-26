@@ -31,7 +31,7 @@ function sweep() {
 }
 
 // Every paid scan, newest first: the public on-chain proof that people and agents pay for this.
-export type PaidScan = { at: string; market: string; verdict: string; txHash: string | null; payer: string | null };
+export type PaidScan = { at: string; market: string; verdict: string; txHash: string | null; payer: string | null; network: string | null };
 const paid: PaidScan[] = [];
 export function recordPaid(entry: PaidScan) {
   paid.unshift(entry);

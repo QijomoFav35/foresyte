@@ -2,17 +2,18 @@
 //   Free:  GET  /api/check       the trap_check verdict for any Polymarket link (the page's live box uses it)
 //          POST /api/code        turn a link into a request code + a prompt to paste into PayBox
 //          GET  /api/code/:code  what a code asks for, and its pay URL
-//          GET  /api/proof       every paid scan with its Solana transaction
-//   Paid:  GET  /api/deep-scan   the full deep scan, $0.25 USDC on Solana over x402
+//          GET  /api/proof       every paid scan with its transaction on Solana or Base
+//   Paid:  GET  /api/deep-scan   the full deep scan, $0.25 USDC on Solana or Base over x402
 // x402 v2 with @x402/express, exact scheme, USDC on Solana (setup per solana.com x402 docs), PayAI facilitator.
 // The server never holds keys or funds.
 
 import express from "express";
 import { paymentMiddleware, x402ResourceServer } from "@x402/express";
 import { ExactSvmScheme } from "@x402/svm/exact/server";
+import { ExactEvmScheme } from "@x402/evm/exact/server";
 import { HTTPFacilitatorClient } from "@x402/core/server";
 import { facilitator } from "@payai/facilitator";
-import { CAIP2, CHAIN_NAME, EXPLORER_SUFFIX, EXPLORER_TX, FACILITATOR_URL, PAY_TO, PORT, PUBLIC_URL, SCAN_PRICE } from "./config.ts";
+import { BASE, CHAIN_NAME, FACILITATOR_URL, PAY_TO_BASE, PAY_TO_SOLANA, PORT, PUBLIC_URL, SCAN_PRICE, SOLANA, explorerFor } from "./config.ts";
 import { getRequest, paidScans, recordPaid, saveRequest } from "./store.ts";
 import { UserError, fullScan, parseRequest, quickCheck } from "./scan.ts";
 import { agentPrompt, normalizeCode, type ScanRequest } from "../src/lib/codes.ts";
@@ -107,7 +108,7 @@ app.get("/api/code/:code", (req, res) => {
 });
 
 app.get("/api/proof", (_req, res) => {
-  res.json({ network: CHAIN_NAME, scans: paidScans().map((p) => ({ ...p, explorer: p.txHash ? `${EXPLORER_TX}${p.txHash}${EXPLORER_SUFFIX}` : null })) });
+  res.json({ network: CHAIN_NAME, scans: paidScans().map((p) => ({ ...p, explorer: p.txHash ? explorerFor(p.network ?? undefined, p.txHash) : null })) });
 });
 
 // ─────────────── Guard that runs BEFORE the paywall ───────────────
@@ -137,13 +138,20 @@ app.use("/api/deep-scan", (req: WithScan, res, next) => {
 // ───────────────────────── x402 paywall ─────────────────────────
 
 const facilitatorClient = new HTTPFacilitatorClient(FACILITATOR_URL ? { url: FACILITATOR_URL } : facilitator);
-const resourceServer = new x402ResourceServer(facilitatorClient).register(CAIP2, new ExactSvmScheme());
+const resourceServer = new x402ResourceServer(facilitatorClient).register(SOLANA, new ExactSvmScheme());
+if (PAY_TO_BASE) resourceServer.register(BASE, new ExactEvmScheme());
+
+// The 402 lists Solana first, then Base if a Base wallet is set. The payer picks the one it can pay on.
+const accepts = [
+  { scheme: "exact", price: SCAN_PRICE, network: SOLANA, payTo: PAY_TO_SOLANA },
+  ...(PAY_TO_BASE ? [{ scheme: "exact", price: SCAN_PRICE, network: BASE, payTo: PAY_TO_BASE }] : []),
+];
 
 app.use(
   paymentMiddleware(
     {
       "GET /api/deep-scan": {
-        accepts: [{ scheme: "exact", price: SCAN_PRICE, network: CAIP2, payTo: PAY_TO }],
+        accepts,
         description: "Foresyte deep scan: exit ladder, biggest bet you can still get out of, sell-by date and a plain-English plan for one Polymarket market",
         mimeType: "application/json",
       },
@@ -154,7 +162,7 @@ app.use(
 
 // ───────────────────────── Paid handler ─────────────────────────
 
-function decodeSettlement(header: unknown): { transaction?: string; payer?: string } | null {
+function decodeSettlement(header: unknown): { transaction?: string; payer?: string; network?: string } | null {
   if (typeof header !== "string") return null;
   try {
     return JSON.parse(Buffer.from(header, "base64").toString("utf8"));
@@ -178,6 +186,7 @@ app.get("/api/deep-scan", async (req: WithScan, res) => {
         verdict: result.verdict,
         txHash: settle?.transaction ?? null,
         payer: settle?.payer ?? null,
+        network: settle?.network ?? null,
       });
     });
     res.json(result);
@@ -194,5 +203,5 @@ app.use((err: unknown, _req: express.Request, res: express.Response, _next: expr
 });
 
 app.listen(PORT, () => {
-  console.log(`Foresyte listening on ${PORT} | public ${PUBLIC_URL} | ${CHAIN_NAME} (${CAIP2}) | deep scan ${SCAN_PRICE} to ${PAY_TO}`);
+  console.log(`Foresyte listening on ${PORT} | public ${PUBLIC_URL} | deep scan ${SCAN_PRICE} | Solana ${PAY_TO_SOLANA}${PAY_TO_BASE ? ` | Base ${PAY_TO_BASE}` : ""}`);
 });

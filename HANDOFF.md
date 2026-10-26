@@ -75,3 +75,7 @@ x402 now settles USDC on **Solana** (founder's call: PayBox/MoonPay prizes are o
 - Plugin deep_scan proposes `solana:mainnet`, 250000 (0.25 USDC); PayBox's proposeX402 fills the USDC mint.
 - Test: `npm run smoke` (no wallet) then Devnet `npm run buy` with a throwaway Devnet key.
 - Unproven until tested: PayAI facilitator on Solana mainnet (check `https://facilitator.payai.network/supported`). Base path (TrueBill) is the fallback if Solana fails.
+
+## Both networks (Oct 26, 23:25)
+The 402 lists USDC on Solana first and on Base second (only when PAY_TO_BASE is set). Env: PAY_TO_SOLANA (required; PAY_TO also accepted), PAY_TO_BASE (optional).
+Plugin deep_scan takes payWith: "solana" (default) or "base". Proof ledger links Solscan or BaseScan per payment.

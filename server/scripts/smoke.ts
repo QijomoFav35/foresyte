@@ -49,10 +49,13 @@ if (!market) {
     const header = paid.headers.get("payment-required");
     let challenge: any = null;
     try { challenge = header ? JSON.parse(Buffer.from(header, "base64").toString("utf8")) : await paid.json(); } catch {}
-    const accept = challenge?.accepts?.[0];
+    const accept = challenge?.accepts?.find((a: any) => String(a.network).startsWith("solana:"));
+    const base = challenge?.accepts?.find((a: any) => String(a.network).startsWith("eip155:"));
+    console.log(`      networks offered: ${(challenge?.accepts ?? []).map((a: any) => a.network).join(", ")}`);
     ok("402 names the exact scheme", accept?.scheme === "exact", accept?.scheme);
     ok("402 is on Solana", typeof accept?.network === "string" && accept.network.startsWith("solana:"), accept?.network);
     ok("402 price is 0.25 USDC (250000)", String(accept?.amount ?? accept?.maxAmountRequired) === "250000", String(accept?.amount ?? accept?.maxAmountRequired));
+    if (base) ok("Base option pays a 0x address", /^0x[0-9a-fA-F]{40}$/.test(base.payTo ?? ""), base.payTo);
     ok("402 pays a Solana PAY_TO address", typeof accept?.payTo === "string" && /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(accept.payTo), accept?.payTo);
   }
 }

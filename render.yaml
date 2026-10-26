@@ -16,5 +16,7 @@ services:
         value: "$0.25"
       - key: PUBLIC_URL
         sync: false # e.g. https://foresyte.onrender.com
-      - key: PAY_TO
-        sync: false # your Solana wallet address that receives the $0.25 (must hold or have held USDC)
+      - key: PAY_TO_SOLANA
+        sync: false # your Solana wallet that receives the $0.25 (must hold or have held USDC)
+      - key: PAY_TO_BASE
+        sync: false # optional: your Base wallet, to also accept USDC on Base
