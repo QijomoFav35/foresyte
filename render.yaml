@@ -18,5 +18,9 @@ services:
         sync: false # e.g. https://foresyte.onrender.com
       - key: PAY_TO_SOLANA
         sync: false # your Solana wallet that receives the $0.10 (must hold or have held USDC)
+      - key: UPSTASH_REDIS_REST_URL
+        sync: false # optional: free Upstash Redis so codes and the payment log survive restarts
+      - key: UPSTASH_REDIS_REST_TOKEN
+        sync: false
       - key: PAY_TO_BASE
         sync: false # optional: your Base wallet, to also accept USDC on Base

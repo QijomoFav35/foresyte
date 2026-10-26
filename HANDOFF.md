@@ -84,3 +84,9 @@ Plugin deep_scan takes payWith: "solana" (default) or "base". Proof ledger links
 Founder's brand: seal mark (triangle eye, rays, dotted ring), gold #C8A96A, navy #0B1530, ivory #F3EFE6, wordmark in spaced serif caps (Cormorant Garamond).
 server/brand.ts draws the seal and the app icon as SVG; used in nav (horizontal dark lockup), chat avatars, footer, and the favicon.
 /brand-kit page shows the founder's Augur + Seer = Foresyte story image and the logo sheet (server/public/brand-*.webp); linked from nav and footer.
+
+## Edge vs TrueBill and LEAPSY (Oct 27, 00:35)
+Added: optional Upstash Redis persistence for codes and the paid-scan log (UPSTASH_REDIS_REST_URL / _TOKEN, same as TrueBill; memory if unset), per-visitor limit on free routes (FREE_CHECKS_PER_MIN, default 20), 20 s cache for identical free checks.
+Still behind TrueBill on proof: no real mainnet payments yet. Get 3+ real Solana payments through PayBox and show them in the Log section and README.
+Must verify in the real-money test: a scan that fails after payment is NOT settled (pay for a closed market on purpose, check Solscan).
+Optional, LEAPSY-style: a remote /mcp endpoint so any MCP agent can connect without PayBox.

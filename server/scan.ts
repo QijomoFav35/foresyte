@@ -12,8 +12,12 @@ import type { ScanRequest } from "../src/lib/codes.ts";
 const BUDGET_MS = 15_000; // a web request can wait longer than a PayBox plugin call
 
 export class UserError extends Error {
-  constructor(message: string, public readonly status = 400, public readonly options?: Array<{ question: string; slug: string }>) {
+  readonly status: number;
+  readonly options?: Array<{ question: string; slug: string }>;
+  constructor(message: string, status = 400, options?: Array<{ question: string; slug: string }>) {
     super(message);
+    this.status = status;
+    this.options = options;
   }
 }
 
@@ -58,8 +62,22 @@ function marketInfo(market: Market, link: string) {
   return { question: market.question, link, endDate: market.endDate, outcomes: market.outcomes, prices: market.prices };
 }
 
-// Free: the same verdict as trap_check.
-export async function quickCheck(req: ScanRequest) {
+// Free: the same verdict as trap_check. The same market, side and amount within 20 s is served from cache.
+const CACHE_MS = 20_000;
+const cache = new Map<string, { at: number; value: Promise<Awaited<ReturnType<typeof runQuickCheck>>> }>();
+export function quickCheck(req: ScanRequest) {
+  const key = `${req.market}|${req.outcome ?? ""}|${req.stakeUsdc}`;
+  const now = Date.now();
+  const hit = cache.get(key);
+  if (hit && now - hit.at < CACHE_MS) return hit.value;
+  const value = runQuickCheck(req);
+  cache.set(key, { at: now, value });
+  value.catch(() => cache.delete(key)); // never cache a failure
+  if (cache.size > 2000) for (const [k, v] of cache) if (now - v.at > CACHE_MS) cache.delete(k);
+  return value;
+}
+
+async function runQuickCheck(req: ScanRequest) {
   const { market, index, book, link } = await load(req);
   const r = assessEntry(market, index, book, req.stakeUsdc);
   return {

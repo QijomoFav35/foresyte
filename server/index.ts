@@ -14,7 +14,7 @@ import { ExactEvmScheme } from "@x402/evm/exact/server";
 import { HTTPFacilitatorClient } from "@x402/core/server";
 import { facilitator } from "@payai/facilitator";
 import { BASE, CHAIN_NAME, FACILITATOR_URL, PAY_TO_BASE, PAY_TO_SOLANA, PORT, PUBLIC_URL, SCAN_PRICE, SOLANA, explorerFor } from "./config.ts";
-import { getRequest, paidScans, recordPaid, saveRequest } from "./store.ts";
+import { STORE_KIND, getRequest, paidScans, recordPaid, saveRequest } from "./store.ts";
 import { UserError, fullScan, parseRequest, quickCheck } from "./scan.ts";
 import { agentPrompt, normalizeCode, type ScanRequest } from "../src/lib/codes.ts";
 import { landingPage } from "./page.ts";
@@ -37,6 +37,22 @@ app.use((req, res, next) => {
 
 // The hero picture and any other static files. Cached for a week.
 app.use(express.static(new URL("./public", import.meta.url).pathname, { maxAge: "7d", index: false }));
+
+// Free routes are rate limited per visitor so nobody can hammer Polymarket through us
+const hits = new Map<string, { n: number; reset: number }>();
+const FREE_PER_MIN = Number(process.env.FREE_CHECKS_PER_MIN || "20");
+function freeLimit(req: express.Request, res: express.Response, next: express.NextFunction) {
+  const ip = req.ip || "unknown";
+  const now = Date.now();
+  const h = hits.get(ip);
+  if (!h || now > h.reset) hits.set(ip, { n: 1, reset: now + 60_000 });
+  else if (++h.n > FREE_PER_MIN) {
+    res.setHeader("Retry-After", String(Math.ceil((h.reset - now) / 1000)));
+    return res.status(429).json({ error: "Too many checks in a minute, wait a few seconds and try again" });
+  }
+  if (hits.size > 20_000) for (const [k, v] of hits) if (now > v.reset) hits.delete(k);
+  next();
+}
 
 const wantsHtml = (req: express.Request) => req.query.format !== "json" && req.accepts(["json", "html"]) === "html";
 
@@ -78,7 +94,7 @@ app.get("/brand-kit", (_req, res) => res.type("html").send(brandKitPage()));
 
 app.get("/health", (_req, res) => res.json({ ok: true, network: CHAIN_NAME }));
 
-app.get("/api/check", async (req, res) => {
+app.get("/api/check", freeLimit, async (req, res) => {
   try {
     res.json(await quickCheck(parseRequest(req.query)));
   } catch (error) {
@@ -86,11 +102,11 @@ app.get("/api/check", async (req, res) => {
   }
 });
 
-app.post("/api/code", async (req, res) => {
+app.post("/api/code", freeLimit, async (req, res) => {
   try {
     const request = parseRequest(req.body ?? {});
     const preview = await quickCheck(request); // also proves the link works before anyone pays
-    const code = saveRequest({ ...request, market: preview.market.link, outcome: preview.outcome });
+    const code = await saveRequest({ ...request, market: preview.market.link, outcome: preview.outcome });
     res.status(201).json({
       code,
       prompt: agentPrompt(code),
@@ -103,15 +119,15 @@ app.post("/api/code", async (req, res) => {
   }
 });
 
-app.get("/api/code/:code", (req, res) => {
+app.get("/api/code/:code", async (req, res) => {
   const code = normalizeCode(String(req.params.code));
-  const request = code ? getRequest(code) : null;
+  const request = code ? await getRequest(code) : null;
   if (!code || !request) return res.status(404).json({ error: "Unknown or expired code. Make a new one on the Foresyte page." });
   res.json({ code, request, price: SCAN_PRICE, payUrl: payUrl({ code }) });
 });
 
-app.get("/api/proof", (_req, res) => {
-  res.json({ network: CHAIN_NAME, scans: paidScans().map((p) => ({ ...p, explorer: p.txHash ? explorerFor(p.network ?? undefined, p.txHash) : null })) });
+app.get("/api/proof", async (_req, res) => {
+  res.json({ network: CHAIN_NAME, scans: (await paidScans()).map((p) => ({ ...p, explorer: p.txHash ? explorerFor(p.network ?? undefined, p.txHash) : null })) });
 });
 
 // ─────────────── Guard that runs BEFORE the paywall ───────────────
@@ -120,13 +136,13 @@ app.get("/api/proof", (_req, res) => {
 
 type WithScan = express.Request & { scanRequest?: ScanRequest };
 
-app.use("/api/deep-scan", (req: WithScan, res, next) => {
+app.use("/api/deep-scan", async (req: WithScan, res, next) => {
   if (req.method !== "GET") return res.status(405).json({ error: "Use GET" });
   if (req.path !== "/") return res.status(404).json({ error: "Not found" });
   try {
     if (typeof req.query.code === "string") {
       const code = normalizeCode(req.query.code);
-      const request = code ? getRequest(code) : null;
+      const request = code ? await getRequest(code) : null;
       if (!request) return res.status(404).json({ error: "Unknown or expired code. Make a new one on the Foresyte page, or pass market=<link>." });
       req.scanRequest = request;
     } else {
@@ -183,14 +199,14 @@ app.get("/api/deep-scan", async (req: WithScan, res) => {
     res.on("finish", () => {
       if (res.statusCode >= 400) return;
       const settle = decodeSettlement(res.getHeader("payment-response") ?? res.getHeader("x-payment-response"));
-      recordPaid({
+      void recordPaid({
         at: new Date().toISOString(),
         market: result.market.question,
         verdict: result.verdict,
         txHash: settle?.transaction ?? null,
         payer: settle?.payer ?? null,
         network: settle?.network ?? null,
-      });
+      }).catch((e) => console.error("Could not record payment", e));
     });
     res.json(result);
   } catch (error) {
@@ -206,5 +222,5 @@ app.use((err: unknown, _req: express.Request, res: express.Response, _next: expr
 });
 
 app.listen(PORT, () => {
-  console.log(`Foresyte listening on ${PORT} | public ${PUBLIC_URL} | deep scan ${SCAN_PRICE} | Solana ${PAY_TO_SOLANA}${PAY_TO_BASE ? ` | Base ${PAY_TO_BASE}` : ""}`);
+  console.log(`Foresyte listening on ${PORT} | public ${PUBLIC_URL} | deep scan ${SCAN_PRICE} | store ${STORE_KIND} | Solana ${PAY_TO_SOLANA}${PAY_TO_BASE ? ` | Base ${PAY_TO_BASE}` : ""}`);
 });
