@@ -131,6 +131,10 @@ img{display:block;max-width:100%}
 .msg.bot{background:#15151a;border:1px solid var(--line)}
 .facts div{background:#0d0d10;border:1px solid var(--line)}
 .facts b{font-family:var(--mono);font-size:clamp(18px,3.4vw,22px)}
+.facts div{border-top:3px solid var(--line-hi)}
+.facts .bad{border-top-color:var(--trap);background:rgba(255,77,90,.08)}.facts .bad b{color:var(--trap)}
+.facts .meh{border-top-color:var(--careful);background:rgba(245,166,35,.08)}.facts .meh b{color:var(--careful)}
+.facts .ok{border-top-color:#3ecf8e;background:rgba(62,207,142,.07)}.facts .ok b{color:#3ecf8e}
 .code-big{font-family:var(--mono)}
 .composer{background:transparent;border-color:var(--line)}
 .ask{background:#121216;border-color:var(--line-hi)}
@@ -434,13 +438,19 @@ function verdictHtml(d) {
   const worst = d.headline.replace(d.verdict, "").trim();
   const why = d.reasons.map((r) => '<li class="' + (r.level === "HIGH_RISK" ? "t" : "c") + '">' + esc(r.message) + "</li>").join("");
   const fill = d.numbers.fillPriceCents == null ? "n/a" : d.numbers.fillPriceCents + "¢";
+  // Red = danger, amber = careful, green = fine, using the same lines as the trap checks
+  const stake = Number(d.stakeUsdc) || 50, n = d.numbers;
+  const backTone = n.sellBackNowUsdc < stake * 0.9 ? "bad" : n.sellBackNowUsdc < stake * 0.97 ? "meh" : "ok";
+  const buyersTone = n.buyersNearPriceUsdc < stake ? "bad" : n.buyersNearPriceUsdc < stake * 2 ? "meh" : "ok";
+  const slip = n.fillPriceCents && n.shownPriceCents ? n.fillPriceCents / n.shownPriceCents - 1 : null;
+  const priceTone = slip == null ? "bad" : slip > 0.15 ? "bad" : slip > 0.05 ? "meh" : "ok";
   return '<p class="verdict ' + tone[d.level] + '">' + esc(d.verdict) + "</p>" +
     '<p class="worst">' + esc(worst) + "</p>" +
     (why ? '<ul class="why">' + why + "</ul>" : "") +
     '<div class="facts num">' +
-      "<div><b>" + money(d.numbers.sellBackNowUsdc) + "</b><span>back if you sell right away</span></div>" +
-      "<div><b>" + money(d.numbers.buyersNearPriceUsdc) + "</b><span>of buyers near the price</span></div>" +
-      "<div><b>" + fill + "</b><span>your real price (shown " + (d.numbers.shownPriceCents ?? "n/a") + "¢)</span></div>" +
+      '<div class="' + backTone + '"><b>' + money(d.numbers.sellBackNowUsdc) + "</b><span>back if you sell right away</span></div>" +
+      '<div class="' + buyersTone + '"><b>' + money(d.numbers.buyersNearPriceUsdc) + "</b><span>of buyers near the price</span></div>" +
+      '<div class="' + priceTone + '"><b>' + fill + "</b><span>your real price (shown " + (d.numbers.shownPriceCents ?? "n/a") + "¢)</span></div>" +
     "</div>" +
     '<p class="todo">What to do: ' + esc(d.whatToDo) + "</p>" +
     '<p class="meta">' + esc(d.market.question) + "<br>Decided by " + esc(d.rules.decidedBy) + (d.rules.deadline ? ", ends " + esc(d.rules.deadline) : "") + "</p>" +
