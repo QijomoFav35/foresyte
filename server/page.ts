@@ -57,17 +57,15 @@ img,svg{display:block;max-width:100%}
 .pill:disabled{opacity:.55;cursor:wait;transform:none}
 
 /* hero */
-.hero{padding:20px 0 0}
-.hero-top{display:grid;gap:24px}
-.hero-art{margin:0;border-radius:var(--r-md);overflow:hidden;background:#1e3a4c;aspect-ratio:16/10}
-.hero-art img{width:100%;height:100%;object-fit:cover;object-position:42% 40%}
-.badge{display:inline-flex;align-items:center;gap:8px;background:var(--panel);border-radius:var(--r-pill);padding:7px 14px 7px 8px;font-size:14px;font-weight:600;color:var(--soft)}
-.badge b{background:var(--blue);color:#fff;border-radius:var(--r-pill);padding:3px 9px;font-size:12px}
-h1{font-weight:900;font-size:clamp(44px,12vw,104px);line-height:.92;letter-spacing:-.055em;margin-top:18px;max-width:11ch}
-.lede{color:var(--muted);font-size:clamp(17px,2.4vw,20px);max-width:46ch;margin-top:18px}
+.hero{position:relative;isolation:isolate;width:100vw;margin-left:calc(50% - 50vw);min-height:min(100svh,940px);display:flex;align-items:flex-end;padding:120px 0 40px;overflow:hidden}
+.hero-bg{position:absolute;inset:0;z-index:-2}
+.hero-bg img{width:100%;height:100%;object-fit:cover;object-position:45% 35%}
+.hero:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(0,0,0,.15) 0%,rgba(0,0,0,.55) 40%,rgba(0,0,0,.9) 75%,#000 100%)}
+.hero-in{width:100%;max-width:1120px;margin:0 auto;padding:0 var(--gutter)}
+.lede{color:#fff;font-weight:600;font-size:clamp(19px,2.8vw,26px);line-height:1.35;max-width:40ch;text-shadow:0 2px 14px rgba(0,0,0,.6)}
 
 /* the chat box */
-.chat{margin-top:32px;background:var(--panel);border-radius:var(--r-md);display:flex;flex-direction:column;overflow:hidden}
+.chat{margin-top:24px;box-shadow:0 20px 60px rgba(0,0,0,.5);background:var(--panel);border-radius:var(--r-md);display:flex;flex-direction:column;overflow:hidden}
 .chat-head{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line);font-size:14px;color:var(--muted)}
 .chat-head b{color:#fff;font-size:15px}
 .chat-head .live{width:8px;height:8px;border-radius:50%;background:#3ecf8e;box-shadow:0 0 0 4px rgba(62,207,142,.15)}
@@ -251,8 +249,7 @@ footer .founder{color:#fff;font-weight:700;font-size:16px;margin-bottom:8px}
   .msg{max-width:92%}
 }
 @media (min-width:900px){
-  .hero{padding-top:40px}
-  .hero-top{gap:32px} /* same stacked layout as phones: picture, then headline, then chat */
+  .hero{padding:160px 0 56px}
   .log{padding:22px}
 }
 </style>
@@ -268,19 +265,13 @@ footer .founder{color:#fff;font-weight:700;font-size:16px;margin-bottom:8px}
 
 <main class="wrap">
 <header class="hero">
-  <div class="hero-top">
-    <figure class="hero-art">
-      <picture>
-        <source type="image/webp" srcset="/hero-760.webp 760w, /hero-1280.webp 1280w" sizes="(min-width:1120px) 1120px, 100vw">
-        <img src="/hero-1280.webp" width="1280" height="757" alt="Engraved illustration of a blue bird beside a face playing a golden flute" fetchpriority="high">
-      </picture>
-    </figure>
-    <div class="hero-copy">
-      <span class="badge"><b>Finalist</b>PayBox Hackathon, Chapter 1</span>
-      <h1>Is this bet a trap?</h1>
-      <p class="lede">Paste any Polymarket link. Foresyte tells you the worst case in dollars before you put money in, and when to get out once you have.</p>
-    </div>
-  </div>
+  <picture class="hero-bg" aria-hidden="true">
+    <source type="image/webp" srcset="/hero-760.webp 760w, /hero-1280.webp 1280w" sizes="100vw">
+    <img src="/hero-1280.webp" width="1280" height="757" alt="" fetchpriority="high">
+  </picture>
+  <div class="hero-in">
+  <h1 class="sr">Foresyte: is this Polymarket bet a trap?</h1>
+  <p class="lede">Paste any Polymarket link. Foresyte tells you the worst case in dollars before you put money in, and when to get out once you have.</p>
 
   <div class="chat" id="try">
     <div class="chat-head"><span class="live" aria-hidden="true"></span><b>Foresyte</b><span>Free check, live Polymarket data</span></div>
@@ -304,6 +295,7 @@ footer .founder{color:#fff;font-weight:700;font-size:16px;margin-bottom:8px}
     </form>
   </div>
   <p class="hint">Free, no wallet, no sign-up. The same check your PayBox agent runs.</p>
+  </div>
 </header>
 
 <section id="traps">
