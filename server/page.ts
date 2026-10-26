@@ -100,6 +100,12 @@ img{display:block;max-width:100%}
 .tag-l{font:600 12px/1 Montserrat,sans-serif;color:var(--muted);margin-bottom:10px}
 .why-l{font:600 12px/1 Montserrat,sans-serif;color:var(--muted);margin-top:16px}
 .why-l + .why{margin-top:8px}
+.more{margin-top:12px}
+.more summary{cursor:pointer;font:600 13px/1 Montserrat,sans-serif;color:#9db4ff;list-style:none;display:inline-flex;align-items:center;gap:6px}
+.more summary::-webkit-details-marker{display:none}
+.more summary:after{content:"+";font-weight:500}
+.more[open] summary:after{content:"−"}
+.next{margin-top:12px;font-size:13.5px;color:var(--muted)}
 .log{display:flex;flex-direction:column;gap:14px;padding:18px;min-height:200px;max-height:min(55vh,520px);overflow-y:auto;overscroll-behavior:contain;scroll-behavior:smooth}
 .msg{max-width:100%;border-radius:18px;padding:14px 16px;animation:rise .3s ease-out}
 @keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
@@ -333,11 +339,6 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
         <textarea id="q" name="q" rows="2" required placeholder="Paste a link or ask: is this a trap? $50 on Yes"></textarea>
         <button class="send" id="go" type="submit" aria-label="Check it"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7"/></svg></button>
       </div>
-      <div class="chips">
-        <label>Amount $<input id="s" name="stake" type="number" min="1" step="1" value="50" inputmode="numeric"></label>
-        <label>You'd buy<input id="o" name="outcome" placeholder="Yes"></label>
-        <span>Enter to send</span>
-      </div>
     </form>
   </div>
   <a class="cue" href="#how">Scroll to see how it works &#8595;</a>
@@ -497,16 +498,25 @@ let last = null;
 const log = $("log");
 
 // Read the message like a chat: find the link, an amount ($50, 50 usd) and Yes/No. Words in the message win over the small fields.
+// Read the message like a chat: the link, an amount ($50, 50 usd) and the side.
+// No link but an amount or side? It's a follow-up on the last market checked.
 function fields() {
   const text = $("q").value.trim();
+  const lower = text.toLowerCase();
   const link = (text.match(/https?:\\/\\/[^\\s]+/i) || [])[0] || (text.match(/\\b[a-z0-9]+(?:-[a-z0-9]+){2,}\\b/i) || [])[0] || "";
   const amt = text.match(/\\$\\s?(\\d[\\d,]*(?:\\.\\d+)?)/) || text.match(/(\\d[\\d,]*(?:\\.\\d+)?)\\s?(?:usd|usdc|dollars?)\\b/i);
-  const side = text.match(/\\bon\\s+(yes|no)\\b/i) || text.match(/\\b(yes|no)\\b/i);
+  const known = (!link && last?.market?.outcomes) || [];
+  let outcome = known.find((o) => lower.includes("on " + String(o).toLowerCase())) || "";
+  if (!outcome) {
+    const side = text.match(/\\bon\\s+(yes|no)\\b/i) || text.match(/\\b(yes|no)\\b/i);
+    outcome = side ? side[1][0].toUpperCase() + side[1].slice(1).toLowerCase() : "";
+  }
+  const followUp = !link && last && (amt || outcome);
   return {
     text,
-    market: link.replace(/[).,]+$/, ""),
-    outcome: side ? side[1][0].toUpperCase() + side[1].slice(1).toLowerCase() : $("o").value.trim(),
-    stake: amt ? amt[1].replace(/,/g, "") : ($("s").value || "50"),
+    market: link ? link.replace(/[).,]+$/, "") : followUp ? last.input.market : "",
+    outcome: outcome || (followUp ? last.outcome : ""),
+    stake: amt ? amt[1].replace(/,/g, "") : followUp ? String(last.stakeUsdc) : "50",
   };
 }
 
@@ -532,6 +542,7 @@ function verdictHtml(d) {
   const fill = d.numbers.fillPriceCents == null ? "n/a" : d.numbers.fillPriceCents + "¢";
   // Red = danger, amber = careful, green = fine, using the same lines as the trap checks
   const stake = Number(d.stakeUsdc) || 50, n = d.numbers;
+  const other = (d.market.outcomes || []).find((o) => o !== d.outcome) || "";
   const backTone = n.sellBackNowUsdc < stake * 0.9 ? "bad" : n.sellBackNowUsdc < stake * 0.97 ? "meh" : "ok";
   const buyersTone = n.buyersNearPriceUsdc < stake ? "bad" : n.buyersNearPriceUsdc < stake * 2 ? "meh" : "ok";
   const slip = n.fillPriceCents && n.shownPriceCents ? n.fillPriceCents / n.shownPriceCents - 1 : null;
@@ -544,9 +555,12 @@ function verdictHtml(d) {
       '<div class="' + buyersTone + '"><b>' + money(d.numbers.buyersNearPriceUsdc) + "</b><span>of buyers near the price</span></div>" +
       '<div class="' + priceTone + '"><b>' + fill + "</b><span>your real price (shown " + (d.numbers.shownPriceCents ?? "n/a") + "¢)</span></div>" +
     "</div>" +
-    (why ? '<p class="why-l">Why</p><ul class="why">' + why + "</ul>" : "") +
     '<p class="todo"><b>What to do</b>' + esc(d.whatToDo) + "</p>" +
-    '<p class="meta">' + esc(d.market.question) + "<br>Decided by " + esc(d.rules.decidedBy) + (d.rules.deadline ? ", ends " + esc(d.rules.deadline) : "") + "</p>" +
+    '<details class="more"><summary>Details</summary>' +
+      (why ? '<p class="why-l">Why</p><ul class="why">' + why + "</ul>" : "") +
+      '<p class="meta">' + esc(d.market.question) + "<br>Decided by " + esc(d.rules.decidedBy) + (d.rules.deadline ? ", ends " + esc(d.rules.deadline) : "") + "</p>" +
+    "</details>" +
+    '<p class="next">Checked $' + esc(d.stakeUsdc) + " on " + esc(d.outcome) + (other ? ", type something like $200 on " + esc(other) + " to check again" : ", type a new amount to check again") + "</p>" +
     '<div class="offer"><p>Want the full plan? Your money back at every amount, the biggest bet you can still exit and the last day to sell</p>' +
     '<button class="pill blue small" type="button" data-scan>Get a deep scan for ${price}</button></div>';
 }
@@ -565,7 +579,7 @@ function showError(d, el) {
   el = el || add("bot", "");
   el.className = "msg bot";
   el.innerHTML = errorHtml(d);
-  el.querySelectorAll("[data-slug]").forEach((b) => b.addEventListener("click", () => { $("q").value = b.dataset.slug + " $" + ($("s").value || "50"); $("check").requestSubmit(); }));
+  el.querySelectorAll("[data-slug]").forEach((b) => b.addEventListener("click", () => { $("q").value = b.dataset.slug + " $" + (last?.stakeUsdc || 50); $("check").requestSubmit(); }));
   log.scrollTop = log.scrollHeight;
 }
 
@@ -580,7 +594,7 @@ $("check").addEventListener("submit", async (e) => {
   if (!f.text) return;
   add("me", esc(f.text.replace(f.market, "").trim() || "Is this a trap?") + (f.market ? "<small>" + esc(shortLink(f.market)) + "</small>" : ""));
   $("q").value = "";
-  if (!f.market) { showError({ error: "Add a Polymarket link to your message so I know which market to check" }); return; }
+  if (!f.market) { showError({ error: "Paste a Polymarket link so I know which market to check" }); return; }
   const wait = typing();
   $("go").disabled = true;
   try {
