@@ -227,7 +227,6 @@ footer .founder{color:#fff;font-weight:700;font-size:16px;margin-bottom:8px}
 @media (min-width:900px){
   :root{--section:104px}
   .links{display:flex}
-  .hero{padding-top:64px}
   .check{padding:24px}
   .fields{grid-template-columns:1fr 130px 130px auto;align-items:end}
   .fields .market{grid-column:auto}
