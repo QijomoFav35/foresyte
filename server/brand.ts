@@ -27,13 +27,10 @@ export function seal(size: number, id = "s"): string {
 <polygon points="${TRI}" fill="none" stroke-width="3.2" stroke-linejoin="round"/>${EYE}</svg>`;
 }
 
-// The app icon: triangle and eye only, for small sizes (chat avatar, tab icon)
-export function eyeIcon(size: number): string {
-  return `<svg width="${size}" height="${size}" viewBox="18 16 64 64" fill="${GOLD}" stroke="${GOLD}" aria-hidden="true"><polygon points="${TRI}" fill="none" stroke-width="4" stroke-linejoin="round"/>${EYE}</svg>`;
-}
-
+// Tab icon: the seal on navy
 export function faviconDataUri(): string {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="${NAVY}"/><g transform="translate(-8 -6) scale(0.8)" fill="${GOLD}" stroke="${GOLD}"><polygon points="${TRI}" fill="none" stroke-width="5" stroke-linejoin="round"/><path d="M37 53Q50 42.5 63 53Q50 63.5 37 53Z" fill="none" stroke-width="2.8"/><circle cx="50" cy="53" r="4.6"/></g></svg>`;
+  const inner = seal(52, "fav").replace("<svg ", '<svg x="6" y="6" ');
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="${NAVY}"/>${inner}</svg>`;
   return "data:image/svg+xml," + encodeURIComponent(svg);
 }
 

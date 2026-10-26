@@ -2,7 +2,7 @@
 // Structure follows Roster Finance (Stocklana winner) and LEAPSY: live tool in the hero, the problem as a timeline,
 // free vs paid, comparison, agents, live proof, objections as an FAQ, dated sources, one closing line.
 
-import { eyeIcon, faviconDataUri, seal } from "./brand.ts";
+import { faviconDataUri, seal } from "./brand.ts";
 
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 
@@ -313,12 +313,12 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
 
   <div class="chat" id="try">
     <div class="chat-head">
-      <span class="av big" aria-hidden="true">${eyeIcon(22)}</span>
+      <span class="av big" aria-hidden="true">${seal(30, "avb")}</span>
       <div class="who-head"><b>Foresyte</b><span><i class="live"></i>Online, reads live Polymarket data</span></div>
       <span class="free">Free</span>
     </div>
     <div class="log" id="log" aria-live="polite">
-      <div class="line bot"><span class="av" aria-hidden="true">${eyeIcon(16)}</span><div class="stack"><span class="who"><b>Foresyte</b></span>
+      <div class="line bot"><span class="av" aria-hidden="true">${seal(22, "av")}</span><div class="stack"><span class="who"><b>Foresyte</b></span>
         <div class="msg bot">Hi, paste a Polymarket link and tell me how much you'd put in</div>
         <div class="msg bot">I'll check three things for you
           <ul class="checks"><li>Can you get your money back out</li><li>The price you'd really pay at your amount</li><li>Can the rules make you lose even when you're right</li></ul>
@@ -515,7 +515,7 @@ function add(cls, html) {
   const time = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   const line = document.createElement("div");
   line.className = "line " + (me ? "me" : "bot");
-  line.innerHTML = (me ? "" : '<span class="av" aria-hidden="true">${eyeIcon(16)}</span>') +
+  line.innerHTML = (me ? "" : '<span class="av" aria-hidden="true">${seal(22, "av")}</span>') +
     '<div class="stack"><span class="who">' + (me ? "You " : "<b>Foresyte</b>") + time + '</span><div class="msg ' + cls + '"></div></div>';
   const bubble = line.querySelector(".msg");
   bubble.innerHTML = html;
