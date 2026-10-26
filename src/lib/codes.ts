@@ -19,7 +19,7 @@ export function normalizeCode(input: string): string | null {
 
 export type ScanRequest = { market: string; outcome: string | null; stakeUsdc: number };
 
-// The prompt a person pastes into their PayBox chat. Agents can also call the paid URL directly.
+// The prompt a person pastes into their PayBox chat (the Full Audit is the deep_scan tool). Agents can also call the paid URL directly.
 export function agentPrompt(code: string): string {
-  return `Use the Foresyte plugin to run a deep scan with code ${code}.`;
+  return `Use the Foresyte plugin to run a full audit with code ${code}`;
 }

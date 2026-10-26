@@ -107,6 +107,10 @@ img{display:block;max-width:100%}
 .more[open] summary:after{content:"−"}
 .disc{margin-top:10px;font-size:12.5px;color:var(--muted)}
 footer .legal{display:block;margin-top:10px;font-size:12.5px;line-height:1.6;max-width:80ch}
+.paysteps{margin:8px 0 0 20px;display:grid;gap:3px;color:#c4cbdb;font-size:14.5px}
+.paybox{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-top:12px}
+.paybox .newpb{font-size:13.5px;font-weight:600;color:#9db4ff;text-decoration:none}
+.paybox .newpb:hover{text-decoration:underline}
 .next{margin-top:12px;font-size:13.5px;color:var(--muted)}
 .log{display:flex;flex-direction:column;gap:14px;padding:18px;min-height:200px;max-height:min(55vh,520px);overflow-y:auto;overscroll-behavior:contain;scroll-behavior:smooth}
 .msg{max-width:100%;border-radius:18px;padding:14px 16px;animation:rise .3s ease-out}
@@ -564,8 +568,8 @@ function verdictHtml(d) {
       '<p class="meta">' + esc(d.market.question) + "<br>Decided by " + esc(d.rules.decidedBy) + (d.rules.deadline ? ", ends " + esc(d.rules.deadline) : "") + "</p>" +
     "</details>" +
     '<p class="next">Checked $' + esc(d.stakeUsdc) + " on " + esc(d.outcome) + (other ? ", type something like $200 on " + esc(other) + " to check again" : ", type a new amount to check again") + "</p>" +
-    '<div class="offer"><p>Want the full plan? Your money back at every amount, the biggest bet you can still exit and the last day to sell</p>' +
-    '<button class="pill blue small" type="button" data-scan>Get a deep scan for ${price}</button></div>';
+    '<div class="offer"><p><b>Full Audit in PayBox, ${price}</b><br>The exit at every amount, the largest size that can still exit and the last day before the deadline window, delivered in your PayBox chat</p>' +
+    '<button class="pill blue small" type="button" data-scan>Get a Full Audit code</button></div>';
 }
 
 function render(d) {
@@ -621,7 +625,7 @@ $("q").addEventListener("input", (e) => { const t = e.currentTarget; t.style.hei
 async function deepScanCode(btn) {
   const f = last?.input || fields();
   btn.disabled = true;
-  add("me", "Deep scan please");
+  add("me", "Full Audit please");
   const wait = typing();
   try {
     const res = await fetch("/api/code", { method: "POST", headers: { "content-type": "application/json", accept: "application/json" }, body: JSON.stringify({ market: f.market, outcome: last?.outcome || f.outcome || undefined, stake: Number(f.stake) }) });
@@ -629,11 +633,12 @@ async function deepScanCode(btn) {
     if (!res.ok) { showError(d, wait); return; }
     wait.className = "msg bot";
     wait.innerHTML =
-      "<p>Here's your code</p>" +
+      "<p>Here's your Full Audit code</p>" +
       '<p class="code-big">' + esc(d.code) + "</p>" +
-      "<p>Paste this in your PayBox chat, approve the " + esc(d.price) + " and the deep scan comes back right there</p>" +
+      '<ol class="paysteps"><li>Copy the prompt</li><li>Paste it in your PayBox chat</li><li>Approve ' + esc(d.price) + ' and the Full Audit comes back right there</li></ol>' +
       '<div class="prompt"><output>' + esc(d.prompt) + '</output><button class="pill blue small" type="button">Copy prompt</button></div>' +
-      '<p class="meta">Code works for 24 hours<br>Agents with their own wallet can pay at ' + esc(d.payUrl) + "</p>";
+      '<div class="paybox"><a class="pill blue small" href="https://app.paybox.sh" target="_blank" rel="noopener">Open PayBox &#8599;</a><a class="newpb" href="https://paybox.sh" target="_blank" rel="noopener">New to PayBox? Set it up &#8599;</a></div>' +
+      '<p class="meta">Code works for 24 hours<br>Agents with their own x402 wallet can pay directly at ' + esc(d.payUrl) + "</p>";
     wait.querySelector(".prompt button").addEventListener("click", (e) => copy(d.prompt, e.currentTarget));
     log.scrollTop = log.scrollHeight;
   } catch { showError({ error: "Couldn't make a code, try again" }, wait); }
