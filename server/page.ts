@@ -19,42 +19,43 @@ export function landingPage(o: { publicUrl: string; price: string; chain: string
 <meta property="og:description" content="Know the worst case in dollars before you bet. Free check, $0.25 deep scan, inside your PayBox agent.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --black:#000;--panel:#181818;--raised:#242424;--line:#2c2c2c;
-  --text:#fff;--soft:#e2e2e2;--muted:#a7a7a7;
-  --blue:#3d6bff;--blue-hi:#6b8dff;--trap:#f3424b;--careful:#f5a623;
-  --r-sm:8px;--r-md:16px;--r-pill:999px;
-  --gutter:16px;--section:64px;
+  --black:#000;--panel:#0b0b0d;--raised:#141418;--line:rgba(255,255,255,.09);--line-hi:rgba(255,255,255,.16);
+  --text:#fff;--soft:#d4d4d8;--muted:#9a9aa3;
+  --blue:#3d6bff;--blue-hi:#7b98ff;--glow:rgba(61,107,255,.35);--trap:#ff4d5a;--careful:#f5a623;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --r-sm:10px;--r-md:18px;--r-pill:999px;
+  --gutter:20px;--section:88px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{background:var(--black);color:var(--text);font:400 16px/1.55 Figtree,system-ui,sans-serif;-webkit-font-smoothing:antialiased;scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html{background:var(--black);color:var(--text);font:400 17px/1.6 Figtree,system-ui,sans-serif;-webkit-font-smoothing:antialiased;scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{background:var(--black);min-height:100vh;overflow-x:hidden}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
 a{color:inherit}
-img,svg{display:block;max-width:100%}
+img{display:block;max-width:100%}
 :focus-visible{outline:2px solid var(--blue-hi);outline-offset:3px;border-radius:4px}
-.wrap{width:100%;max-width:1120px;margin:0 auto;padding:0 var(--gutter)}
-.num{font-variant-numeric:tabular-nums}
+.wrap{width:100%;max-width:1080px;margin:0 auto;padding:0 var(--gutter)}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 /* nav */
-.nav{position:sticky;top:0;z-index:10;background:rgba(0,0,0,.86);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-.nav .wrap{display:flex;align-items:center;gap:24px;height:64px}
-.mark{font-weight:900;font-size:21px;letter-spacing:-.04em;text-decoration:none;display:flex;align-items:center;gap:9px;margin-right:auto}
-.mark i{width:20px;height:20px;border-radius:50%;background:var(--blue);box-shadow:inset -6px -4px 0 #000;flex:none}
-.links{display:none;gap:22px;font-weight:600;font-size:15px;color:var(--muted)}
+.nav{position:fixed;inset:0 0 auto;z-index:20;background:linear-gradient(180deg,rgba(0,0,0,.7),rgba(0,0,0,0));transition:background .2s}
+.nav.solid{background:rgba(0,0,0,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:28px;height:64px;max-width:1240px}
+.mark{font-weight:900;font-size:20px;letter-spacing:-.04em;text-decoration:none;display:flex;align-items:center;gap:9px;margin-right:auto}
+.mark i{width:18px;height:18px;border-radius:50%;background:var(--blue);box-shadow:0 0 14px var(--glow),inset -5px -3px 0 #000;flex:none}
+.links{display:none;gap:24px;font-weight:600;font-size:15px;color:var(--soft)}
 .links a{text-decoration:none}.links a:hover{color:#fff}
 
 /* buttons */
-.pill{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:var(--r-pill);font:700 15px/1 Figtree,sans-serif;padding:14px 22px;min-height:48px;cursor:pointer;text-decoration:none;transition:transform .12s,background .12s,box-shadow .12s;white-space:nowrap}
-.pill:hover{transform:scale(1.03)}
-.pill.blue{background:var(--blue);color:#fff}.pill.blue:hover{background:#5179ff}
-.pill.ghost{background:transparent;color:#fff;box-shadow:inset 0 0 0 1px #727272}.pill.ghost:hover{box-shadow:inset 0 0 0 1px #fff}
-.pill.white{background:#fff;color:#000}
-.pill.small{min-height:40px;padding:10px 16px;font-size:14px}
-.pill:disabled{opacity:.55;cursor:wait;transform:none}
+.pill{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:var(--r-pill);font:700 15px/1 Figtree,sans-serif;padding:14px 22px;min-height:46px;cursor:pointer;text-decoration:none;transition:background .15s,box-shadow .15s;white-space:nowrap}
+.pill.blue{background:var(--blue);color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,.12) inset,0 8px 28px var(--glow)}
+.pill.blue:hover{background:#5179ff}
+.pill.ghost{background:transparent;color:#fff;box-shadow:inset 0 0 0 1px var(--line-hi)}.pill.ghost:hover{box-shadow:inset 0 0 0 1px #fff}
+.pill.small{min-height:38px;padding:9px 16px;font-size:14px}
+.pill:disabled{opacity:.55;cursor:wait}
 
 /* hero */
 .hero{position:relative;isolation:isolate;width:100vw;margin-left:calc(50% - 50vw);min-height:min(100svh,940px);display:flex;align-items:flex-end;padding:120px 0 40px;overflow:hidden}
@@ -118,146 +119,123 @@ img,svg{display:block;max-width:100%}
 .chips span{margin-left:auto}
 .hint{color:var(--muted);font-size:13px;margin:10px 4px 0}
 
+.chat{background:rgba(8,8,10,.86);border:1px solid var(--line-hi);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.chat-head{border-color:var(--line)}
+.msg.bot{background:#15151a;border:1px solid var(--line)}
+.facts div{background:#0d0d10;border:1px solid var(--line)}
+.facts b{font-family:var(--mono);font-size:clamp(18px,3.4vw,22px)}
+.code-big{font-family:var(--mono)}
+.composer{background:transparent;border-color:var(--line)}
+.ask{background:#121216;border-color:var(--line-hi)}
+.chips input{background:#121216;border:1px solid var(--line)}
+.hint{margin-top:12px}
+
 /* sections */
-section{padding-top:var(--section);scroll-margin-top:72px}
-h2{font-weight:800;font-size:clamp(30px,6.5vw,52px);line-height:1;letter-spacing:-.045em;max-width:17ch}
-.sub{color:var(--muted);margin-top:14px;max-width:58ch;font-size:17px}
-.panel{background:var(--panel);border-radius:var(--r-md);padding:20px}
+section{padding-top:var(--section);scroll-margin-top:80px}
+h2{font-weight:800;font-size:clamp(28px,5vw,40px);line-height:1.08;letter-spacing:-.035em;max-width:20ch}
+.sub{color:var(--muted);margin-top:10px;max-width:56ch}
+.card{border:1px solid var(--line);border-radius:var(--r-md);background:var(--panel);padding:22px}
+.grid2{display:grid;gap:14px;margin-top:28px}
 
-/* problem timelines */
-.stories{display:grid;gap:16px;margin-top:28px}
-.story h3{font-size:22px;font-weight:800;letter-spacing:-.03em}
-.story .amt{font-size:clamp(44px,10vw,60px);font-weight:900;letter-spacing:-.05em;line-height:1;margin:10px 0 4px}
-.story .amt-l{color:var(--muted);font-size:14px}
-.tl{margin-top:18px;display:grid;gap:0}
-.step{display:grid;gap:8px;padding:14px 0;border-top:1px solid var(--line)}
-.step .when{font-weight:800;font-size:14px;color:#fff}
-.step .bad,.step .good{font-size:15px;line-height:1.45;padding-left:14px;border-left:3px solid}
-.step .bad{border-color:var(--trap);color:var(--soft)}
-.step .good{border-color:var(--blue);color:#fff}
-.step .good:empty{display:none}
-.legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:14px;font-size:13px;color:var(--muted)}
-.legend span{display:flex;align-items:center;gap:6px}
-.legend i{width:12px;height:3px;border-radius:2px}
+.steps{display:grid;gap:10px;margin-top:28px;list-style:none;counter-reset:s}
+.steps li{counter-increment:s;display:grid;grid-template-columns:36px 1fr;gap:4px 14px;align-items:start}
+.steps li:before{content:counter(s);grid-row:span 2;width:32px;height:32px;border-radius:50%;border:1px solid var(--line-hi);display:grid;place-items:center;font:700 14px var(--mono);color:var(--blue-hi)}
+.steps b{font-size:17px}.steps span{color:var(--muted);font-size:15px}
 
-/* steps + pricing */
-.how{display:grid;gap:12px;margin-top:28px;counter-reset:s}
-.how li{list-style:none;background:var(--panel);border-radius:var(--r-md);padding:18px 18px 18px 64px;position:relative;counter-increment:s}
-.how li:before{content:counter(s);position:absolute;left:18px;top:16px;width:30px;height:30px;border-radius:50%;background:var(--raised);display:grid;place-items:center;font-weight:800}
-.how b{display:block;font-size:17px}
-.how span{color:var(--muted);font-size:15px}
-.tiers{display:grid;gap:16px;margin-top:16px}
-.tier h3{font-size:19px;font-weight:700}
-.tier .cost{font-size:clamp(42px,9vw,54px);font-weight:900;letter-spacing:-.05em;margin:4px 0 14px}
-.tier ul{padding-left:20px;display:grid;gap:6px;color:var(--soft)}
-.tier.paid{background:var(--blue)}.tier.paid ul{color:#eef2ff}
+.trap h3{font-size:20px;font-weight:800;letter-spacing:-.02em}
+.trap .big{font-size:clamp(40px,8vw,56px);font-weight:700;line-height:1;margin:18px 0 6px;color:var(--trap)}
+.trap .cap{color:var(--muted);font-size:15px}
+.trap .fix{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);color:var(--soft);font-size:15.5px}
+.trap .fix b{color:var(--blue-hi)}
 
-/* comparison */
-.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:28px;border-radius:var(--r-md);background:var(--panel)}
+.tier h3{font-size:17px;font-weight:700;color:var(--soft)}
+.tier .cost{font-size:clamp(38px,7vw,48px);font-weight:700;margin:6px 0 16px}
+.tier ul{list-style:none;display:grid;gap:8px;color:var(--soft);font-size:15.5px}
+.tier li{padding-left:22px;position:relative}
+.tier li:before{content:"";position:absolute;left:2px;top:.55em;width:9px;height:5px;border-left:2px solid var(--blue-hi);border-bottom:2px solid var(--blue-hi);transform:rotate(-45deg)}
+.tier.paid{border-color:rgba(61,107,255,.55);background:linear-gradient(180deg,rgba(61,107,255,.14),rgba(61,107,255,.03) 60%),var(--panel);box-shadow:0 0 40px rgba(61,107,255,.12)}
+.tier.paid .cost{color:var(--blue-hi)}
+
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:28px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--panel)}
 table{border-collapse:collapse;width:100%}
 .compare{min-width:520px}
-.compare th,.compare td{text-align:left;padding:14px 18px;border-top:1px solid var(--line);font-size:15px;vertical-align:top}
-.compare thead th{border-top:0;color:var(--muted);font-weight:600}
-.compare thead th:last-child{color:#fff}
-.compare td:first-child{color:var(--soft);width:44%}
+.compare th,.compare td{text-align:left;padding:14px 18px;border-top:1px solid var(--line);font-size:15px}
+.compare thead th{border-top:0;color:var(--muted);font-weight:600;font-size:14px}
+.compare thead th:last-child{color:var(--blue-hi)}
+.compare td:first-child{color:var(--soft)}
 .compare .y{color:#fff;font-weight:700}.compare .n{color:var(--muted)}
-.scroll-hint{color:var(--muted);font-size:13px;margin-top:8px}
 
-/* agents */
-.agent{display:grid;gap:16px;margin-top:28px}
-.endpoints .row{display:grid;gap:4px;padding:14px 0;border-top:1px solid var(--line)}
-.endpoints .row:first-child{border-top:0;padding-top:0}
-.endpoints code{font:600 13.5px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;overflow-wrap:anywhere}
-.endpoints .p{font-size:13px;font-weight:700;color:var(--muted)}.endpoints .p.paid{color:var(--blue-hi)}
-.endpoints span{color:var(--soft);font-size:15px}
-pre{background:var(--black);border-radius:var(--r-sm);padding:14px;overflow-x:auto;font:500 13px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;color:#d6d6d6;white-space:pre}
-.copyrow{display:grid;gap:10px;margin-top:12px}
-
-/* proof */
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:28px}
-.stats b{display:block;font-size:clamp(30px,7vw,44px);font-weight:900;letter-spacing:-.04em}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-top:28px;background:var(--line);border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
+.stats div{background:var(--panel);padding:18px 20px}
+.stats b{display:block;font-size:clamp(26px,5vw,34px);font-weight:700}
 .stats span{color:var(--muted);font-size:14px}
-.ledger{margin-top:16px}
+.ledger{margin-top:14px}
 .ledger .row{display:grid;gap:2px;padding:12px 0;border-top:1px solid var(--line);font-size:15px}
-.ledger .row:first-child{border-top:0}
+.ledger .row:first-child{border-top:0;padding-top:0}
 .ledger a{color:var(--blue-hi);font-weight:600}
-.empty{color:var(--muted)}
+.empty{color:var(--muted);font-size:15px}
 
-/* faq */
-.faq{margin-top:28px;border-top:1px solid var(--line)}
-details{border-bottom:1px solid var(--line)}
-summary{list-style:none;cursor:pointer;padding:20px 40px 20px 0;font-weight:700;font-size:clamp(17px,2.4vw,20px);position:relative}
-summary::-webkit-details-marker{display:none}
-summary:after{content:"";position:absolute;right:6px;top:50%;width:12px;height:12px;border-right:2px solid #fff;border-bottom:2px solid #fff;transform:translateY(-70%) rotate(45deg);transition:transform .15s}
-details[open] summary:after{transform:translateY(-30%) rotate(-135deg)}
-details p{color:var(--soft);padding:0 0 20px;max-width:66ch}
+details.dev{margin-top:14px}
+details.dev summary{list-style:none;cursor:pointer;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+details.dev summary::-webkit-details-marker{display:none}
+details.dev summary span{color:var(--muted);font-weight:500;font-size:14px}
+.endpoints{margin-top:16px}
+.endpoints .row{display:grid;gap:2px;padding:12px 0;border-top:1px solid var(--line)}
+.endpoints code,pre{font:500 13px/1.6 var(--mono)}
+.endpoints code{color:#fff;overflow-wrap:anywhere}
+.endpoints .p{font-size:13px;font-weight:700;color:var(--muted)}.endpoints .p.paid{color:var(--blue-hi)}
+.endpoints .row > span:last-child{color:var(--soft);font-size:15px}
+pre{background:#060608;border:1px solid var(--line);border-radius:var(--r-sm);padding:14px;overflow-x:auto;color:#cfd3dc;margin-top:10px}
+.copyrow{display:grid;gap:10px}
 
-/* sources + close */
-.sources{display:grid;gap:12px;margin-top:28px}
-.src{display:block;text-decoration:none;background:var(--panel);border-radius:var(--r-md);padding:18px;transition:background .12s}
-.src:hover{background:var(--raised)}
-.src b{display:block;font-size:17px}.src span{color:var(--muted);font-size:14px}
-.close{padding-top:96px;text-align:left}
-.close h2{font-size:clamp(36px,9vw,80px);max-width:14ch;letter-spacing:-.055em;line-height:.95}
-.close .ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.faq{margin-top:24px;border-top:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;padding:18px 36px 18px 0;font-weight:600;font-size:17px;position:relative}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:after{content:"+";position:absolute;right:4px;top:50%;transform:translateY(-50%);font:500 22px var(--mono);color:var(--muted)}
+.faq details[open] summary:after{content:"−"}
+.faq details p{color:var(--soft);padding:0 0 18px;max-width:64ch;font-size:16px}
 
-footer{margin-top:88px;padding:32px 0 48px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
-footer .cols{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:28px}
+footer{margin-top:104px;border-top:1px solid var(--line);padding:36px 0 48px;color:var(--muted);font-size:14px}
+footer .top{display:grid;gap:24px}
+footer .cta p{color:#fff;font-weight:700;font-size:20px;letter-spacing:-.02em;margin-bottom:14px}
+footer .cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 footer h4{color:#fff;font-size:14px;margin-bottom:8px}
 footer ul{list-style:none;display:grid;gap:6px}
 footer a{text-decoration:none}footer a:hover{color:#fff}
-footer .founder{color:#fff;font-weight:700;font-size:16px;margin-bottom:8px}
+footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
 
-/* wider screens add columns */
 @media (min-width:640px){
-  :root{--gutter:24px}
-  .fields{grid-template-columns:1fr 130px 130px}
-  .fields .market{grid-column:1/-1}.fields .go{grid-column:auto}
-  .facts{grid-template-columns:repeat(3,1fr)}
-  .upsell{grid-template-columns:1fr auto;align-items:center}
-  .upsell .pill{justify-self:end}
-  .prompt{grid-template-columns:1fr auto}
-  .copyrow{grid-template-columns:1fr auto}
-  .tiers{grid-template-columns:1fr 1fr}
-  .stats{grid-template-columns:repeat(4,1fr)}
-  .sources{grid-template-columns:repeat(3,1fr)}
-  footer .cols{grid-template-columns:2fr 1fr 1fr 1fr}
-  .scroll-hint{display:none}
-}
-@media (min-width:900px){
-  :root{--section:104px}
-  .links{display:flex}
-  .check{padding:24px}
-  .fields{grid-template-columns:1fr 130px 130px auto;align-items:end}
-  .fields .market{grid-column:auto}
-  .go .pill{width:auto}
-  .stories{grid-template-columns:1fr 1fr}
-  .step{grid-template-columns:96px 1fr 1fr;gap:16px;align-items:start}
-  .how{grid-template-columns:repeat(4,1fr)}
-  .how li{padding:64px 18px 18px}
-  .how li:before{top:18px}
-  .agent{grid-template-columns:1.1fr .9fr}
-  .endpoints .row{grid-template-columns:1fr 70px;column-gap:16px}
-  .endpoints .row span{grid-column:1/-1}
-}
-@media (min-width:640px){
+  :root{--gutter:28px}
   .facts{grid-template-columns:repeat(3,1fr)}
   .prompt{grid-template-columns:1fr auto}
   .offer{grid-template-columns:1fr auto;align-items:center}
   .offer .pill{justify-self:end}
   .msg{max-width:92%}
+  .grid2{grid-template-columns:1fr 1fr}
+  .steps{grid-template-columns:repeat(2,1fr);gap:22px}
+  .stats{grid-template-columns:repeat(4,1fr)}
+  .endpoints .row{grid-template-columns:1fr 70px;column-gap:16px}
+  .endpoints .row > span:last-child{grid-column:1/-1}
+  .copyrow{grid-template-columns:1fr auto;align-items:start}
+  footer .top{grid-template-columns:1.2fr 2fr}
+  footer .cols{grid-template-columns:repeat(3,1fr)}
 }
 @media (min-width:900px){
+  :root{--section:120px}
+  .links{display:flex}
   .hero{padding:160px 0 56px}
   .log{padding:22px}
+  .steps{grid-template-columns:repeat(4,1fr)}
+  .card{padding:28px}
 }
 </style>
 </head>
 <body>
-<nav class="nav" aria-label="Main">
+<nav class="nav" id="nav" aria-label="Main">
   <div class="wrap">
     <a class="mark" href="/"><i aria-hidden="true"></i>Foresyte</a>
-    <div class="links"><a href="#traps">The traps</a><a href="#scan">Deep scan</a><a href="#agents">For agents</a><a href="#proof">Proof</a><a href="#faq">FAQ</a></div>
+    <div class="links"><a href="#how">How it works</a><a href="#traps">Traps</a><a href="#pricing">Pricing</a><a href="#proof">Proof</a><a href="#faq">FAQ</a></div>
     <a class="pill blue small" href="https://app.paybox.sh/plugins">Add to PayBox</a>
   </div>
 </nav>
@@ -297,53 +275,49 @@ footer .founder{color:#fff;font-weight:700;font-size:16px;margin-bottom:8px}
   </div>
 </header>
 
+<section id="how">
+  <h2>How it works</h2>
+  <ol class="steps">
+    <li><b>Paste a link</b><span>Any Polymarket market, with your amount.</span></li>
+    <li><b>Get the verdict</b><span>Trap, careful, or safe. Free.</span></li>
+    <li><b>Go deeper</b><span>A code for the ${price} deep scan.</span></li>
+    <li><b>Approve in PayBox</b><span>Your full plan comes back in chat.</span></li>
+  </ol>
+</section>
+
 <section id="traps">
-  <h2>Two ways Polymarket takes your money</h2>
-  <p class="sub">Both happened to real people. Both were visible before the bet.</p>
-  <div class="legend"><span><i style="background:var(--trap)"></i>What happened</span><span><i style="background:var(--blue)"></i>With Foresyte</span></div>
-  <div class="stories">
-    <article class="story panel">
+  <h2>The two traps</h2>
+  <div class="grid2">
+    <article class="card trap">
       <h3>You can't get out</h3>
-      <p class="amt num">$50</p><p class="amt-l">lost on a game that was winning at halftime</p>
-      <div class="tl">
-        <div class="step"><span class="when">Tip-off</span><p class="bad">You put $50 on a basketball game in Germany. Nothing warns you that almost nobody is buying.</p><p class="good">Before you buy: "Only $8 of buyers exist near the price. Put in $50 and you can't cash out until it ends."</p></div>
-        <div class="step"><span class="when">Halftime</span><p class="bad">Your team leads. The app shows a profit. You tap to cash out. Nobody buys.</p><p class="good">You bet the amount you could still sell, and you cash out at halftime.</p></div>
-        <div class="step"><span class="when">Full time</span><p class="bad">The game turns. The $50 is gone.</p><p class="good">You kept your profit.</p></div>
-      </div>
+      <p class="big num">$8</p>
+      <p class="cap">of buyers on a game where someone bet $50. Winning at halftime, unable to sell, lost it all.</p>
+      <p class="fix"><b>Foresyte</b> checks the buyers at your amount before you bet, and tells you when they are running out.</p>
     </article>
-    <article class="story panel">
+    <article class="card trap">
       <h3>You can be right and still lose</h3>
-      <p class="amt num">$500,000</p><p class="amt-l">lost by one trader on the Strategy bitcoin market, May 2026</p>
-      <div class="tl">
-        <div class="step"><span class="when">From May 26</span><p class="bad">Strategy sells bitcoin. Traders betting Yes are right.</p><p class="good">"Decided by what gets reported by Sunday, May 31. Weekend deadline: you can be right and still lose."</p></div>
-        <div class="step"><span class="when">Thu, May 28</span><p class="bad">Nothing on the market tells holders the deadline is a Sunday, when filings rarely come out.</p><p class="good">"Latest day to sell is today." You sell and keep your gains.</p></div>
-        <div class="step"><span class="when">Sun, May 31</span><p class="bad">The deadline passes on a Sunday with no filing. Holders trying to sell can't find buyers.</p><p class="good"></p></div>
-        <div class="step"><span class="when">Mon, June 1</span><p class="bad">The filing comes out. The market resolves No.</p><p class="good">You were already out.</p></div>
-      </div>
+      <p class="big num">$500K</p>
+      <p class="cap">lost on the Strategy bitcoin market. The sale happened; the filing came after the Sunday deadline.</p>
+      <p class="fix"><b>Foresyte</b> flags markets decided by a report, not the event, and gives you the last day to sell.</p>
     </article>
   </div>
 </section>
 
-<section id="scan">
-  <h2>Check free. Pay for the full plan.</h2>
-  <ol class="how">
-    <li><b>Paste a link</b><span>Get the free verdict above.</span></li>
-    <li><b>Get a code</b><span>Like FSY-7K2QXM, with a prompt to copy.</span></li>
-    <li><b>Paste it in PayBox</b><span>Your agent shows ${price}. You approve.</span></li>
-    <li><b>Read your plan</b><span>The deep scan comes back in your chat.</span></li>
-  </ol>
-  <div class="tiers">
-    <div class="tier panel">
+<section id="pricing">
+  <h2>Check free. Go deep for ${price}.</h2>
+  <div class="grid2">
+    <div class="card tier">
       <h3>Quick check</h3>
-      <p class="cost">Free</p>
-      <ul><li>Trap, careful, or safe at your amount</li><li>What you'd get back if you sold right away</li><li>The rules trap and the deadline</li><li>One clear next step</li></ul>
+      <p class="cost num">Free</p>
+      <ul><li>Trap, careful, or safe at your amount</li><li>What you'd get back if you sold now</li><li>The rules trap and the deadline</li><li>One clear next step</li></ul>
     </div>
-    <div class="tier panel paid">
+    <div class="card tier paid">
       <h3>Deep scan</h3>
       <p class="cost num">${price}</p>
-      <ul><li>What you'd get back at $10, $50, $250, $1,000 and more</li><li>The biggest bet you can still get out of</li><li>The last day to sell</li><li>How the other side looks</li><li>A numbered plan in plain English</li></ul>
+      <ul><li>Your money back at $10 to $25,000</li><li>The biggest bet you can still get out of</li><li>The last day to sell</li><li>The other side of the market</li><li>A step-by-step plan</li></ul>
     </div>
   </div>
+  <p class="sub">USDC on ${chain} via x402. Approve in PayBox, or let your agent pay from its own wallet.</p>
 </section>
 
 <section id="compare">
@@ -351,94 +325,70 @@ footer .founder{color:#fff;font-weight:700;font-size:16px;margin-bottom:8px}
   <div class="scroll"><table class="compare">
     <thead><tr><th scope="col"><span class="sr">Question</span></th><th scope="col">Polymarket app</th><th scope="col">Foresyte</th></tr></thead>
     <tbody>
-      <tr><td>The price you really pay at your amount</td><td class="n">Order book only, you do the math</td><td class="y">Shown in dollars</td></tr>
-      <tr><td>Can you sell before it ends?</td><td class="n">Not shown</td><td class="y">Checked before you buy</td></tr>
-      <tr><td>Decided by the event or by a report?</td><td class="n">Buried in the rules text</td><td class="y">Flagged, with the deadline day</td></tr>
-      <tr><td>When to get out</td><td class="n">Not shown</td><td class="y">Latest day to sell</td></tr>
-      <tr><td>Works inside your AI agent</td><td class="n">No</td><td class="y">Yes, on PayBox</td></tr>
+      <tr><td>Real price at your amount</td><td class="n">Do the math yourself</td><td class="y">In dollars</td></tr>
+      <tr><td>Can you sell before it ends?</td><td class="n">Not shown</td><td class="y">Checked first</td></tr>
+      <tr><td>Decided by event or by report?</td><td class="n">In the fine print</td><td class="y">Flagged</td></tr>
+      <tr><td>When to get out</td><td class="n">Not shown</td><td class="y">Last day to sell</td></tr>
+      <tr><td>Inside your AI agent</td><td class="n">No</td><td class="y">Yes</td></tr>
     </tbody>
   </table></div>
-  <p class="scroll-hint">Swipe the table to see both columns.</p>
-</section>
-
-<section id="agents">
-  <h2>Built for agents too</h2>
-  <p class="sub">Any agent that speaks x402 can pay for a deep scan with its own wallet. PayBox users get the same tools in their chat.</p>
-  <div class="agent">
-    <div class="panel endpoints">
-      <div class="row"><code>GET /api/check?market=&amp;outcome=&amp;stake=</code><span class="p">Free</span><span>The quick check as JSON</span></div>
-      <div class="row"><code>POST /api/code</code><span class="p">Free</span><span>Turns a link into a code and a prompt</span></div>
-      <div class="row"><code>GET /api/deep-scan?code=FSY-…</code><span class="p paid">${price}</span><span>Answers 402, your agent pays, then sends the report</span></div>
-      <div class="row"><code>GET /api/proof</code><span class="p">Free</span><span>Every paid scan with its ${chain} transaction</span></div>
-    </div>
-    <div class="panel">
-      <p><b>Paste into your agent</b></p>
-      <div class="copyrow"><pre id="agent-prompt">Use the Foresyte plugin to check if &lt;Polymarket link&gt; is a trap for $50.</pre><button class="pill ghost small" type="button" data-copy="agent-prompt">Copy</button></div>
-      <p class="meta" style="margin-top:16px">Response, shortened</p>
-<pre>{
-  "verdict": "This is a trap.",
-  "safeBetUsdc": 12,
-  "sellBy": "Sunday, November 1",
-  "plan": ["Bet $12 or less, not $50. ..."],
-  "report": "This is a trap. If you bet $50 ..."
-}</pre>
-    </div>
-  </div>
 </section>
 
 <section id="proof">
   <h2>Check our work</h2>
-  <p class="sub">Every paid scan is a real USDC payment on ${chain}. They show up here as they happen.</p>
-  <div class="stats num">
-    <div><b>60</b><span>unit tests on saved market data</span></div>
-    <div><b>3</b><span>Polymarket sources, read live</span></div>
-    <div><b id="paid-count">0</b><span>paid deep scans</span></div>
-    <div><b>0</b><span>keys or deposits needed</span></div>
+  <div class="stats">
+    <div><b class="num">60</b><span>unit tests</span></div>
+    <div><b class="num">3</b><span>live data sources</span></div>
+    <div><b class="num" id="paid-count">0</b><span>paid scans</span></div>
+    <div><b class="num">0</b><span>keys needed</span></div>
   </div>
-  <div class="panel ledger" id="ledger"><p class="empty">No paid scans yet. The first ones will appear here with their ${chain} transaction.</p></div>
+  <div class="card ledger" id="ledger"><p class="empty">No paid scans yet. Each one will appear here with its ${chain} transaction.</p></div>
+  <details class="card dev" id="agents">
+    <summary>For developers and agents <span>Show</span></summary>
+    <div class="endpoints">
+      <div class="row"><code>GET /api/check?market=&amp;outcome=&amp;stake=</code><span class="p">Free</span><span>Quick check as JSON</span></div>
+      <div class="row"><code>POST /api/code</code><span class="p">Free</span><span>Link to request code and prompt</span></div>
+      <div class="row"><code>GET /api/deep-scan?code=FSY-…</code><span class="p paid">${price}</span><span>402, pay, then the report</span></div>
+      <div class="row"><code>GET /api/proof</code><span class="p">Free</span><span>Paid scans with transactions</span></div>
+    </div>
+    <div class="copyrow" style="margin-top:16px"><pre id="agent-prompt">Use the Foresyte plugin to check if &lt;Polymarket link&gt; is a trap for $50.</pre><button class="pill ghost small" type="button" data-copy="agent-prompt">Copy</button></div>
+  </details>
 </section>
 
 <section id="faq">
-  <h2>Questions people ask</h2>
+  <h2>FAQ</h2>
   <div class="faq">
-    <details><summary>Is this betting advice?</summary><p>No. Foresyte gives you information about a market: who is buying, what you'd get back, and how the rules decide the result. What you do with it is up to you. Prediction markets can lose you all of your stake.</p></details>
-    <details><summary>Polymarket already shows a price. Why isn't that enough?</summary><p>The price shown is for a small amount. A bigger bet eats through the cheap shares and pays more. Selling is the same in reverse: if few people are buying, you get less than the app shows, or nothing at all. Foresyte works this out at your exact amount.</p></details>
-    <details><summary>Where do the numbers come from?</summary><p>From Polymarket's public data at the moment you ask: the market and its rules, and the live list of buyers and sellers. Nothing is cached. The AI agent only passes the numbers along; it never makes one up.</p></details>
-    <details><summary>What is the 3-day rule?</summary><p>In the last 3 days before a market ends, buyers tend to vanish and the rules start to decide the result. If a market has a rules or liquidity risk and is inside that window, Foresyte tells you to get out, and the deep scan gives you the latest day to sell.</p></details>
-    <details><summary>Will it warn me automatically while I hold a bet?</summary><p>Not yet. PayBox runs each request fresh, so there are no background alerts. Ask your agent to check your positions any time, and always before you sell.</p></details>
-    <details><summary>How do I pay ${price}?</summary><p>In your PayBox chat. Your agent shows the price, you approve it, and ${price} in USDC moves on ${chain} using x402. No account and no card. If the scan can't run, the payment isn't taken.</p></details>
-    <details><summary>Can my own agent pay without PayBox?</summary><p>Yes. Any agent with an x402 wallet can call the deep scan link, get the price, pay, and receive the report.</p></details>
-    <details><summary>Does Foresyte place bets or hold my money?</summary><p>No. It only reads public data. It never places or blocks bets, never asks for keys, and never holds funds.</p></details>
+    <details><summary>Is this betting advice?</summary><p>No. Foresyte shows you how a market works right now: who is buying, what you'd get back, and how the rules decide the result. The choice is yours. You can lose all of your stake.</p></details>
+    <details><summary>Polymarket already shows a price. Why isn't that enough?</summary><p>That price is for a small amount. A bigger bet pays more as it eats through the cheap shares, and selling gets you less if few people are buying. Foresyte works it out at your exact amount.</p></details>
+    <details><summary>Where do the numbers come from?</summary><p>Polymarket's public data, read the moment you ask. Nothing is cached, and the AI never makes up a number.</p></details>
+    <details><summary>What is the 3-day rule?</summary><p>In a market's last 3 days, buyers tend to vanish and the rules start to decide it. If a risky market is in that window, Foresyte tells you to get out.</p></details>
+    <details><summary>Will it alert me while I hold a bet?</summary><p>Not in the background yet. Ask your agent to check your positions any time, and always before you sell.</p></details>
+    <details><summary>How do I pay ${price}?</summary><p>In your PayBox chat: your agent shows the price, you approve, and USDC moves on ${chain} via x402. No account, no card. If the scan can't run, you aren't charged.</p></details>
+    <details><summary>Can my own agent pay?</summary><p>Yes. Any agent with an x402 wallet can call the deep scan link and pay for itself.</p></details>
+    <details><summary>Does Foresyte place bets or hold my money?</summary><p>No. It only reads public data. It never places bets, never asks for keys, and never holds funds.</p></details>
   </div>
-</section>
-
-<section id="sources">
-  <h2>Said out loud</h2>
-  <div class="sources">
-    <a class="src" href="https://theblock.co/post/403312/polymarket-faces-backlash-strategy-bitcoin-sale"><b>The Block</b><span>Polymarket faces backlash over the Strategy bitcoin sale market. 2026.</span></a>
-    <a class="src" href="https://www.galaxy.com/insights/research/strategy-bitcoin-sale-polymarket-resolution-dispute-may-2026"><b>Galaxy Research</b><span>The Strategy resolution dispute, and why markets should say if they pay on the event or on its confirmation. May 2026.</span></a>
-    <a class="src" href="https://github.com/QijomoFav35/foresyte"><b>Foresyte source code</b><span>Every rule and threshold, with the tests that check them.</span></a>
-  </div>
-</section>
-
-<section class="close">
-  <h2>Know the worst case before you click.</h2>
-  <div class="ctas"><a class="pill blue" href="#try">Check a market</a><a class="pill ghost" href="https://app.paybox.sh/plugins">Add to PayBox</a></div>
 </section>
 </main>
 
 <footer>
   <div class="wrap">
-    <div class="cols">
-      <div><p class="founder">Built by someone who couldn't cash out at halftime.</p><p>Information, not betting advice. Not affiliated with Polymarket.</p></div>
-      <div><h4>Product</h4><ul><li><a href="#try">Free check</a></li><li><a href="#scan">Deep scan</a></li><li><a href="https://app.paybox.sh/plugins">PayBox plugin</a></li></ul></div>
-      <div><h4>Read</h4><ul><li><a href="#traps">The traps</a></li><li><a href="#faq">FAQ</a></li><li><a href="#sources">Sources</a></li></ul></div>
-      <div><h4>Source</h4><ul><li><a href="https://github.com/QijomoFav35/foresyte">GitHub</a></li><li><a href="/api/proof">Proof (JSON)</a></li><li><a href="/?format=json">API</a></li></ul></div>
+    <div class="top">
+      <div class="cta"><p>Know the worst case before you click.</p><a class="pill blue small" href="#try">Check a market</a></div>
+      <div class="cols">
+        <div><h4>Product</h4><ul><li><a href="#try">Free check</a></li><li><a href="#pricing">Deep scan</a></li><li><a href="https://app.paybox.sh/plugins">PayBox plugin</a></li></ul></div>
+        <div><h4>Sources</h4><ul><li><a href="https://theblock.co/post/403312/polymarket-faces-backlash-strategy-bitcoin-sale">The Block</a></li><li><a href="https://www.galaxy.com/insights/research/strategy-bitcoin-sale-polymarket-resolution-dispute-may-2026">Galaxy Research</a></li></ul></div>
+        <div><h4>Build</h4><ul><li><a href="https://github.com/QijomoFav35/foresyte">GitHub</a></li><li><a href="/api/proof">Proof (JSON)</a></li><li><a href="/?format=json">API</a></li></ul></div>
+      </div>
     </div>
+    <p class="fine">Built by someone who couldn't cash out at halftime. Information, not betting advice. Not affiliated with Polymarket. PayBox Hackathon finalist.</p>
   </div>
 </footer>
 
 <script>
+const navEl = document.getElementById("nav");
+const onScroll = () => navEl.classList.toggle("solid", window.scrollY > 40);
+addEventListener("scroll", onScroll, { passive: true }); onScroll();
+
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
 const money = (n) => n == null ? "n/a" : "$" + (n >= 100 ? Math.round(n).toLocaleString("en-US") : Number(n).toFixed(2).replace(/\\.00$/, ""));
@@ -558,6 +508,7 @@ async function deepScanCode(btn) {
   finally { btn.disabled = false; }
 }
 
+document.getElementById("agents").addEventListener("toggle", (e) => { e.currentTarget.querySelector("summary span").textContent = e.currentTarget.open ? "Hide" : "Show"; });
 document.querySelectorAll("[data-copy]").forEach((b) => b.addEventListener("click", () => copy($(b.dataset.copy).textContent, b)));
 
 fetch("/api/proof", { headers: { accept: "application/json" } }).then((r) => r.json()).then((d) => {
