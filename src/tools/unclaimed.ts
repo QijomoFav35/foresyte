@@ -4,11 +4,11 @@ import { Deadline } from "../lib/http.ts";
 import { getPositions, marketLink, resolveProxy } from "../lib/polymarket.ts";
 import { claimable } from "../lib/traps.ts";
 import { usd } from "../lib/verdict.ts";
-import { errorResult, messageOf, money, nowIso, okResult, walletSchema } from "./common.ts";
+import { NO_WALLET, errorResult, messageOf, money, nowIso, okResult, walletSchema } from "./common.ts";
 
 const inputSchema = z
   .object({
-    wallet: walletSchema.describe("The user's Polymarket wallet address (login or proxy wallet)."),
+    wallet: walletSchema.optional().describe("The user's Polymarket wallet address (login or proxy wallet). Leave empty to use the wallet connected to PayBox."),
   })
   .strict();
 
@@ -44,6 +44,7 @@ export function registerCheckUnclaimed(server: McpServer) {
       annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     },
     async ({ wallet }) => {
+      if (!wallet) return errorResult(NO_WALLET);
       const deadline = new Deadline();
       try {
         const proxy = await resolveProxy(wallet, deadline);

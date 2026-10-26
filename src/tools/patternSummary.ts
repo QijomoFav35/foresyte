@@ -3,11 +3,11 @@ import type { McpServer } from "@modelcontextprotocol/server";
 import { Deadline } from "../lib/http.ts";
 import { getClosedPositions, getTrades, resolveProxy } from "../lib/polymarket.ts";
 import { analyzeHistory, renderReport, type GroupStats, type Insight } from "../lib/history.ts";
-import { errorResult, messageOf, money, nowIso, okResult, walletSchema } from "./common.ts";
+import { NO_WALLET, errorResult, messageOf, money, nowIso, okResult, walletSchema } from "./common.ts";
 
 const inputSchema = z
   .object({
-    wallet: walletSchema.describe("The user's Polymarket wallet address (login or proxy wallet)."),
+    wallet: walletSchema.optional().describe("The user's Polymarket wallet address (login or proxy wallet). Leave empty to use the wallet connected to PayBox."),
   })
   .strict();
 
@@ -85,6 +85,7 @@ export function registerPatternSummary(server: McpServer) {
       annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     },
     async ({ wallet }) => {
+      if (!wallet) return errorResult(NO_WALLET);
       const deadline = new Deadline();
       try {
         const proxy = await resolveProxy(wallet, deadline);

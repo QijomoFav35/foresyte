@@ -6,7 +6,7 @@ import { Deadline } from "../lib/http.ts";
 import { getPositions, marketLink, resolveProxy } from "../lib/polymarket.ts";
 import { claimable } from "../lib/traps.ts";
 import { usd } from "../lib/verdict.ts";
-import { errorResult, messageOf, walletSchema } from "./common.ts";
+import { NO_WALLET, errorResult, messageOf, walletSchema } from "./common.ts";
 
 // Polygon contracts. Standard markets redeem on the Conditional Tokens contract with USDC.e collateral;
 // neg-risk markets redeem through the Neg Risk Adapter, which takes per-outcome amounts.
@@ -17,7 +17,7 @@ const ZERO_BYTES32 = "0x00000000000000000000000000000000000000000000000000000000
 
 const inputSchema = z
   .object({
-    wallet: walletSchema.describe("The PayBox wallet address that will sign the claim."),
+    wallet: walletSchema.optional().describe("The PayBox wallet address that will sign the claim. Leave empty to use the wallet connected to PayBox."),
     conditionId: z.string().regex(/^0x[0-9a-fA-F]{64}$/).describe("conditionId from check_unclaimed."),
   })
   .strict();
@@ -34,6 +34,7 @@ export function registerProposeClaim(server: McpServer) {
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
     },
     async ({ wallet, conditionId }) => {
+      if (!wallet) return errorResult(NO_WALLET);
       const deadline = new Deadline();
       try {
         const own = claimable(await getPositions(wallet.toLowerCase(), deadline, { redeemable: true })).filter(

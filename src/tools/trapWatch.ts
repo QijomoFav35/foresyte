@@ -4,11 +4,11 @@ import { Deadline, PER_REQUEST_MS } from "../lib/http.ts";
 import { findMarket, getBook, getPositions, marketLink, resolveProxy } from "../lib/polymarket.ts";
 import { assessHolding, openPositions, type HoldingAssessment } from "../lib/traps.ts";
 import { combine, usd } from "../lib/verdict.ts";
-import { errorResult, levelSchema, messageOf, money, nowIso, okResult, reasonSchema, walletSchema } from "./common.ts";
+import { NO_WALLET, errorResult, levelSchema, messageOf, money, nowIso, okResult, reasonSchema, walletSchema } from "./common.ts";
 
 const inputSchema = z
   .object({
-    wallet: walletSchema.describe("The user's Polymarket wallet address (login or proxy wallet)."),
+    wallet: walletSchema.optional().describe("The user's Polymarket wallet address (login or proxy wallet). Leave empty to use the wallet connected to PayBox."),
   })
   .strict();
 
@@ -53,6 +53,7 @@ export function registerTrapWatch(server: McpServer) {
       annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: true },
     },
     async ({ wallet }) => {
+      if (!wallet) return errorResult(NO_WALLET);
       const deadline = new Deadline();
       try {
         const proxy = await resolveProxy(wallet, deadline);

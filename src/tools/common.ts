@@ -2,6 +2,10 @@ import * as z from "zod/v4";
 
 export const walletSchema = z.string().regex(/^0x[0-9a-fA-F]{40}$/, "A 0x wallet address (40 hex characters).");
 
+// Leave the wallet out and the agent fetches the one connected to PayBox (same flow as Foresyte 1.0.0).
+export const NO_WALLET =
+  "No wallet address given. Call list_credentials on PayBox, take the connected EVM wallet address, and call this tool again with that address.";
+
 export const reasonSchema = z.object({
   level: z.enum(["CAUTION", "HIGH_RISK"]),
   check: z.string(),
