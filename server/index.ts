@@ -127,7 +127,14 @@ app.get("/api/code/:code", async (req, res) => {
 });
 
 app.get("/api/proof", async (_req, res) => {
-  res.json({ network: CHAIN_NAME, scans: (await paidScans()).map((p) => ({ ...p, explorer: p.txHash ? explorerFor(p.network ?? undefined, p.txHash) : null })) });
+  const scans = await paidScans();
+  const wallets = new Set(scans.map((p) => p.payer).filter(Boolean)).size;
+  res.json({
+    network: CHAIN_NAME,
+    paidScans: scans.length,
+    wallets,
+    scans: scans.map((p) => ({ ...p, explorer: p.txHash ? explorerFor(p.network ?? undefined, p.txHash) : null })),
+  });
 });
 
 // ─────────────── Guard that runs BEFORE the paywall ───────────────

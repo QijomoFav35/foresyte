@@ -225,6 +225,7 @@ table{border-collapse:collapse;width:100%}
 .ledger{margin-top:14px}
 .ledger .row{display:grid;gap:2px;padding:12px 0;border-top:1px solid var(--line);font-size:15px}
 .ledger .row:first-child{border-top:0;padding-top:0}
+.ledger .meta-row{color:var(--muted);font-size:14px}
 .ledger a{color:var(--accent);font-weight:600}
 .empty{color:var(--muted);font-size:15px}
 
@@ -438,8 +439,8 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
   <h2>Log</h2>
   <div class="stats">
     <div><b class="num">60</b><span>unit tests</span></div>
-    <div><b class="num">3</b><span>live data sources</span></div>
     <div><b class="num" id="paid-count">0</b><span>paid scans</span></div>
+    <div><b class="num" id="wallet-count">0</b><span>different wallets</span></div>
     <div><b class="num">0</b><span>keys needed</span></div>
   </div>
   <div class="card ledger" id="ledger"><p class="empty">No paid scans yet, each one shows up here with its ${chain} transaction</p></div>
@@ -627,10 +628,14 @@ document.querySelectorAll("[data-copy]").forEach((b) => b.addEventListener("clic
 
 fetch("/api/proof", { headers: { accept: "application/json" } }).then((r) => r.json()).then((d) => {
   if (!d.scans?.length) return;
-  $("paid-count").textContent = d.scans.length;
-  $("ledger").innerHTML = d.scans.slice(0, 10).map((s) =>
-    '<div class="row"><b>' + esc(s.market) + "</b><span>" + esc(s.verdict) + " " + new Date(s.at).toLocaleString() + "</span>" +
-    (s.explorer ? '<a href="' + esc(s.explorer) + '">View payment</a>' : "") + "</div>").join("");
+  $("paid-count").textContent = d.paidScans ?? d.scans.length;
+  $("wallet-count").textContent = d.wallets ?? 0;
+  const short = (a) => a && a.length > 12 ? a.slice(0, 4) + "…" + a.slice(-4) : (a || "unknown wallet");
+  const net = (n) => String(n || "").startsWith("eip155:") ? "Base" : "Solana";
+  $("ledger").innerHTML = d.scans.slice(0, 12).map((s) =>
+    '<div class="row"><b>' + esc(s.market) + "</b>" +
+    '<span class="meta-row"><span class="num">' + esc(short(s.payer)) + "</span> paid on " + net(s.network) + " " + new Date(s.at).toLocaleString() + ", verdict: " + esc(s.verdict) + "</span>" +
+    (s.explorer ? '<a href="' + esc(s.explorer) + '">View payment on ' + (net(s.network) === "Base" ? "BaseScan" : "Solscan") + " &#8599;</a>" : "") + "</div>").join("");
 }).catch(() => {});
 </script>
 </body>
