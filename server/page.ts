@@ -473,7 +473,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
         <div><h4>Build</h4><ul><li><a href="https://github.com/QijomoFav35/foresyte">GitHub</a></li><li><a href="/api/proof">Proof (JSON)</a></li><li><a href="/?format=json">API</a></li></ul></div>
       </div>
     </div>
-    <p class="fine">Built by someone who couldn't cash out at halftime<br>Information, not betting advice / not affiliated with Polymarket / PayBox Hackathon finalist</p>
+    <p class="fine">&copy; 2026 Foresyte. All rights reserved</p>
   </div>
 </footer>
 
