@@ -7,6 +7,7 @@ import { registerTrapCheck } from "./tools/trapCheck.ts";
 import { registerTrapWatch } from "./tools/trapWatch.ts";
 import { registerCheckUnclaimed } from "./tools/unclaimed.ts";
 import { registerProposeClaim } from "./tools/proposeClaim.ts";
+import { registerPatternSummary } from "./tools/patternSummary.ts";
 
 serveStdio(() => {
   const server = new McpServer(
@@ -17,5 +18,6 @@ serveStdio(() => {
   registerTrapWatch(server);
   registerCheckUnclaimed(server);
   registerProposeClaim(server);
+  registerPatternSummary(server);
   return server;
 });

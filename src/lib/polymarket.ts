@@ -3,6 +3,7 @@
 
 import { Deadline, getJson } from "./http.ts";
 import { parseLevels, type Level } from "./book.ts";
+import { toMs, type ClosedBet, type Trade } from "./history.ts";
 
 export const GAMMA = "https://gamma-api.polymarket.com";
 export const CLOB = "https://clob.polymarket.com";
@@ -191,6 +192,68 @@ export async function getPositions(
   const raw = await getJson(`${DATA}/positions?${params}`, deadline);
   const list = Array.isArray(raw) ? raw : [];
   return list.map(normalizePosition);
+}
+
+// Closed bets, most recent first. The endpoint returns at most 50 per page, so pages are fetched in parallel.
+export async function getClosedPositions(user: string, deadline: Deadline, pages = 4): Promise<ClosedBet[]> {
+  const requests = Array.from({ length: pages }, (_, i) => {
+    const params = new URLSearchParams({ user, limit: "50", offset: String(i * 50), sortBy: "TIMESTAMP", sortDirection: "DESC" });
+    return getJson(`${DATA}/closed-positions?${params}`, deadline).catch((error: unknown) => (i === 0 ? Promise.reject(error) : []));
+  });
+  const results = await Promise.all(requests);
+  const seen = new Set<string>();
+  const out: ClosedBet[] = [];
+  for (const page of results) {
+    for (const raw of Array.isArray(page) ? page : []) {
+      const bet = normalizeClosed(raw);
+      const key = `${bet.asset}:${bet.conditionId}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      out.push(bet);
+    }
+  }
+  return out;
+}
+
+// The wallet's last 500 trades (the API maximum for one page).
+export async function getTrades(user: string, deadline: Deadline): Promise<Trade[]> {
+  const params = new URLSearchParams({ user, type: "TRADE", limit: "500", sortBy: "TIMESTAMP", sortDirection: "DESC" });
+  const raw = await getJson(`${DATA}/activity?${params}`, deadline);
+  return (Array.isArray(raw) ? raw : []).map(normalizeTrade).filter((t): t is Trade => t !== null);
+}
+
+export function normalizeClosed(raw: unknown): ClosedBet {
+  const c = (raw ?? {}) as Record<string, unknown>;
+  return {
+    asset: String(c.asset ?? ""),
+    conditionId: String(c.conditionId ?? ""),
+    title: str(c.title) ?? "(untitled market)",
+    slug: str(c.slug) ?? "",
+    eventSlug: str(c.eventSlug),
+    outcome: str(c.outcome) ?? "",
+    avgPrice: num(c.avgPrice),
+    totalBought: num(c.totalBought),
+    realizedPnl: num(c.realizedPnl),
+    curPrice: num(c.curPrice),
+    closedAt: toMs(num(c.timestamp)),
+  };
+}
+
+export function normalizeTrade(raw: unknown): Trade | null {
+  const t = (raw ?? {}) as Record<string, unknown>;
+  const side = t.side === "BUY" || t.side === "SELL" ? t.side : null;
+  const at = toMs(num(t.timestamp));
+  if (!side || at === null) return null;
+  return {
+    asset: String(t.asset ?? ""),
+    side,
+    price: num(t.price),
+    size: num(t.size),
+    usdcSize: num(t.usdcSize),
+    at,
+    title: str(t.title) ?? "",
+    slug: str(t.slug) ?? "",
+  };
 }
 
 export function marketLink(eventSlug: string | null, marketSlug: string): string {
