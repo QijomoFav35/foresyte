@@ -30,8 +30,8 @@ export function landingPage(o: { publicUrl: string; price: string; chain: string
   --gutter:20px;--section:88px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{background:var(--black);color:var(--text);font:400 17px/1.6 Montserrat,system-ui,sans-serif;-webkit-font-smoothing:antialiased;scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-body{background:var(--black);min-height:100vh;overflow-x:hidden}
+html{background:#e8ecf3;color:var(--text);font:400 17px/1.6 Montserrat,system-ui,sans-serif;-webkit-font-smoothing:antialiased;scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:#e8ecf3;min-height:100vh;overflow-x:hidden}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
 a{color:inherit}
 img{display:block;max-width:100%}
@@ -41,13 +41,18 @@ img{display:block;max-width:100%}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 /* nav */
-.nav{position:fixed;inset:0 0 auto;z-index:20;background:transparent;transition:background .2s}
-.nav.solid{background:#000;border-bottom:1px solid var(--line)}
-.nav .wrap{display:flex;align-items:center;gap:28px;height:64px;max-width:1240px}
-.mark{font-weight:700;font-size:20px;letter-spacing:-.02em;text-decoration:none;display:flex;align-items:center;gap:9px;margin-right:auto}
-.mark i{width:18px;height:18px;border-radius:50%;background:var(--blue);box-shadow:inset -5px -3px 0 #000;flex:none}
-.links{display:none;gap:24px;font-weight:600;font-size:15px;color:var(--soft)}
-.links a{text-decoration:none}.links a:hover{color:#fff}
+.nav{position:relative;z-index:5}
+.nav .wrap{display:flex;align-items:center;gap:28px;height:72px;max-width:1240px}
+.mark{display:grid;gap:7px;text-decoration:none;margin-right:auto;color:#111522}
+.mark span{font:600 12px/1 Montserrat,sans-serif;letter-spacing:.32em;text-transform:uppercase}
+.mark i{display:flex;gap:7px}
+.mark i b{width:9px;height:9px;border-radius:50%;background:#111522}
+.mark i b:nth-child(2){background:transparent;box-shadow:inset 0 0 0 1.5px #111522}
+.mark i b:nth-child(3){background:#536684}
+.mark i b:nth-child(4){background:#98a9c4}
+.links{display:none;gap:26px;font:600 11.5px/1 Montserrat,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#536684}
+.links a{text-decoration:none}.links a:hover{color:#111522}
+.nav .pill{background:#111522;color:#fff}
 
 /* buttons */
 .pill{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:var(--r-pill);font:700 15px/1 Montserrat,sans-serif;padding:14px 22px;min-height:46px;cursor:pointer;text-decoration:none;transition:background .15s,box-shadow .15s;white-space:nowrap}
@@ -57,20 +62,34 @@ img{display:block;max-width:100%}
 .pill.small{min-height:38px;padding:9px 16px;font-size:14px}
 .pill:disabled{opacity:.55;cursor:wait}
 
-/* hero */
-.hero{position:relative;isolation:isolate;width:100vw;margin-left:calc(50% - 50vw);min-height:100svh;display:flex;align-items:center;padding:112px 0 40px;overflow:hidden}
-.hero-bg{position:absolute;inset:0;z-index:-2}
-.hero-bg img{width:100%;height:100%;object-fit:cover;object-position:45% 35%}
-.hero:after{content:"";position:absolute;inset:0;z-index:-1;background:rgba(0,0,0,.66)}
-.hero-in{width:100%;max-width:820px;margin:0 auto;padding:0 var(--gutter);text-align:center}
-.say h1{font-weight:700;font-size:clamp(38px,7.6vw,80px);line-height:1.02;letter-spacing:-.025em;color:#fff}
-.say h1 em{font-style:italic;font-weight:500;color:#fff;letter-spacing:-.02em}
-.say p{color:#e6e6ea;font-size:clamp(17px,2.2vw,20px);max-width:44ch;margin:20px auto 0}
-.btns{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:28px}
-.pill.white{background:#fff;color:#000}.pill.white:hover{background:#e8e8e8}
-.hero .chat{margin:44px auto 0;max-width:720px;text-align:left;scroll-margin-top:84px}
-.cue{display:block;margin-top:28px;color:#bdbdc4;font-size:14px;text-decoration:none}
-.cue:hover{color:#fff}
+/* hero: framed picture, black title card, white stats strip (editorial layout) */
+.hero{padding:0 var(--gutter)}
+.frame{position:relative;max-width:1240px;margin:0 auto;background:#fff;box-shadow:0 24px 60px rgba(17,21,34,.14)}
+.shot{position:relative;height:min(62vh,560px);min-height:300px;overflow:hidden;background:#1e263b}
+.shot img{width:100%;height:100%;object-fit:cover;object-position:42% 38%}
+.shot .chip{position:absolute;top:18px;left:18px;background:#111522;color:#dce3ef;font:600 11px/1 Montserrat,sans-serif;letter-spacing:.2em;text-transform:uppercase;padding:9px 12px}
+.card{position:relative;margin:-64px 16px 0;background:#111522;color:#fff;z-index:2}
+.card .in{padding:26px 24px 24px}
+.card small{display:block;font:600 11px/1 Montserrat,sans-serif;letter-spacing:.32em;text-transform:uppercase;color:#98a9c4;margin-bottom:16px}
+.card h1{font-weight:500;font-size:clamp(26px,3.4vw,36px);line-height:1.15;letter-spacing:-.01em}
+.card h1 em{font-style:normal;color:#98a9c4}
+.card .row{display:flex;justify-content:space-between;gap:12px;background:#1e263b;padding:14px 24px;font:600 12px/1 Montserrat,sans-serif;letter-spacing:.14em;text-transform:uppercase}
+.card .row a{text-decoration:none;color:#dce3ef}.card .row a:hover{color:#fff}
+.strip{display:grid;grid-template-columns:1fr 1fr;gap:0;padding:28px 16px 32px}
+.strip .gap{display:none}
+.stat{padding:6px 18px;border-left:1px solid #dce3ef}
+.stat:first-of-type{border-left:0;padding-left:8px}
+.stat b{display:block;font-weight:500;font-size:clamp(28px,4vw,38px);color:#111522;letter-spacing:-.02em}
+.stat span{display:block;margin-top:6px;font:600 11px/1.4 Montserrat,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#536684}
+.strip p{grid-column:1/-1;margin-top:24px;color:#536684;font-size:15.5px;line-height:1.7;max-width:46ch;padding-left:8px}
+
+/* the chat, under the strip */
+.try{max-width:760px;margin:64px auto 0;scroll-margin-top:24px}
+.try h2{color:#111522;font-weight:500;font-size:clamp(22px,3vw,28px);letter-spacing:-.01em;margin-bottom:6px}
+.try .lead{color:#536684;margin-bottom:18px;font-size:15.5px}
+
+/* ridge band: layered hills in the palette, leading into the dark sections */
+.ridge{display:block;width:100vw;margin:80px 0 0 calc(50% - 50vw);height:clamp(90px,14vw,190px)}
 
 /* the chat box */
 .chat{background:var(--panel);border-radius:var(--r-md);display:flex;flex-direction:column;overflow:hidden}
@@ -247,7 +266,14 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
 @media (min-width:900px){
   :root{--section:120px}
   .links{display:flex}
-  .hero{padding:140px 0 56px}
+  .hero{padding:0 28px}
+  .card{position:absolute;left:clamp(24px,5vw,64px);bottom:-150px;width:440px;margin:0}
+  .strip{grid-template-columns:504px 1fr 1fr 1.4fr;padding:40px 40px 44px 0;align-items:start}
+  .strip .gap{display:block}
+  .stat:first-of-type{border-left:1px solid #dce3ef;padding-left:24px}
+  .stat{padding:4px 24px}
+  .strip p{grid-column:auto;margin-top:0;padding-left:28px;border-left:1px solid #dce3ef;font-size:15px}
+  .shot{height:min(70vh,640px)}
   .log{padding:22px}
   .steps{grid-template-columns:repeat(4,1fr)}
   .card{padding:28px}
@@ -257,26 +283,42 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
 <body>
 <nav class="nav" id="nav" aria-label="Main">
   <div class="wrap">
-    <a class="mark" href="/"><i aria-hidden="true"></i>Foresyte</a>
+    <a class="mark" href="/"><span>Foresyte</span><i aria-hidden="true"><b></b><b></b><b></b><b></b></i></a>
     <div class="links"><a href="#how">How it works</a><a href="#traps">Traps</a><a href="#pricing">Pricing</a><a href="#proof">Proof</a><a href="#faq">FAQ</a></div>
-    <a class="pill blue small" href="https://app.paybox.sh/plugins">Add to PayBox</a>
+    <a class="pill small" href="https://app.paybox.sh/plugins">Add to PayBox</a>
   </div>
 </nav>
 
-<main class="wrap">
 <header class="hero">
-  <picture class="hero-bg" aria-hidden="true">
-    <source type="image/webp" srcset="/hero-760.webp 760w, /hero-1280.webp 1280w" sizes="100vw">
-    <img src="/hero-1280.webp" width="1280" height="757" alt="" fetchpriority="high">
-  </picture>
-  <div class="hero-in">
-  <div class="say">
-    <h1>Know if a contract is a trap <em>before you place it</em></h1>
-    <p>Paste any Polymarket link and see the worst case in dollars, plus when to get out</p>
-    <div class="btns"><a class="pill white" href="#try">Check a market</a><a class="pill ghost" href="https://app.paybox.sh/plugins">Add to PayBox &#8599;</a></div>
+  <div class="frame">
+    <div class="shot">
+      <picture>
+        <source type="image/webp" srcset="/hero-760.webp 760w, /hero-1280.webp 1280w" sizes="(min-width:1240px) 1240px, 100vw">
+        <img src="/hero-1280.webp" width="1280" height="757" alt="Engraved illustration of a blue bird beside a face playing a golden flute" fetchpriority="high">
+      </picture>
+      <span class="chip">Polymarket trap check</span>
+    </div>
+    <div class="card">
+      <div class="in">
+        <small>Foresyte</small>
+        <h1>Know if a contract is a trap <em>before you place it</em></h1>
+      </div>
+      <div class="row"><a href="#try">Check a market &#8595;</a><a href="https://app.paybox.sh/plugins">PayBox &#8599;</a></div>
+    </div>
+    <div class="strip">
+      <div class="gap" aria-hidden="true"></div>
+      <div class="stat"><b class="num">$0</b><span>to check<br>a market</span></div>
+      <div class="stat"><b class="num">${price}</b><span>for the<br>full plan</span></div>
+      <p>Foresyte reads Polymarket's live order book and rules, then tells you the worst case in dollars and when to get out, right inside your PayBox agent</p>
+    </div>
   </div>
+</header>
 
-  <div class="chat" id="try">
+<main class="wrap">
+<div class="try" id="try">
+  <h2>Ask Foresyte</h2>
+  <p class="lead">Paste a Polymarket link and your amount, the verdict comes back in seconds</p>
+  <div class="chat">
     <div class="chat-head"><span class="live" aria-hidden="true"></span><b>Foresyte</b><span>free, live data</span></div>
     <div class="log" id="log" aria-live="polite">
       <div class="msg bot intro">
@@ -297,11 +339,12 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
       </div>
     </form>
   </div>
-  <a class="cue" href="#how">Scroll to see how it works &#8595;</a>
-  </div>
-</header>
+</div>
 
-<section id="how" class="p1">
+<svg class="ridge" viewBox="0 0 1440 190" preserveAspectRatio="none" aria-hidden="true"><path fill="#98a9c4" d="M0 120 L120 70 L230 100 L360 40 L470 90 L600 55 L720 95 L860 35 L990 85 L1110 50 L1240 95 L1350 60 L1440 85 V190 H0Z"/><path fill="#536684" d="M0 140 L140 100 L260 130 L400 85 L520 125 L660 95 L790 130 L930 80 L1060 120 L1190 90 L1320 128 L1440 105 V190 H0Z"/><path fill="#303d59" d="M0 158 L110 132 L250 155 L380 120 L510 150 L640 128 L780 158 L900 122 L1040 150 L1170 128 L1300 155 L1440 135 V190 H0Z"/><path fill="#1e263b" d="M0 172 L150 152 L300 170 L450 148 L600 168 L760 150 L910 170 L1070 152 L1220 170 L1350 155 L1440 165 V190 H0Z"/><path fill="#111522" d="M0 182 L200 172 L420 182 L640 170 L880 182 L1120 172 L1340 182 L1440 176 V190 H0Z"/></svg>
+
+
+<section id="how" class="p1" style="padding-top:calc(var(--section) - 24px)">
   <h2>How it works</h2>
   <ol class="steps">
     <li><b>Paste a link</b><span>Any Polymarket market, plus your amount</span></li>
@@ -411,9 +454,6 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
 </footer>
 
 <script>
-const navEl = document.getElementById("nav");
-const onScroll = () => navEl.classList.toggle("solid", window.scrollY > 40);
-addEventListener("scroll", onScroll, { passive: true }); onScroll();
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
