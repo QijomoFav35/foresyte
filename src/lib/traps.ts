@@ -2,10 +2,11 @@
 //   Trap 1, liquidity: "you can't get out" — the app shows money you cannot sell.
 //   Trap 2, rules: "you can be right and still lose" — see rules.ts.
 
-import { EXIT_BAND, bestAsk, bestBid, exitDepth, sellProceeds, spread, walkAsks, type Level } from "./book.ts";
+import { bestAsk, bestBid, exitDepth, sellProceeds, spread, walkAsks, type Level } from "./book.ts";
 import { analyzeRules, type RulesResult } from "./rules.ts";
 import type { Market, Position } from "./polymarket.ts";
-import { cents, combine, finite, pct, sortFlags, usd, type Flag, type RiskLevel } from "./verdict.ts";
+import { cents, combine, finite, pct, shareCount, sortFlags, usd, type Flag, type RiskLevel } from "./verdict.ts";
+import { VERDICT, daysUntil, inExitWindow, timeLeft, whatToDoBeforeBuying, whatToDoWhileHolding } from "./plain.ts";
 
 // Thresholds. Published in the README; every one of them is checked against live markets.
 export const SLIPPAGE_LIMIT = 0.05; // average fill more than 5% worse than the shown price
@@ -16,6 +17,7 @@ export const EXIT_DISCOUNT_LIMIT = 0.03; // selling now returns more than 3% und
 export type EntryAssessment = {
   level: RiskLevel;
   headline: string;
+  whatToDo: string;
   flags: Flag[];
   outcome: string;
   stakeUsdc: number;
@@ -46,45 +48,45 @@ export function assessEntry(
 
   // Trap 1: liquidity
   if (book.asks.length === 0) {
-    flags.push({ level: "HIGH_RISK", check: "no_sellers", message: `Nobody is selling ${outcome} right now, so a bet can't fill.` });
+    flags.push({ level: "HIGH_RISK", check: "no_sellers", message: `Nobody is selling ${outcome} right now, so your bet can't go through.` });
   } else if (!fill.filled) {
     flags.push({
       level: "HIGH_RISK",
       check: "cannot_fill",
-      message: `Only ${usd(fill.available)} of ${outcome} is for sale. A ${usd(stakeUsdc)} bet can't fill.`,
+      message: `Only ${usd(fill.available)} of ${outcome} is for sale, so a ${usd(stakeUsdc)} bet can't go through in full.`,
     });
   }
   if (book.bids.length === 0) {
     flags.push({
       level: "HIGH_RISK",
       check: "no_buyers",
-      message: "Nobody is buying this market right now. Once you're in, you're in until it resolves.",
+      message: "Nobody is buying in this market right now. Once you're in, you're stuck until it ends.",
     });
   } else if (depth < stakeUsdc) {
     flags.push({
       level: "HIGH_RISK",
       check: "exit_thinner_than_stake",
-      message: `Only ${usd(depth)} of buyers exist within ${cents(EXIT_BAND)} of the price. If you buy ${usd(stakeUsdc)}, you can't cash out until it resolves.`,
+      message: `Only ${usd(depth)} of buyers exist near the current price. Put in ${usd(stakeUsdc)} and you can't cash out until the market ends.`,
     });
   } else if (depth < THIN_MULTIPLE * stakeUsdc) {
     flags.push({
       level: "CAUTION",
       check: "exit_thin",
-      message: `Few buyers here (${usd(depth)} near the price). Selling early would push the price against you.`,
+      message: `Few buyers here (${usd(depth)} near the price). If you sell early, you'll get less than the price shown.`,
     });
   }
   if (fill.avgPrice !== null && shown !== null && shown > 0 && fill.avgPrice > shown * (1 + SLIPPAGE_LIMIT)) {
     flags.push({
       level: "CAUTION",
       check: "slippage",
-      message: `Shows ${cents(shown)}, but your size fills at ${cents(fill.avgPrice)} on average.`,
+      message: `Shows ${cents(shown)}, but your size fills at ${cents(fill.avgPrice)} on average. You pay more than the price on screen.`,
     });
   }
   if (gap !== null && gap > SPREAD_LIMIT + 1e-9) {
     flags.push({
       level: "CAUTION",
       check: "wide_spread",
-      message: `Buying and selling right now are ${cents(gap)} apart, so you start that far underwater.`,
+      message: `The buy price and the sell price are ${cents(gap)} apart, so you start ${cents(gap)} down on every share.`,
     });
   }
 
@@ -95,20 +97,31 @@ export function assessEntry(
   );
   flags.push(...rules.flags);
 
+  // The exit window: a risky market within 3 days of its end. This is when buyers vanish and rules decide it.
+  const liquidityTrap = flags.some((f) => f.level === "HIGH_RISK" && f.check !== "no_sellers" && f.check !== "cannot_fill");
+  if ((rules.flags.length > 0 || liquidityTrap) && inExitWindow(market.endDate, now)) {
+    flags.push({
+      level: "HIGH_RISK",
+      check: "exit_window",
+      message: `This market ends in ${timeLeft(daysUntil(market.endDate, now))}. Near the end, buyers disappear and the rules decide who wins. This is the riskiest time to get in.`,
+    });
+  }
+
   const sorted = sortFlags(flags);
   const level = combine(sorted);
   let headline: string;
   if (fill.shares > 0) {
-    headline = `${level}. A ${usd(fill.spent)} bet on ${outcome} buys ${fill.shares.toFixed(1)} shares; selling them right back would return ${usd(sale.proceeds)}.`;
-    if (sale.unsoldShares > 0.05) headline += ` ${sale.unsoldShares.toFixed(1)} shares would find no buyer at all.`;
+    headline = `${VERDICT[level]} If you bet ${usd(fill.spent)} on ${outcome} and want out right away, you'd get back ${usd(sale.proceeds)}.`;
+    if (sale.unsoldShares > 0.05) headline += ` Part of your bet (${shareCount(sale.unsoldShares)} of ${shareCount(fill.shares)} shares) would find no buyer at all.`;
   } else {
-    headline = `${level}. A ${usd(stakeUsdc)} bet on ${outcome} can't be placed: there are no sellers.`;
+    headline = `${VERDICT[level]} A ${usd(stakeUsdc)} bet on ${outcome} can't be placed: nobody is selling.`;
   }
   if (level === "CLEAR") headline += " No traps found at this size.";
 
   return {
     level,
     headline,
+    whatToDo: whatToDoBeforeBuying(level, sorted),
     flags: sorted,
     outcome,
     stakeUsdc,
@@ -136,6 +149,7 @@ export type HoldingAssessment = {
   unsoldShares: number;
   daysLeft: number | null;
   notes: string[];
+  whatToDo: string;
   flags: Flag[];
 };
 
@@ -151,7 +165,7 @@ export function assessHolding(
   const cost = finite(position.initialValue) ?? (finite(position.size) ?? 0) * (finite(position.avgPrice) ?? 0);
   const displayed = finite(position.currentValue) ?? 0;
   const pnl = displayed - cost;
-  notes.push(pnl >= 0 ? `Up ${usd(pnl)} on paper.` : `Down ${usd(-pnl)} on paper.`);
+  notes.push(pnl >= 0 ? `Up ${usd(pnl)} on paper.` : `Down ${usd(-pnl)} on paper.`);  // "on paper" = what the app shows, not cash
 
   let sellNow = 0;
   let unsold = position.size;
@@ -162,20 +176,20 @@ export function assessHolding(
     unsold = sale.unsoldShares;
     if (book.bids.length === 0 || bestBid(book.bids) === null) {
       thin = true;
-      flags.push({ level: "HIGH_RISK", check: "no_buyers", message: "No buyers right now. You can't exit until someone bids." });
+      flags.push({ level: "HIGH_RISK", check: "no_buyers", message: "Nobody is buying right now. You can't sell until someone wants to buy." });
     } else if (sale.unsoldShares > 0.05) {
       thin = true;
       flags.push({
         level: "HIGH_RISK",
         check: "exit_closing",
-        message: `Buyers are thinning out. Cash out now while you still can: only ${sale.soldShares.toFixed(1)} of your ${position.size.toFixed(1)} shares can be sold right now, for about ${usd(sale.proceeds)}.`,
+        message: `Buyers are thinning out. Cash out now while you still can: only ${shareCount(sale.soldShares)} of your ${shareCount(position.size)} shares can be sold right now, for about ${usd(sale.proceeds)}.`,
       });
     } else if (displayed > 0 && sale.proceeds < displayed * (1 - EXIT_DISCOUNT_LIMIT)) {
       thin = true;
       flags.push({
         level: "CAUTION",
         check: "exit_discount",
-        message: `Selling now returns about ${usd(sale.proceeds)}, ${pct(1 - sale.proceeds / displayed)} below the displayed ${usd(displayed)}, because buyers are thin.`,
+        message: `Selling now returns about ${usd(sale.proceeds)}, ${pct(1 - sale.proceeds / displayed)} less than the ${usd(displayed)} the app shows, because there are few buyers.`,
       });
     } else {
       notes.push(`Selling everything now returns about ${usd(sale.proceeds)}.`);
@@ -197,13 +211,25 @@ export function assessHolding(
     if (daysLeft !== null && daysLeft >= 0) notes.push(`Resolves in ${daysLeft === 0 ? "less than a day" : `${daysLeft} day${daysLeft === 1 ? "" : "s"}`}.`);
   }
 
-  if (book && sellNow > cost && (rulesRisk || thin)) {
-    notes.push(`You could lock in about ${usd(sellNow - cost)} profit now instead of waiting on an uncertain resolution.`);
+  // The exit window: rules or liquidity risk within 3 days of the end. Say "get out now" while there is still a way out.
+  const endDate = market?.endDate ?? null;
+  if ((rulesRisk || thin) && inExitWindow(endDate, now)) {
+    flags.push({
+      level: "HIGH_RISK",
+      check: "exit_window",
+      message: `This market ends in ${timeLeft(daysUntil(endDate, now))}. Near the end, buyers disappear and the rules decide who wins. Get out now while people are still buying.`,
+    });
+  }
+
+  const canLockIn = Boolean(book && sellNow > cost && (rulesRisk || thin));
+  if (canLockIn) {
+    notes.push(`You could lock in about ${usd(sellNow - cost)} profit now instead of waiting on an uncertain result.`);
   }
 
   const sorted = sortFlags(flags);
+  const level = combine(sorted);
   return {
-    level: combine(sorted),
+    level,
     title: position.title,
     outcome: position.outcome,
     link,
@@ -215,6 +241,7 @@ export function assessHolding(
     unsoldShares: unsold,
     daysLeft,
     notes,
+    whatToDo: whatToDoWhileHolding(level, sorted, canLockIn),
     flags: sorted,
   };
 }

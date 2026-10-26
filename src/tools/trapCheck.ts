@@ -3,6 +3,7 @@ import type { McpServer } from "@modelcontextprotocol/server";
 import { Deadline } from "../lib/http.ts";
 import { MarketChoiceNeeded, findMarket, getBook, marketLink } from "../lib/polymarket.ts";
 import { assessEntry } from "../lib/traps.ts";
+import { VERDICT } from "../lib/plain.ts";
 import { errorResult, levelSchema, maybe, messageOf, money, nowIso, okResult, reasonSchema } from "./common.ts";
 
 const inputSchema = z
@@ -15,7 +16,9 @@ const inputSchema = z
 
 const outputSchema = z.object({
   level: levelSchema,
+  verdict: z.string(),
   headline: z.string(),
+  whatToDo: z.string(),
   reasons: z.array(reasonSchema),
   market: z.object({ question: z.string(), slug: z.string(), link: z.string(), endDate: z.string().nullable() }),
   outcome: z.string(),
@@ -63,14 +66,25 @@ export function registerTrapCheck(server: McpServer) {
         const book = await getBook(tokenId, deadline);
         const result = assessEntry(market, index, book, stake);
         const link = marketLink(market.eventSlug, market.slug);
-        const lines = [result.headline, ...result.flags.map((f) => `- ${f.message}`)];
+        const lines = [result.headline];
+        if (result.flags.length) lines.push("", "Why:", ...result.flags.map((f) => `- ${f.message}`));
         const ruleLine = result.rules.basis === "confirmation"
-          ? `Rules: pays on what is confirmed or reported${result.rules.deadline ? ` by ${result.rules.deadline.label}` : ""}.`
-          : `Rules: pays on the event itself${result.rules.deadline ? `; ends ${result.rules.deadline.label}` : ""}.`;
-        lines.push(ruleLine, `Market: ${market.question} (${link})`, `Checked ${nowIso()} against Polymarket's live order book.`);
+          ? `How it's decided: by what gets officially reported${result.rules.deadline ? ` by ${result.rules.deadline.label}` : ""}.`
+          : `How it's decided: by what actually happens${result.rules.deadline ? `. Ends ${result.rules.deadline.label}` : ""}.`;
+        lines.push(
+          "",
+          ruleLine,
+          `What to do: ${result.whatToDo}`,
+          "",
+          `Market: ${market.question}`,
+          link,
+          `Checked ${nowIso()} using Polymarket's live prices. Not betting advice.`,
+        );
         return okResult(lines.join("\n"), {
           level: result.level,
+          verdict: VERDICT[result.level],
           headline: result.headline,
+          whatToDo: result.whatToDo,
           reasons: result.flags,
           market: { question: market.question, slug: market.slug, link, endDate: market.endDate },
           outcome: result.outcome,

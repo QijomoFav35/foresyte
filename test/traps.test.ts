@@ -12,8 +12,9 @@ test("thin in-play game: HIGH_RISK, worst case first", () => {
   assert.equal(r.level, "HIGH_RISK");
   assert.equal(r.flags[0]?.check, "exit_thinner_than_stake");
   assert.match(r.flags[0]?.message ?? "", /Only \$8 of buyers/);
-  assert.match(r.headline, /^HIGH_RISK\. A \$50 bet on Lakers buys 119\.0 shares; selling them right back would return \$8\./);
-  assert.match(r.headline, /99\.0 shares would find no buyer/);
+  assert.match(r.headline, /^This is a trap\. If you bet \$50 on Lakers and want out right away, you'd get back \$8\./);
+  assert.match(r.headline, /99\.0 of 119\.0 shares\) would find no buyer/);
+  assert.match(r.whatToDo, /You may not be able to sell/);
 });
 
 test("deep book, event-based rules: CLEAR", () => {
@@ -50,7 +51,7 @@ test("no buyers and no sellers are both HIGH_RISK", () => {
   assert.ok(noBids.flags.some((f) => f.check === "no_buyers" && f.level === "HIGH_RISK"));
   const noAsks = assessEntry(btcPrice, 0, { bids: deep.bids, asks: [] }, 50, NOW_OCT_26_2026);
   assert.equal(noAsks.level, "HIGH_RISK");
-  assert.match(noAsks.headline, /can't be placed: there are no sellers/);
+  assert.match(noAsks.headline, /can't be placed: nobody is selling/);
 });
 
 test("a stake larger than all asks cannot fill", () => {
@@ -103,4 +104,57 @@ test("claimable counts winners only, never $0 losers", () => {
     position({ redeemable: false, currentValue: 99, title: "open" }),
   ];
   assert.deepEqual(claimable(list).map((p) => p.title), ["winner"]);
+});
+
+// ---- Plain English and the exit window (v1.2.0) ----
+
+const NOW_MAY_29_2026 = new Date("2026-05-29T12:00:00Z"); // 2 days before Strategy's Sunday deadline
+const deepStrategy = { bids: [{ price: 0.11, size: 50000 }], asks: [{ price: 0.12, size: 50000 }] };
+
+test("plain English: no agent words in what a person reads", () => {
+  const r = assessEntry(btcPrice, 0, deep, 50, NOW_OCT_26_2026);
+  assert.match(r.headline, /^Looks safe at this size\./);
+  assert.doesNotMatch(r.headline, /HIGH_RISK|CAUTION|CLEAR/);
+  assert.equal(r.whatToDo, "Go ahead if you like the bet.");
+});
+
+test("exit window: buying a Strategy-style market 2 days before the end is flagged", () => {
+  const r = assessEntry(strategyMay31, 0, deepStrategy, 50, NOW_MAY_29_2026);
+  assert.equal(r.level, "HIGH_RISK");
+  assert.ok(r.flags.some((f) => f.check === "exit_window"));
+  assert.match(r.flags.find((f) => f.check === "exit_window")?.message ?? "", /ends in 2 days/);
+  assert.match(r.whatToDo, /^Don't buy this close to the end/);
+});
+
+test("exit window: holding a Strategy-style market 2 days out says get out now", () => {
+  const h = assessHolding(position({}), deepStrategy, strategyMay31, "x", NOW_MAY_29_2026);
+  assert.equal(h.level, "HIGH_RISK");
+  assert.match(h.flags.find((f) => f.check === "exit_window")?.message ?? "", /Get out now while people are still buying/);
+  assert.equal(h.whatToDo, "Sell now while people are still buying.");
+});
+
+test("exit window: the same market 11 days out is not in the window", () => {
+  const h = assessHolding(position({}), deepStrategy, strategyMay31, "x", NOW_MAY_20_2026);
+  assert.ok(!h.flags.some((f) => f.check === "exit_window"));
+});
+
+test("exit window: a clean, deep price market near its end is not flagged", () => {
+  const r = assessEntry(btcPrice, 0, deep, 50, new Date("2026-11-05T12:00:00Z"));
+  assert.equal(r.level, "CLEAR");
+});
+
+test("exit window: a thin market near its end is flagged even with clean rules", () => {
+  const thin = { bids: [{ price: 0.4, size: 20 }], asks: [{ price: 0.42, size: 500 }] };
+  const r = assessEntry(sportsGame, 0, thin, 50, new Date("2026-11-03T12:00:00Z"));
+  assert.ok(r.flags.some((f) => f.check === "exit_window"));
+});
+
+test("whale: a $500,000 position with $40,000 of buyers can't get out", () => {
+  // 1,000,000 shares bought at 50¢; buyers want only 80,000 shares.
+  const whale = position({ size: 1_000_000, initialValue: 500_000, currentValue: 550_000, curPrice: 0.55 });
+  const book = { bids: [{ price: 0.55, size: 50_000 }, { price: 0.45, size: 30_000 }], asks: [] };
+  const h = assessHolding(whale, book, strategyMay31, "x", NOW_MAY_29_2026);
+  assert.equal(h.level, "HIGH_RISK");
+  assert.match(h.flags.map((f) => f.message).join(" "), /only 80,000 of your 1,000,000 shares can be sold right now, for about \$41,000/);
+  assert.equal(Math.round(h.unsoldShares), 920_000);
 });

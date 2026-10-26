@@ -33,6 +33,12 @@ export function cents(price: number): string {
   return `${c >= 10 ? c.toFixed(0) : c.toFixed(1).replace(/\.0$/, "")}¢`;
 }
 
+// Share counts: one decimal for small holdings, whole numbers with commas for big ones.
+export function shareCount(value: number): string {
+  if (!Number.isFinite(value)) return "0";
+  return Math.abs(value) >= 1000 ? Math.round(value).toLocaleString("en-US") : value.toFixed(1);
+}
+
 export function pct(fraction: number): string {
   return `${Math.round(fraction * 100)}%`;
 }

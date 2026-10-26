@@ -148,13 +148,13 @@ export function analyzeRules(input: RulesInput, now: Date = new Date()): RulesRe
     flags.push({
       level: "HIGH_RISK",
       check: "reporting_deadline_near_weekend",
-      message: `This market resolves on what's reported by ${deadline.label}, not on when it happens, and ${deadline.why}. If the event happens close to the deadline, you can be right and still lose.`,
+      message: `This market is decided by what gets officially reported by ${deadline.label}, not by what actually happens, and ${deadline.why}. If it happens but the news comes out late, you can be right and still lose.`,
     });
   } else if (confirmationBased) {
     flags.push({
       level: "CAUTION",
       check: "reporting_dependent",
-      message: `This market resolves on what's officially reported${deadline ? ` by ${deadline.label}` : ""}, not on when it happens. A reporting delay can decide it.`,
+      message: `This market is decided by what gets officially reported${deadline ? ` by ${deadline.label}` : ""}, not by what actually happens. If the news comes out late, it can decide the result.`,
     });
   }
 
@@ -162,7 +162,7 @@ export function analyzeRules(input: RulesInput, now: Date = new Date()): RulesRe
     flags.push({
       level: "CAUTION",
       check: "clarification_added",
-      message: "The rules carry an added clarification or update. Read it: the outcome may turn on it rather than on the original wording.",
+      message: "Polymarket added an extra note to the rules after the market opened. Read it: the result may depend on that note, not the original rules.",
     });
   }
 
@@ -170,7 +170,7 @@ export function analyzeRules(input: RulesInput, now: Date = new Date()): RulesRe
     flags.push({
       level: "CAUTION",
       check: "vague_wording",
-      message: "The rules use open-ended wording, so the outcome can depend on interpretation.",
+      message: "The rules use vague words, so who wins can come down to how someone reads them.",
     });
   }
 
