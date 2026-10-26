@@ -41,35 +41,39 @@ img{display:block;max-width:100%}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 /* nav */
-.nav{position:fixed;inset:0 0 auto;z-index:20;background:linear-gradient(180deg,rgba(0,0,0,.7),rgba(0,0,0,0));transition:background .2s}
-.nav.solid{background:rgba(0,0,0,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav{position:fixed;inset:0 0 auto;z-index:20;background:transparent;transition:background .2s}
+.nav.solid{background:#000;border-bottom:1px solid var(--line)}
 .nav .wrap{display:flex;align-items:center;gap:28px;height:64px;max-width:1240px}
 .mark{font-weight:900;font-size:20px;letter-spacing:-.04em;text-decoration:none;display:flex;align-items:center;gap:9px;margin-right:auto}
-.mark i{width:18px;height:18px;border-radius:50%;background:var(--blue);box-shadow:0 0 14px var(--glow),inset -5px -3px 0 #000;flex:none}
+.mark i{width:18px;height:18px;border-radius:50%;background:var(--blue);box-shadow:inset -5px -3px 0 #000;flex:none}
 .links{display:none;gap:24px;font-weight:600;font-size:15px;color:var(--soft)}
 .links a{text-decoration:none}.links a:hover{color:#fff}
 
 /* buttons */
 .pill{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:var(--r-pill);font:700 15px/1 Figtree,sans-serif;padding:14px 22px;min-height:46px;cursor:pointer;text-decoration:none;transition:background .15s,box-shadow .15s;white-space:nowrap}
-.pill.blue{background:var(--blue);color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,.12) inset,0 8px 28px var(--glow)}
+.pill.blue{background:var(--blue);color:#fff}
 .pill.blue:hover{background:#5179ff}
 .pill.ghost{background:transparent;color:#fff;box-shadow:inset 0 0 0 1px var(--line-hi)}.pill.ghost:hover{box-shadow:inset 0 0 0 1px #fff}
 .pill.small{min-height:38px;padding:9px 16px;font-size:14px}
 .pill:disabled{opacity:.55;cursor:wait}
 
 /* hero */
-.hero{position:relative;isolation:isolate;width:100vw;margin-left:calc(50% - 50vw);min-height:min(100svh,940px);display:flex;align-items:flex-end;padding:120px 0 40px;overflow:hidden}
+.hero{position:relative;isolation:isolate;width:100vw;margin-left:calc(50% - 50vw);min-height:100svh;display:flex;align-items:flex-end;padding:96px 0 28px;overflow:hidden}
 .hero-bg{position:absolute;inset:0;z-index:-2}
 .hero-bg img{width:100%;height:100%;object-fit:cover;object-position:45% 35%}
-.hero:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(0,0,0,.15) 0%,rgba(0,0,0,.55) 40%,rgba(0,0,0,.9) 75%,#000 100%)}
-.hero-in{width:100%;max-width:1120px;margin:0 auto;padding:0 var(--gutter)}
-.lede{color:#fff;font-weight:600;font-size:clamp(19px,2.8vw,26px);line-height:1.35;max-width:40ch;text-shadow:0 2px 14px rgba(0,0,0,.6)}
+.hero-in{width:100%;max-width:1240px;margin:0 auto;padding:0 var(--gutter);display:grid;gap:22px;align-items:end}
+.say{max-width:640px}
+.say h1{display:inline;font-weight:900;font-size:clamp(34px,7.4vw,72px);line-height:1.18;letter-spacing:-.045em;background:#000;color:#fff;padding:.02em .22em;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.say h1 span{color:var(--blue-hi)}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:18px}
+.tags li{list-style:none;background:#000;color:var(--soft);font:500 13px/1 var(--mono);padding:8px 10px;border-radius:4px}
+.tags li b{color:#3ecf8e;font-weight:500}
 
 /* the chat box */
-.chat{margin-top:24px;box-shadow:0 20px 60px rgba(0,0,0,.5);background:var(--panel);border-radius:var(--r-md);display:flex;flex-direction:column;overflow:hidden}
+.chat{margin-top:0;background:var(--panel);border-radius:var(--r-md);display:flex;flex-direction:column;overflow:hidden}
 .chat-head{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line);font-size:14px;color:var(--muted)}
 .chat-head b{color:#fff;font-size:15px}
-.chat-head .live{width:8px;height:8px;border-radius:50%;background:#3ecf8e;box-shadow:0 0 0 4px rgba(62,207,142,.15)}
+.chat-head .live{width:7px;height:7px;border-radius:50%;background:#3ecf8e}
 .log{display:flex;flex-direction:column;gap:14px;padding:18px;min-height:200px;max-height:min(55vh,520px);overflow-y:auto;overscroll-behavior:contain;scroll-behavior:smooth}
 .msg{max-width:100%;border-radius:18px;padding:14px 16px;animation:rise .3s ease-out}
 @keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
@@ -119,7 +123,7 @@ img{display:block;max-width:100%}
 .chips span{margin-left:auto}
 .hint{color:var(--muted);font-size:13px;margin:10px 4px 0}
 
-.chat{background:rgba(8,8,10,.86);border:1px solid var(--line-hi);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.chat{background:#0b0b0d;border:1px solid #26262b;box-shadow:none}
 .chat-head{border-color:var(--line)}
 .msg.bot{background:#15151a;border:1px solid var(--line)}
 .facts div{background:#0d0d10;border:1px solid var(--line)}
@@ -128,7 +132,6 @@ img{display:block;max-width:100%}
 .composer{background:transparent;border-color:var(--line)}
 .ask{background:#121216;border-color:var(--line-hi)}
 .chips input{background:#121216;border:1px solid var(--line)}
-.hint{margin-top:12px}
 
 /* sections */
 section{padding-top:var(--section);scroll-margin-top:80px}
@@ -153,7 +156,7 @@ h2{font-weight:800;font-size:clamp(28px,5vw,40px);line-height:1.08;letter-spacin
 .tier ul{list-style:none;display:grid;gap:8px;color:var(--soft);font-size:15.5px}
 .tier li{padding-left:22px;position:relative}
 .tier li:before{content:"";position:absolute;left:2px;top:.55em;width:9px;height:5px;border-left:2px solid var(--blue-hi);border-bottom:2px solid var(--blue-hi);transform:rotate(-45deg)}
-.tier.paid{border-color:rgba(61,107,255,.55);background:linear-gradient(180deg,rgba(61,107,255,.14),rgba(61,107,255,.03) 60%),var(--panel);box-shadow:0 0 40px rgba(61,107,255,.12)}
+.tier.paid{border-color:var(--blue);background:#0a0f22}
 .tier.paid .cost{color:var(--blue-hi)}
 
 .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:28px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--panel)}
@@ -224,7 +227,9 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
 @media (min-width:900px){
   :root{--section:120px}
   .links{display:flex}
-  .hero{padding:160px 0 56px}
+  .hero{padding:110px 0 40px}
+  .hero-in{grid-template-columns:1fr minmax(380px,460px);gap:40px}
+  .say{align-self:end;padding-bottom:6px}
   .log{padding:22px}
   .steps{grid-template-columns:repeat(4,1fr)}
   .card{padding:28px}
@@ -247,41 +252,42 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
     <img src="/hero-1280.webp" width="1280" height="757" alt="" fetchpriority="high">
   </picture>
   <div class="hero-in">
-  <h1 class="sr">Foresyte: is this Polymarket bet a trap?</h1>
-  <p class="lede">Paste any Polymarket link. Foresyte tells you the worst case in dollars before you put money in, and when to get out once you have.</p>
+  <div class="say">
+    <h1>Know if a Polymarket bet is a <span>trap</span> before you place it</h1>
+    <ul class="tags"><li><b>&#9679;</b> live order books</li><li>free check</li><li>no wallet needed</li><li>works in PayBox</li></ul>
+  </div>
 
   <div class="chat" id="try">
-    <div class="chat-head"><span class="live" aria-hidden="true"></span><b>Foresyte</b><span>Free check, live Polymarket data</span></div>
+    <div class="chat-head"><span class="live" aria-hidden="true"></span><b>Foresyte</b><span>free, live data</span></div>
     <div class="log" id="log" aria-live="polite">
       <div class="msg bot intro">
-        <p>Paste a Polymarket link and tell me what you'd bet. I'll tell you:</p>
+        <p>Drop a Polymarket link and your amount, I'll check</p>
         <ul><li>if you can get your money back out</li><li>the price you'd really pay at your amount</li><li>if the rules can make you lose even when you're right</li></ul>
       </div>
     </div>
     <form class="composer" id="check" autocomplete="off">
       <div class="ask">
         <label class="sr" for="q">Ask Foresyte</label>
-        <textarea id="q" name="q" rows="2" required placeholder="Paste a Polymarket link, or ask: Is this a trap? $50 on Yes https://polymarket.com/event/..."></textarea>
+        <textarea id="q" name="q" rows="2" required placeholder="Paste a link or ask: is this a trap? $50 on Yes"></textarea>
         <button class="send" id="go" type="submit" aria-label="Check it"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M12 5l7 7-7 7"/></svg></button>
       </div>
       <div class="chips">
         <label>Amount $<input id="s" name="stake" type="number" min="1" step="1" value="50" inputmode="numeric"></label>
         <label>You'd buy<input id="o" name="outcome" placeholder="Yes"></label>
-        <span>Press Enter to send</span>
+        <span>Enter to send</span>
       </div>
     </form>
   </div>
-  <p class="hint">Free, no wallet, no sign-up. The same check your PayBox agent runs.</p>
   </div>
 </header>
 
 <section id="how">
   <h2>How it works</h2>
   <ol class="steps">
-    <li><b>Paste a link</b><span>Any Polymarket market, with your amount.</span></li>
-    <li><b>Get the verdict</b><span>Trap, careful, or safe. Free.</span></li>
-    <li><b>Go deeper</b><span>A code for the ${price} deep scan.</span></li>
-    <li><b>Approve in PayBox</b><span>Your full plan comes back in chat.</span></li>
+    <li><b>Paste a link</b><span>Any Polymarket market, plus your amount</span></li>
+    <li><b>Get the verdict</b><span>Trap, careful or safe, free</span></li>
+    <li><b>Go deeper</b><span>Grab a code for the ${price} deep scan</span></li>
+    <li><b>Approve in PayBox</b><span>Your full plan lands in the chat</span></li>
   </ol>
 </section>
 
@@ -291,20 +297,20 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
     <article class="card trap">
       <h3>You can't get out</h3>
       <p class="big num">$8</p>
-      <p class="cap">of buyers on a game where someone bet $50. Winning at halftime, unable to sell, lost it all.</p>
-      <p class="fix"><b>Foresyte</b> checks the buyers at your amount before you bet, and tells you when they are running out.</p>
+      <p class="cap">of buyers on a game someone put $50 on, winning at halftime with no way to sell, then lost it all</p>
+      <p class="fix"><b>Foresyte</b> checks the buyers at your amount before you bet and warns you when they start running out</p>
     </article>
     <article class="card trap">
       <h3>You can be right and still lose</h3>
       <p class="big num">$500K</p>
-      <p class="cap">lost on the Strategy bitcoin market. The sale happened; the filing came after the Sunday deadline.</p>
-      <p class="fix"><b>Foresyte</b> flags markets decided by a report, not the event, and gives you the last day to sell.</p>
+      <p class="cap">lost on the Strategy bitcoin market, the sale happened but the filing landed after a Sunday deadline</p>
+      <p class="fix"><b>Foresyte</b> flags markets decided by a report instead of the event and gives you a last day to sell</p>
     </article>
   </div>
 </section>
 
 <section id="pricing">
-  <h2>Check free. Go deep for ${price}.</h2>
+  <h2>Check free, go deep for ${price}</h2>
   <div class="grid2">
     <div class="card tier">
       <h3>Quick check</h3>
@@ -317,7 +323,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
       <ul><li>Your money back at $10 to $25,000</li><li>The biggest bet you can still get out of</li><li>The last day to sell</li><li>The other side of the market</li><li>A step-by-step plan</li></ul>
     </div>
   </div>
-  <p class="sub">USDC on ${chain} via x402. Approve in PayBox, or let your agent pay from its own wallet.</p>
+  <p class="sub">Paid in USDC on ${chain} over x402, approve it in PayBox or let your agent pay from its own wallet</p>
 </section>
 
 <section id="compare">
@@ -342,7 +348,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
     <div><b class="num" id="paid-count">0</b><span>paid scans</span></div>
     <div><b class="num">0</b><span>keys needed</span></div>
   </div>
-  <div class="card ledger" id="ledger"><p class="empty">No paid scans yet. Each one will appear here with its ${chain} transaction.</p></div>
+  <div class="card ledger" id="ledger"><p class="empty">No paid scans yet, each one shows up here with its ${chain} transaction</p></div>
   <details class="card dev" id="agents">
     <summary>For developers and agents <span>Show</span></summary>
     <div class="endpoints">
@@ -351,21 +357,21 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
       <div class="row"><code>GET /api/deep-scan?code=FSY-…</code><span class="p paid">${price}</span><span>402, pay, then the report</span></div>
       <div class="row"><code>GET /api/proof</code><span class="p">Free</span><span>Paid scans with transactions</span></div>
     </div>
-    <div class="copyrow" style="margin-top:16px"><pre id="agent-prompt">Use the Foresyte plugin to check if &lt;Polymarket link&gt; is a trap for $50.</pre><button class="pill ghost small" type="button" data-copy="agent-prompt">Copy</button></div>
+    <div class="copyrow" style="margin-top:16px"><pre id="agent-prompt">Use the Foresyte plugin to check if &lt;Polymarket link&gt; is a trap for $50</pre><button class="pill ghost small" type="button" data-copy="agent-prompt">Copy</button></div>
   </details>
 </section>
 
 <section id="faq">
   <h2>FAQ</h2>
   <div class="faq">
-    <details><summary>Is this betting advice?</summary><p>No. Foresyte shows you how a market works right now: who is buying, what you'd get back, and how the rules decide the result. The choice is yours. You can lose all of your stake.</p></details>
-    <details><summary>Polymarket already shows a price. Why isn't that enough?</summary><p>That price is for a small amount. A bigger bet pays more as it eats through the cheap shares, and selling gets you less if few people are buying. Foresyte works it out at your exact amount.</p></details>
-    <details><summary>Where do the numbers come from?</summary><p>Polymarket's public data, read the moment you ask. Nothing is cached, and the AI never makes up a number.</p></details>
-    <details><summary>What is the 3-day rule?</summary><p>In a market's last 3 days, buyers tend to vanish and the rules start to decide it. If a risky market is in that window, Foresyte tells you to get out.</p></details>
-    <details><summary>Will it alert me while I hold a bet?</summary><p>Not in the background yet. Ask your agent to check your positions any time, and always before you sell.</p></details>
-    <details><summary>How do I pay ${price}?</summary><p>In your PayBox chat: your agent shows the price, you approve, and USDC moves on ${chain} via x402. No account, no card. If the scan can't run, you aren't charged.</p></details>
-    <details><summary>Can my own agent pay?</summary><p>Yes. Any agent with an x402 wallet can call the deep scan link and pay for itself.</p></details>
-    <details><summary>Does Foresyte place bets or hold my money?</summary><p>No. It only reads public data. It never places bets, never asks for keys, and never holds funds.</p></details>
+    <details><summary>Is this betting advice?</summary><p>No, Foresyte shows how a market looks right now (who is buying, what you'd get back, how the rules decide it) and the call is yours, you can still lose your whole stake</p></details>
+    <details><summary>Polymarket already shows a price, why isn't that enough?</summary><p>That price is for a small amount, a bigger bet eats through the cheap shares and costs more, and selling pays less when few people are buying, Foresyte works it out at your exact amount</p></details>
+    <details><summary>Where do the numbers come from?</summary><p>Polymarket's public data, read the moment you ask, nothing is cached and the AI never makes up a number</p></details>
+    <details><summary>What is the 3-day rule?</summary><p>In the last 3 days of a market buyers tend to vanish and the rules start deciding it, so if a risky market is in that window Foresyte tells you to get out</p></details>
+    <details><summary>Will it alert me while I hold a bet?</summary><p>Not in the background yet, ask your agent to check your positions any time and always before you sell</p></details>
+    <details><summary>How do I pay ${price}?</summary><p>Right in your PayBox chat, your agent shows the price, you approve and USDC moves on ${chain} over x402, no account or card, and if the scan can't run you aren't charged</p></details>
+    <details><summary>Can my own agent pay?</summary><p>Yes, any agent with an x402 wallet can call the deep scan link and pay for itself</p></details>
+    <details><summary>Does Foresyte place bets or hold my money?</summary><p>No, it only reads public data, it never places bets, never asks for keys and never holds funds</p></details>
   </div>
 </section>
 </main>
@@ -373,14 +379,14 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
 <footer>
   <div class="wrap">
     <div class="top">
-      <div class="cta"><p>Know the worst case before you click.</p><a class="pill blue small" href="#try">Check a market</a></div>
+      <div class="cta"><p>Know the worst case before you click</p><a class="pill blue small" href="#try">Check a market</a></div>
       <div class="cols">
         <div><h4>Product</h4><ul><li><a href="#try">Free check</a></li><li><a href="#pricing">Deep scan</a></li><li><a href="https://app.paybox.sh/plugins">PayBox plugin</a></li></ul></div>
         <div><h4>Sources</h4><ul><li><a href="https://theblock.co/post/403312/polymarket-faces-backlash-strategy-bitcoin-sale">The Block</a></li><li><a href="https://www.galaxy.com/insights/research/strategy-bitcoin-sale-polymarket-resolution-dispute-may-2026">Galaxy Research</a></li></ul></div>
         <div><h4>Build</h4><ul><li><a href="https://github.com/QijomoFav35/foresyte">GitHub</a></li><li><a href="/api/proof">Proof (JSON)</a></li><li><a href="/?format=json">API</a></li></ul></div>
       </div>
     </div>
-    <p class="fine">Built by someone who couldn't cash out at halftime. Information, not betting advice. Not affiliated with Polymarket. PayBox Hackathon finalist.</p>
+    <p class="fine">Built by someone who couldn't cash out at halftime<br>Information, not betting advice / not affiliated with Polymarket / PayBox Hackathon finalist</p>
   </div>
 </footer>
 
@@ -434,8 +440,8 @@ function verdictHtml(d) {
       "<div><b>" + fill + "</b><span>your real price (shown " + (d.numbers.shownPriceCents ?? "n/a") + "¢)</span></div>" +
     "</div>" +
     '<p class="todo">What to do: ' + esc(d.whatToDo) + "</p>" +
-    '<p class="meta">' + esc(d.market.question) + ". Decided by " + esc(d.rules.decidedBy) + (d.rules.deadline ? ", ends " + esc(d.rules.deadline) : "") + ".</p>" +
-    '<div class="offer"><p>Want the full plan? What you&rsquo;d get back at every amount, the biggest bet you can still get out of, and the last day to sell.</p>' +
+    '<p class="meta">' + esc(d.market.question) + "<br>Decided by " + esc(d.rules.decidedBy) + (d.rules.deadline ? ", ends " + esc(d.rules.deadline) : "") + "</p>" +
+    '<div class="offer"><p>Want the full plan? Your money back at every amount, the biggest bet you can still exit and the last day to sell</p>' +
     '<button class="pill blue small" type="button" data-scan>Get a deep scan for ${price}</button></div>';
 }
 
@@ -445,7 +451,7 @@ function render(d) {
 }
 
 function errorHtml(d) {
-  let html = '<p class="err">' + esc(d.error || "That didn't work. Check the link and try again.") + "</p>";
+  let html = '<p class="err">' + esc(d.error || "That didn't work, check the link and try again") + "</p>";
   if (d.options) html += '<div class="choices">' + d.options.map((o) => '<button type="button" data-slug="' + esc(o.slug) + '">' + esc(o.question) + "</button>").join("") + "</div>";
   return html;
 }
@@ -468,7 +474,7 @@ $("check").addEventListener("submit", async (e) => {
   if (!f.text) return;
   add("me", esc(f.text.replace(f.market, "").trim() || "Is this a trap?") + (f.market ? "<small>" + esc(shortLink(f.market)) + "</small>" : ""));
   $("q").value = "";
-  if (!f.market) { showError({ error: "Paste a Polymarket link in your message so I know which market to check." }); return; }
+  if (!f.market) { showError({ error: "Add a Polymarket link to your message so I know which market to check" }); return; }
   const wait = typing();
   $("go").disabled = true;
   try {
@@ -477,7 +483,7 @@ $("check").addEventListener("submit", async (e) => {
     const d = await res.json();
     wait.remove();
     if (!res.ok) showError(d); else { last = { ...d, input: f }; render(d); }
-  } catch { showError({ error: "Couldn't reach Foresyte. Check your connection and try again." }, wait); }
+  } catch { showError({ error: "Couldn't reach Foresyte, check your connection and try again" }, wait); }
   $("go").disabled = false;
 });
 
@@ -489,7 +495,7 @@ $("q").addEventListener("input", (e) => { const t = e.currentTarget; t.style.hei
 async function deepScanCode(btn) {
   const f = last?.input || fields();
   btn.disabled = true;
-  add("me", "Deep scan, please.");
+  add("me", "Deep scan please");
   const wait = typing();
   try {
     const res = await fetch("/api/code", { method: "POST", headers: { "content-type": "application/json", accept: "application/json" }, body: JSON.stringify({ market: f.market, outcome: last?.outcome || f.outcome || undefined, stake: Number(f.stake) }) });
@@ -497,14 +503,14 @@ async function deepScanCode(btn) {
     if (!res.ok) { showError(d, wait); return; }
     wait.className = "msg bot";
     wait.innerHTML =
-      "<p>Here's your code:</p>" +
+      "<p>Here's your code</p>" +
       '<p class="code-big">' + esc(d.code) + "</p>" +
-      "<p>Paste this into your PayBox chat. Your agent shows the " + esc(d.price) + " price, you approve it, and the deep scan comes back in the chat.</p>" +
+      "<p>Paste this in your PayBox chat, approve the " + esc(d.price) + " and the deep scan comes back right there</p>" +
       '<div class="prompt"><output>' + esc(d.prompt) + '</output><button class="pill blue small" type="button">Copy prompt</button></div>' +
-      '<p class="meta">The code lasts 24 hours. Agents with their own wallet can pay at ' + esc(d.payUrl) + "</p>";
+      '<p class="meta">Code works for 24 hours<br>Agents with their own wallet can pay at ' + esc(d.payUrl) + "</p>";
     wait.querySelector(".prompt button").addEventListener("click", (e) => copy(d.prompt, e.currentTarget));
     log.scrollTop = log.scrollHeight;
-  } catch { showError({ error: "Couldn't make a code. Try again." }, wait); }
+  } catch { showError({ error: "Couldn't make a code, try again" }, wait); }
   finally { btn.disabled = false; }
 }
 
