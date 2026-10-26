@@ -8,7 +8,7 @@ import { errorResult, messageOf } from "./common.ts";
 // No network call here: PayBox fetches the live 402 price, shows it to the person, and pays on approval.
 export const FORESYTE_URL = "https://foresyte.onrender.com"; // change to the Render URL after deploy, and allowlist its host
 const PRICE_ATOMIC = "250000"; // 0.25 USDC (6 decimals)
-const BASE = "eip155:8453" as const;
+const SOLANA = "solana:mainnet" as const; // PayBox pays USDC on Solana
 
 const inputSchema = z
   .object({
@@ -25,7 +25,7 @@ export function registerDeepScan(server: McpServer) {
     {
       title: "Foresyte deep scan (0.25 USDC)",
       description:
-        "Paid, 0.25 USDC on Base over x402. The full Foresyte report for one Polymarket market: what you'd get back at every bet size, the biggest bet you can still get out of, the last day to sell, the other side, and a numbered plain-English plan. " +
+        "Paid, 0.25 USDC on Solana over x402. The full Foresyte report for one Polymarket market: what you'd get back at every bet size, the biggest bet you can still get out of, the last day to sell, the other side, and a numbered plain-English plan. " +
         "Use it when the person pastes a Foresyte code (FSY-XXXXXX) or asks for a deep scan of a market. Use the free trap_check for a quick verdict. " +
         "This returns a payment proposal; after PayBox pays and the request returns, show the person the 'report' field exactly as written, without rewording or adding numbers.",
       inputSchema,
@@ -46,7 +46,7 @@ export function registerDeepScan(server: McpServer) {
         } else {
           return errorResult("Give a Foresyte code (FSY-XXXXXX) or a Polymarket market link.");
         }
-        return proposeX402({ chain: BASE, url, maxAmount: PRICE_ATOMIC });
+        return proposeX402({ chain: SOLANA, url, maxAmount: PRICE_ATOMIC });
       } catch (error) {
         return errorResult(`Couldn't prepare the deep scan: ${messageOf(error)}`);
       }

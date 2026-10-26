@@ -2,17 +2,17 @@
 //   Free:  GET  /api/check       the trap_check verdict for any Polymarket link (the page's live box uses it)
 //          POST /api/code        turn a link into a request code + a prompt to paste into PayBox
 //          GET  /api/code/:code  what a code asks for, and its pay URL
-//          GET  /api/proof       every paid scan with its Base transaction
-//   Paid:  GET  /api/deep-scan   the full deep scan, $0.25 USDC on Base over x402
-// x402 setup copied from TrueBill (a PayBox finalist tested end to end on Base mainnet):
-// @x402/express v2, exact scheme, PayAI facilitator. The server never holds keys or funds.
+//          GET  /api/proof       every paid scan with its Solana transaction
+//   Paid:  GET  /api/deep-scan   the full deep scan, $0.25 USDC on Solana over x402
+// x402 v2 with @x402/express, exact scheme, USDC on Solana (setup per solana.com x402 docs), PayAI facilitator.
+// The server never holds keys or funds.
 
 import express from "express";
 import { paymentMiddleware, x402ResourceServer } from "@x402/express";
-import { ExactEvmScheme } from "@x402/evm/exact/server";
+import { ExactSvmScheme } from "@x402/svm/exact/server";
 import { HTTPFacilitatorClient } from "@x402/core/server";
 import { facilitator } from "@payai/facilitator";
-import { CAIP2, CHAIN_NAME, EXPLORER_TX, PAY_TO, PORT, PUBLIC_URL, SCAN_PRICE } from "./config.ts";
+import { CAIP2, CHAIN_NAME, EXPLORER_SUFFIX, EXPLORER_TX, FACILITATOR_URL, PAY_TO, PORT, PUBLIC_URL, SCAN_PRICE } from "./config.ts";
 import { getRequest, paidScans, recordPaid, saveRequest } from "./store.ts";
 import { UserError, fullScan, parseRequest, quickCheck } from "./scan.ts";
 import { agentPrompt, normalizeCode, type ScanRequest } from "../src/lib/codes.ts";
@@ -107,7 +107,7 @@ app.get("/api/code/:code", (req, res) => {
 });
 
 app.get("/api/proof", (_req, res) => {
-  res.json({ network: CHAIN_NAME, scans: paidScans().map((p) => ({ ...p, explorer: p.txHash ? `${EXPLORER_TX}${p.txHash}` : null })) });
+  res.json({ network: CHAIN_NAME, scans: paidScans().map((p) => ({ ...p, explorer: p.txHash ? `${EXPLORER_TX}${p.txHash}${EXPLORER_SUFFIX}` : null })) });
 });
 
 // ─────────────── Guard that runs BEFORE the paywall ───────────────
@@ -136,7 +136,8 @@ app.use("/api/deep-scan", (req: WithScan, res, next) => {
 
 // ───────────────────────── x402 paywall ─────────────────────────
 
-const resourceServer = new x402ResourceServer(new HTTPFacilitatorClient(facilitator)).register("eip155:*", new ExactEvmScheme());
+const facilitatorClient = new HTTPFacilitatorClient(FACILITATOR_URL ? { url: FACILITATOR_URL } : facilitator);
+const resourceServer = new x402ResourceServer(facilitatorClient).register(CAIP2, new ExactSvmScheme());
 
 app.use(
   paymentMiddleware(

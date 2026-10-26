@@ -31,7 +31,7 @@ Unit tests: 60 pass (`node --test test/*.test.ts`). All math is in pure function
 
 ## How payment works (x402, confirmed)
 Copied from TrueBill (github.com/big14way/truebill), a PayBox finalist tested end to end on Base mainnet:
-Express 5 + `@x402/express` v2, exact scheme, `@payai/facilitator`, USDC on Base (eip155:8453). No API keys.
+Express 5 + `@x402/express` v2, exact scheme, `@payai/facilitator`, USDC on Solana (was Base). No API keys.
 1. Page: paste link → free check → "Get a deep scan" → code FSY-XXXXXX + prompt "Use the Foresyte plugin to run a deep scan with code FSY-XXXXXX."
 2. Person pastes prompt in PayBox chat → plugin `deep_scan` returns x402 proposal → PayBox shows $0.25 → person approves → paid GET /api/deep-scan → report.
 3. Agents with their own wallet call GET /api/deep-scan directly (402 → pay → 200).
@@ -67,3 +67,11 @@ Spotify-inspired: pure black, #181818 panels, white text, Polymarket blue #3D6BF
 ## Trap case cards (Oct 26, 22:45), all verified against news sources
 Strategy bitcoin ($3.8M cleared, 1,838 accounts; The Block), Zelenskyy suit ($237M volume; Decrypt), Ukraine minerals ($7M, ~25% of UMA votes one holder; Cointelegraph), Paris temperature ($1.4M over two days; Boston Globe/CNN), oversized whale ($2.07M in 35 days, 51% win rate; Coinpedia).
 Left out: "BTC daily markers secret rule edit" (no source found), unclaimed winnings (Polymarket auto-claims now). No trader names on the site. No full stops in page copy (founder's style).
+
+## Payments moved to Solana (Oct 26, 23:20)
+x402 now settles USDC on **Solana** (founder's call: PayBox/MoonPay prizes are on Solana).
+- Server: `@x402/svm` ExactSvmScheme, network `solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp` (Devnet `solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1`), PayAI facilitator by default, `FACILITATOR_URL` overrides. Setup from solana.com/docs/payments/agentic-payments/x402.
+- PAY_TO is a Solana address and must already have a USDC token account (receive any USDC once first).
+- Plugin deep_scan proposes `solana:mainnet`, 250000 (0.25 USDC); PayBox's proposeX402 fills the USDC mint.
+- Test: `npm run smoke` (no wallet) then Devnet `npm run buy` with a throwaway Devnet key.
+- Unproven until tested: PayAI facilitator on Solana mainnet (check `https://facilitator.payai.network/supported`). Base path (TrueBill) is the fallback if Solana fails.

@@ -51,9 +51,9 @@ if (!market) {
     try { challenge = header ? JSON.parse(Buffer.from(header, "base64").toString("utf8")) : await paid.json(); } catch {}
     const accept = challenge?.accepts?.[0];
     ok("402 names the exact scheme", accept?.scheme === "exact", accept?.scheme);
-    ok("402 is on Base", typeof accept?.network === "string" && accept.network.startsWith("eip155:"), accept?.network);
+    ok("402 is on Solana", typeof accept?.network === "string" && accept.network.startsWith("solana:"), accept?.network);
     ok("402 price is 0.25 USDC (250000)", String(accept?.amount ?? accept?.maxAmountRequired) === "250000", String(accept?.amount ?? accept?.maxAmountRequired));
-    ok("402 pays your PAY_TO address", typeof accept?.payTo === "string" && accept.payTo.startsWith("0x"), accept?.payTo);
+    ok("402 pays a Solana PAY_TO address", typeof accept?.payTo === "string" && /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(accept.payTo), accept?.payTo);
   }
 }
 
