@@ -142,7 +142,19 @@ img{display:block;max-width:100%}
 .chips input{background:#121216;border:1px solid var(--line)}
 
 /* sections */
-section{padding-top:var(--section);scroll-margin-top:80px}
+section{padding:var(--section) 0;scroll-margin-top:64px;position:relative;background:var(--bg);color:var(--text);box-shadow:0 0 0 100vmax var(--bg);clip-path:inset(0 -100vmax)}
+section h2{color:var(--text)}
+/* palette: one shade per section, darkest at the top */
+.p1,.p2,.p3,.p4{--text:#fff;--accent:#9db4ff}
+.p1{--bg:#111522;--panel:#1e263b;--soft:#dce3ef;--muted:#98a9c4;--line:rgba(152,169,196,.16);--line-hi:rgba(152,169,196,.3)}
+.p2{--bg:#1e263b;--panel:#111522;--soft:#dce3ef;--muted:#98a9c4;--line:rgba(152,169,196,.18);--line-hi:rgba(152,169,196,.32)}
+.p3{--bg:#303d59;--panel:#1e263b;--soft:#dce3ef;--muted:#b8c5da;--line:rgba(220,227,239,.16);--line-hi:rgba(220,227,239,.3)}
+.p4{--bg:#536684;--panel:#303d59;--soft:#dce3ef;--muted:#dce3ef;--line:rgba(220,227,239,.2);--line-hi:rgba(220,227,239,.35)}
+.p5,.p6{--text:#111522;--accent:#1e3fae;--soft:#1e263b}
+.p5{--bg:#98a9c4;--panel:#dce3ef;--muted:#303d59;--line:rgba(17,21,34,.16);--line-hi:rgba(17,21,34,.28)}
+.p6{--bg:#dce3ef;--panel:#fff;--muted:#536684;--line:rgba(17,21,34,.12);--line-hi:rgba(17,21,34,.24)}
+.p5 pre,.p6 pre{background:#111522;color:#dce3ef}
+.p5 .pill.ghost,.p6 .pill.ghost{color:#111522;box-shadow:inset 0 0 0 1px rgba(17,21,34,.35)}
 h2{font-weight:700;font-size:clamp(28px,5vw,40px);line-height:1.08;letter-spacing:-.02em;max-width:20ch}
 .sub{color:var(--muted);margin-top:10px;max-width:56ch}
 .card{border:1px solid var(--line);border-radius:var(--r-md);background:var(--panel);padding:22px}
@@ -150,31 +162,31 @@ h2{font-weight:700;font-size:clamp(28px,5vw,40px);line-height:1.08;letter-spacin
 
 .steps{display:grid;gap:10px;margin-top:28px;list-style:none;counter-reset:s}
 .steps li{counter-increment:s;display:grid;grid-template-columns:36px 1fr;gap:4px 14px;align-items:start}
-.steps li:before{content:counter(s);grid-row:span 2;width:32px;height:32px;border-radius:50%;border:1px solid var(--line-hi);display:grid;place-items:center;font:700 14px Montserrat,sans-serif;color:var(--blue-hi)}
+.steps li:before{content:counter(s);grid-row:span 2;width:32px;height:32px;border-radius:50%;border:1px solid var(--line-hi);display:grid;place-items:center;font:700 14px Montserrat,sans-serif;color:var(--accent)}
 .steps b{font-size:17px}.steps span{color:var(--muted);font-size:15px}
 
 .trap h3{font-size:20px;font-weight:700;letter-spacing:-.02em}
 .trap .big{font-size:clamp(40px,8vw,56px);font-weight:700;line-height:1;margin:18px 0 6px;color:var(--trap)}
 .trap .cap{color:var(--muted);font-size:15px}
 .trap .fix{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);color:var(--soft);font-size:15.5px}
-.trap .fix b{color:var(--blue-hi)}
+.trap .fix b{color:var(--accent)}
 
 .tier h3{font-size:17px;font-weight:700;color:var(--soft)}
 .tier .cost{font-size:clamp(38px,7vw,48px);font-weight:700;margin:6px 0 16px}
 .tier ul{list-style:none;display:grid;gap:8px;color:var(--soft);font-size:15.5px}
 .tier li{padding-left:22px;position:relative}
-.tier li:before{content:"";position:absolute;left:2px;top:.55em;width:9px;height:5px;border-left:2px solid var(--blue-hi);border-bottom:2px solid var(--blue-hi);transform:rotate(-45deg)}
-.tier.paid{border-color:var(--blue);background:#0a0f22}
-.tier.paid .cost{color:var(--blue-hi)}
+.tier li:before{content:"";position:absolute;left:2px;top:.55em;width:9px;height:5px;border-left:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(-45deg)}
+.tier.paid{border-color:var(--accent);background:var(--panel)}
+.tier.paid .cost{color:var(--accent)}
 
 .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:28px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--panel)}
 table{border-collapse:collapse;width:100%}
 .compare{min-width:520px}
 .compare th,.compare td{text-align:left;padding:14px 18px;border-top:1px solid var(--line);font-size:15px}
 .compare thead th{border-top:0;color:var(--muted);font-weight:600;font-size:14px}
-.compare thead th:last-child{color:var(--blue-hi)}
+.compare thead th:last-child{color:var(--accent)}
 .compare td:first-child{color:var(--soft)}
-.compare .y{color:#fff;font-weight:700}.compare .n{color:var(--muted)}
+.compare .y{color:var(--text);font-weight:700}.compare .n{color:var(--muted)}
 
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-top:28px;background:var(--line);border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
 .stats div{background:var(--panel);padding:18px 20px}
@@ -183,7 +195,7 @@ table{border-collapse:collapse;width:100%}
 .ledger{margin-top:14px}
 .ledger .row{display:grid;gap:2px;padding:12px 0;border-top:1px solid var(--line);font-size:15px}
 .ledger .row:first-child{border-top:0;padding-top:0}
-.ledger a{color:var(--blue-hi);font-weight:600}
+.ledger a{color:var(--accent);font-weight:600}
 .empty{color:var(--muted);font-size:15px}
 
 details.dev{margin-top:14px}
@@ -193,8 +205,8 @@ details.dev summary span{color:var(--muted);font-weight:500;font-size:14px}
 .endpoints{margin-top:16px}
 .endpoints .row{display:grid;gap:2px;padding:12px 0;border-top:1px solid var(--line)}
 .endpoints code,pre{font:500 13px/1.6 var(--mono)}
-.endpoints code{color:#fff;overflow-wrap:anywhere}
-.endpoints .p{font-size:13px;font-weight:700;color:var(--muted)}.endpoints .p.paid{color:var(--blue-hi)}
+.endpoints code{color:var(--text);overflow-wrap:anywhere}
+.endpoints .p{font-size:13px;font-weight:700;color:var(--muted)}.endpoints .p.paid{color:var(--accent)}
 .endpoints .row > span:last-child{color:var(--soft);font-size:15px}
 pre{background:#060608;border:1px solid var(--line);border-radius:var(--r-sm);padding:14px;overflow-x:auto;color:#cfd3dc;margin-top:10px}
 .copyrow{display:grid;gap:10px}
@@ -207,13 +219,13 @@ pre{background:#060608;border:1px solid var(--line);border-radius:var(--r-sm);pa
 .faq details[open] summary:after{content:"−"}
 .faq details p{color:var(--soft);padding:0 0 18px;max-width:64ch;font-size:16px}
 
-footer{margin-top:104px;border-top:1px solid var(--line);padding:36px 0 48px;color:var(--muted);font-size:14px}
+footer{background:var(--bg);border-top:1px solid var(--line);padding:40px 0 48px;color:var(--muted);font-size:14px}
 footer .top{display:grid;gap:24px}
-footer .cta p{color:#fff;font-weight:700;font-size:20px;letter-spacing:-.02em;margin-bottom:14px}
+footer .cta p{color:var(--text);font-weight:700;font-size:20px;letter-spacing:-.02em;margin-bottom:14px}
 footer .cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-footer h4{color:#fff;font-size:14px;margin-bottom:8px}
+footer h4{color:var(--text);font-size:14px;margin-bottom:8px}
 footer ul{list-style:none;display:grid;gap:6px}
-footer a{text-decoration:none}footer a:hover{color:#fff}
+footer a{text-decoration:none}footer a:hover{color:var(--text)}
 footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
 
 @media (min-width:640px){
@@ -289,7 +301,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
   </div>
 </header>
 
-<section id="how">
+<section id="how" class="p1">
   <h2>How it works</h2>
   <ol class="steps">
     <li><b>Paste a link</b><span>Any Polymarket market, plus your amount</span></li>
@@ -299,7 +311,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
   </ol>
 </section>
 
-<section id="traps">
+<section id="traps" class="p2">
   <h2>The two traps</h2>
   <div class="grid2">
     <article class="card trap">
@@ -317,7 +329,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
   </div>
 </section>
 
-<section id="pricing">
+<section id="pricing" class="p3">
   <h2>Check free, go deep for ${price}</h2>
   <div class="grid2">
     <div class="card tier">
@@ -334,7 +346,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
   <p class="sub">Paid in USDC on ${chain} over x402, approve it in PayBox or let your agent pay from its own wallet</p>
 </section>
 
-<section id="compare">
+<section id="compare" class="p4">
   <h2>What the app doesn't tell you</h2>
   <div class="scroll"><table class="compare">
     <thead><tr><th scope="col"><span class="sr">Question</span></th><th scope="col">Polymarket app</th><th scope="col">Foresyte</th></tr></thead>
@@ -348,7 +360,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
   </table></div>
 </section>
 
-<section id="proof">
+<section id="proof" class="p5">
   <h2>Check our work</h2>
   <div class="stats">
     <div><b class="num">60</b><span>unit tests</span></div>
@@ -369,7 +381,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
   </details>
 </section>
 
-<section id="faq">
+<section id="faq" class="p6">
   <h2>FAQ</h2>
   <div class="faq">
     <details><summary>Is this betting advice?</summary><p>No, Foresyte shows how a market looks right now (who is buying, what you'd get back, how the rules decide it) and the call is yours, you can still lose your whole stake</p></details>
@@ -384,7 +396,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
 </section>
 </main>
 
-<footer>
+<footer class="p6">
   <div class="wrap">
     <div class="top">
       <div class="cta"><p>Know the worst case before you click</p><a class="pill blue small" href="#try">Check a market</a></div>
