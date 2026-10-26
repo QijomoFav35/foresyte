@@ -333,7 +333,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
 </section>
 
 <section id="traps" class="p2">
-  <h2>The two traps</h2>
+  <h2>Previously Recorded Traps</h2>
   <div class="grid2">
     <article class="card trap">
       <h3>You can't get out</h3>
