@@ -1,4 +1,6 @@
 {
-  "tool": "search_markets",
-  "arguments": { "query": "bitcoin" }
+  "tool": "check_unclaimed",
+  "arguments": {
+    "wallet": "0x0000000000000000000000000000000000000001"
+  }
 }

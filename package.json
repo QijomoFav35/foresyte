@@ -1,6 +1,6 @@
 {
-  "name": "my-plugin",
-  "version": "0.1.0",
+  "name": "foresyte",
+  "version": "1.1.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -13,7 +13,8 @@
     "build": "esbuild src/plugin.ts --bundle --platform=node --format=esm --target=node24 --minify --outfile=dist/plugin.mjs",
     "conformance": "node scripts/conformance.mjs",
     "test": "node scripts/test.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "unit": "node --test test/*.test.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/server": "2.0.0",

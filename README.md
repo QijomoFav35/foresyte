@@ -1,72 +1,112 @@
 # Foresyte
 
-**Find unclaimed Polymarket winnings and claim them in one prompt.**
+**Know if a Polymarket market is a trap before you buy, and when to get out while you can.**
 
-Most people leave money on Polymarket because they forget to claim resolved positions. Foresyte scans any wallet, shows live markets, flags simple patterns from your history, and prepares the claim as a Polygon transaction. You approve it inside PayBox. It settles.
+`33` unit tests on fixtures · `4` tools · read-only by default · no keys, ever · a PayBox plugin
 
-Built for the PayBox Hackathon.
+Foresyte is a PayBox plugin. Ask your agent "is this market a trap?" and Foresyte reads Polymarket's live order book and rules, computes every number, and answers CLEAR, CAUTION or HIGH_RISK with the worst case first. The agent explains; Foresyte computes. It never places, blocks or signs a bet.
 
 ---
 
-## What it does
+## 1. The problem
 
-| Tool | What it does |
-|---|---|
-| `search_markets` | Pulls live Polymarket markets with current odds |
-| `check_unclaimed` | Scans a wallet for resolved positions that have not been claimed |
-| `pattern_summary` | Looks at your own prediction history and flags simple repeatable patterns (for example, long-shot YES bets that keep losing) |
-| `propose_claim` | Builds a Polygon `redeemPositions` transaction proposal. You approve it inside PayBox |
+More than 70% of Polymarket users lose money, and 0.1% of accounts took 67% of the profits (Wall Street Journal analysis of 1.6 million accounts, May 2026). Some of those losses come from two traps you can see coming if you know where to look.
 
-All four tools run through the PayBox MCP. No tab switching. No manual claims.
+**The liquidity trap: you can't get out.** The app shows your position's value, but value is not cash. If nobody is bidding near the price, you can't sell. The founder's own story: a $50 bet on a German basketball game was up at halftime, and there was nobody to sell to. The game turned; the $50 was gone.
 
-## How it works
+**The rules trap: you can be right and still lose.** Polymarket's "MicroStrategy sells any Bitcoin by May 31?" market. Strategy sold 32 BTC between May 26 and May 31, 2026. May 31 was a Sunday. The 8-K disclosing the sale was filed Monday, June 1. Polymarket added a note that confirmation outside the timeframe does not count, and the market resolved No. One trader says he lost about $500,000; two traders have sued.
 
-1. You ask your agent something like “check this wallet for unclaimed Polymarket winnings” or “claim anything I won.”
-2. Foresyte calls the Polymarket APIs (Gamma + data API), finds resolved but unclaimed positions, and returns the amounts.
-3. If you want to claim, it builds the exact `redeemPositions` transaction for Polygon.
-4. PayBox shows the proposal. You approve with your passkey. The claim settles.
+## 2. The tools
 
-It never asks for a private key. It only returns an unsigned transaction proposal that PayBox handles.
+| Tool | When | What it tells you |
+| --- | --- | --- |
+| `trap_check` | Before you buy | At your stake: what you'd actually pay per share, what you'd get back selling right away, how many buyers sit near the price, the spread, and whether the rules pay on the event or on a report due by a weekend or holiday deadline |
+| `trap_watch` | While you hold | For your five largest open positions: paper P&L, what selling everything now actually returns, whether buyers are thinning out, deadline risk, and when locking in profit beats waiting |
+| `check_unclaimed` | After it resolves | Winning positions you haven't claimed, the total, and the link to claim each one |
+| `propose_claim` | After it resolves | An unsigned claim for PayBox approval, only when the winnings sit in the PayBox wallet itself |
 
-## Why it exists
+## 3. How each verdict is decided
 
-Polymarket positions stay claimable after resolution. A lot of wallets leave small and large amounts unclaimed because the UI makes it easy to forget. Foresyte makes the recovery one prompt instead of hunting through resolved markets.
+Any HIGH_RISK check makes the verdict HIGH_RISK; otherwise any CAUTION makes it CAUTION; otherwise CLEAR. The thresholds live in [`src/lib/traps.ts`](src/lib/traps.ts) and [`src/lib/book.ts`](src/lib/book.ts).
 
-## Network hosts used
+| Check | Rule | Level |
+| --- | --- | --- |
+| No sellers / can't fill | the asks can't absorb your stake | HIGH_RISK |
+| No buyers | zero bids | HIGH_RISK |
+| Exit thinner than stake | USDC of bids within 5¢ of the best bid is below your stake | HIGH_RISK |
+| Exit thin | that depth is below 2× your stake | CAUTION |
+| Slippage | your average fill is more than 5% worse than the shown price | CAUTION |
+| Wide spread | best ask minus best bid above 5¢ | CAUTION |
+| Reporting deadline near a weekend | a deadline market whose rules pay on what's announced, reported, filed or confirmed, with the deadline (New York time) on a Friday, Saturday, Sunday or within a day of a US market holiday | HIGH_RISK |
+| Reporting-dependent | the same, on an ordinary weekday | CAUTION |
+| Clarification added | the rules carry added context or an update | CAUTION |
+| Vague wording | discretion, ambiguous, unclear, subjective, interpretation | CAUTION |
+| Exit closing (while holding) | bids can't absorb your whole position | HIGH_RISK |
+| Exit discount (while holding) | selling now returns more than 3% under the displayed value | CAUTION |
 
-- `gamma-api.polymarket.com`
-- `data-api.polymarket.com`
+The rules check is the split Galaxy Research proposed after the Strategy dispute: is a market **event-based** (pays on what happens) or **confirmation-based** (pays on what is reported by a deadline)? Sports results and price-feed markets are event-based and are not flagged.
 
-No secrets required.
+## 4. Where every number comes from
 
-## Local setup
+| Figure | Source | Freshness |
+| --- | --- | --- |
+| Question, rules text, end date, outcomes, shown prices, order book ids | Gamma API, `gamma-api.polymarket.com/markets` | fetched on every call |
+| Bids and asks at every price | CLOB API, `clob.polymarket.com/book` | fetched on every call |
+| Open and resolved positions, cost basis, value | Data API, `data-api.polymarket.com/positions` | fetched on every call |
+| Which wallet holds a user's positions | Gamma public profile | fetched on every call |
+
+Nothing is cached and nothing is estimated. If Polymarket doesn't answer within 2.5 seconds, Foresyte says so instead of guessing.
+
+## 5. What is live, and how to check it
+
+| Claim | Where | Verify |
+| --- | --- | --- |
+| Book math: fills, sell-back value, exit depth, spread | [`src/lib/book.ts`](src/lib/book.ts) | `pnpm unit` |
+| The Strategy May 31 market comes back HIGH_RISK; sports and price markets come back clean | [`src/lib/rules.ts`](src/lib/rules.ts), [`test/rules.test.ts`](test/rules.test.ts) | `pnpm unit` |
+| Losing positions are never counted as unclaimed winnings | [`src/lib/traps.ts`](src/lib/traps.ts) | `pnpm unit` |
+| Any verdict on a live market | `trap_check` | open the same market on Polymarket and compare its order book with the numbers returned |
+
+## 6. Not live, and why
+
+- **Background alerts.** PayBox runs each call in a fresh sandbox with no memory, so `trap_watch` checks when you ask, not continuously.
+- **One-tap claims for normal Polymarket accounts.** Polymarket holds positions in a proxy or Safe wallet that only Polymarket's site can claim from. `check_unclaimed` finds those winnings and links to them; `propose_claim` refuses rather than build a transaction that would redeem nothing.
+- **Newer collateral.** `propose_claim` redeems against USDC.e. Markets settled in Polymarket's newer collateral may not redeem through it.
+- **Exact Strategy rules text.** The Strategy test fixture is reconstructed from news coverage; it will be replaced with the text saved from Gamma.
+
+## 7. Who has named this problem
+
+- **Wall Street Journal, May 2026.** Over 70% of 1.6 million Polymarket accounts lost money; 0.1% captured 67% of profits.
+- **Kalshi.** Losing users outnumber winners about 2.9 to 1.
+- **[The Block](https://theblock.co/post/403312/polymarket-faces-backlash-strategy-bitcoin-sale), June 2026.** Traders' backlash over the Strategy market's "No" resolution.
+- **[Galaxy Research](https://www.galaxy.com/insights/research/strategy-bitcoin-sale-polymarket-resolution-dispute-may-2026).** Markets should be labelled event-based or confirmation-based.
+- **[The Defiant](https://thedefiant.io/news/regulation/traders-sue-polymarket-ceo-coplan-over-strategy-market-decision).** Two traders sued Polymarket and its CEO over the Strategy resolution.
+
+## 8. Run it
+
+Node.js 24 and pnpm 11.11.0 (Windows: WSL2).
 
 ```bash
 pnpm install --frozen-lockfile
-pnpm test
-pnpm build
+pnpm unit        # unit tests on fixtures, no network
+pnpm test        # typecheck, reproducible build, PayBox conformance
 ```
 
-The build produces `dist/plugin.mjs`. Upload that in the PayBox developer portal.
+`pnpm test` writes `dist/plugin.mjs`. Upload only that file in the PayBox developer portal and allowlist:
 
-## Tools
+- `gamma-api.polymarket.com`
+- `clob.polymarket.com`
+- `data-api.polymarket.com`
 
-### `check_unclaimed`
-Input: wallet address (0x…).  
-Returns: list of resolved positions that can still be claimed, with amounts.
+```
+src/plugin.ts          wiring: server "foresyte" v1.1.0, four tools
+src/tools/             trapCheck, trapWatch, unclaimed, proposeClaim
+src/lib/http.ts        2.5 s per request, 8 s per call (PayBox allows 10)
+src/lib/polymarket.ts  Gamma, CLOB and Data API reads
+src/lib/book.ts        order-book math
+src/lib/rules.ts       event-based vs confirmation-based, deadlines in New York time
+src/lib/traps.ts       the two traps, thresholds, verdicts
+src/lib/verdict.ts     levels and number formatting
+test/                  unit tests and fixtures
+```
 
-### `propose_claim`
-Input: the position details from `check_unclaimed`.  
-Returns: a PayBox transaction proposal (`io.paybox/transactionProposal`) for `redeemPositions` on Polygon.
-
-### `search_markets`
-Input: optional query or category.  
-Returns: current live markets and odds.
-
-### `pattern_summary`
-Input: wallet address.  
-Returns: simple flags based on the wallet’s own history (for example, high frequency of low-probability YES bets that resolved No).
-
-## Built for
-
-PayBox marketplace. The agent proposes. You approve. It settles.
+Built for the PayBox × MoonPay Hackathon. Foresyte is information, not financial advice.
