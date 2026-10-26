@@ -458,7 +458,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
 <section id="faq" class="p6">
   <h2>FAQ</h2>
   <div class="faq">
-    <details><summary>Is this betting advice?</summary><p>No, Foresyte shows how a market looks right now (who is buying, what you'd get back, how the rules decide it) and the call is yours, you can still lose your whole stake</p></details>
+    <details><summary>Is this financial advice?</summary><p>No, Foresyte shows how a market looks right now (who is buying, what you'd get back, how the rules decide it) and the call is yours, you can still lose your whole stake</p></details>
     <details><summary>Polymarket already shows a price, why isn't that enough?</summary><p>That price is for a small amount, a bigger bet eats through the cheap contracts and costs more, and selling pays less when few people are buying, Foresyte works it out at your exact amount</p></details>
     <details><summary>Where do the numbers come from?</summary><p>Polymarket's public data, read the moment you ask, nothing is cached and the AI never makes up a number</p></details>
     <details><summary>What is the 3-day rule?</summary><p>In the last 3 days of a market buyers tend to vanish and the rules start deciding it, so if a risky market is in that window Foresyte tells you to get out</p></details>
