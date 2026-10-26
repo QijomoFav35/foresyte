@@ -1,6 +1,7 @@
 {
-  "tool": "check_unclaimed",
+  "tool": "deep_scan",
   "arguments": {
-    "wallet": "0x0000000000000000000000000000000000000001"
+    "market": "https://polymarket.com/event/fed-decision-in-december",
+    "stakeUsdc": 50
   }
 }
