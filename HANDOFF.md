@@ -1,6 +1,6 @@
 # Foresyte: handoff (read this first)
 
-Any model or person continuing this work: start here. Last updated Oct 26, 2026, by Claude.
+Any model or person continuing this work: start here. Last updated Oct 26, 2026, 18:35 (UTC+1), by Claude.
 
 ## What Foresyte is
 A PayBox (MoonPay) plugin that tells you if a Polymarket bet is a trap before you place it, and when to get out.
@@ -58,3 +58,8 @@ Spotify-inspired: pure black, #181818 panels, white text, Polymarket blue #3D6BF
 - Everything a person reads must be plain English a 10-year-old understands. Agents get exact numbers in structuredContent.
 - Always end a session with commit + push; GitHub is the checkpoint.
 - Benchmark: Stocklana (Solana) winner Roster Finance: one real pain, worst case shown first, proof for every claim, honest limits.
+
+## Latest (Oct 26, 18:35)
+- Page: founder's engraved bird-and-flute picture is the hero image (server/public/hero-*.webp). The free check is a chat box: one message field that reads plain sentences ("Is this a trap? $50 on Yes <link>"), verdict comes back as a reply, deep-scan code as the next reply.
+- Possible palette switch to the picture's peacock blue + antique gold: founder hasn't decided.
+- Still to do, in order: run `pnpm test` and the server on the founder's PC, `npm run smoke`, testnet `npm run buy`, deploy on Render, set FORESYTE_URL, point paybox-plugin.json sample call at trap_check, upload plugin 1.2.0, 3 real paid scans, README, video by Wed Oct 28.
