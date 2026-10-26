@@ -276,7 +276,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
   .endpoints .row > span:last-child{grid-column:1/-1}
   .copyrow{grid-template-columns:1fr auto;align-items:start}
   footer .top{grid-template-columns:1.2fr 2fr}
-  footer .cols{grid-template-columns:repeat(3,1fr)}
+  footer .cols{grid-template-columns:repeat(2,1fr)}
 }
 @media (min-width:900px){
   :root{--section:120px}
@@ -476,7 +476,6 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
       <div class="cta"><p>Know the worst case before you click</p><a class="pill blue small" href="#try">Check a market</a></div>
       <div class="cols">
         <div><h4>Product</h4><ul><li><a href="#try">Free check</a></li><li><a href="#pricing">Deep scan</a></li><li><a href="https://app.paybox.sh/plugins">PayBox plugin</a></li></ul></div>
-        <div><h4>Sources</h4><ul><li><a href="https://theblock.co/post/403312/polymarket-faces-backlash-strategy-bitcoin-sale">The Block</a></li><li><a href="https://www.galaxy.com/insights/research/strategy-bitcoin-sale-polymarket-resolution-dispute-may-2026">Galaxy Research</a></li></ul></div>
         <div><h4>Build</h4><ul><li><a href="/brand-kit">Brand Kit</a></li><li><a href="https://github.com/QijomoFav35/foresyte">GitHub</a></li><li><a href="/api/proof">Proof (JSON)</a></li><li><a href="/?format=json">API</a></li></ul></div>
       </div>
     </div>
