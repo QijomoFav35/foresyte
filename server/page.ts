@@ -421,7 +421,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
 </section>
 
 <section id="compare" class="p4">
-  <h2>What the app doesn't tell you</h2>
+  <h2>The unwritten rules</h2>
   <div class="scroll"><table class="compare">
     <thead><tr><th scope="col"><span class="sr">Question</span></th><th scope="col">Polymarket app</th><th scope="col">Foresyte</th></tr></thead>
     <tbody>
