@@ -473,7 +473,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
 <footer class="p6">
   <div class="wrap">
     <div class="top">
-      <div class="cta"><p>Know the worst case before you click</p><a class="pill blue small" href="#try">Check a market</a></div>
+      <div class="cta"><p>Know the worst case beforehand</p><a class="pill blue small" href="#try">Check a market</a></div>
       <div class="cols">
         <div><h4>Product</h4><ul><li><a href="#try">Free check</a></li><li><a href="#pricing">Deep scan</a></li><li><a href="https://app.paybox.sh/plugins">PayBox plugin</a></li></ul></div>
         <div><h4>Build</h4><ul><li><a href="/brand-kit">Brand Kit</a></li><li><a href="https://github.com/QijomoFav35/foresyte">GitHub</a></li></ul></div>
