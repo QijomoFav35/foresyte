@@ -18,6 +18,7 @@ import { getRequest, paidScans, recordPaid, saveRequest } from "./store.ts";
 import { UserError, fullScan, parseRequest, quickCheck } from "./scan.ts";
 import { agentPrompt, normalizeCode, type ScanRequest } from "../src/lib/codes.ts";
 import { landingPage } from "./page.ts";
+import { brandKitPage } from "./brand.ts";
 
 const app = express();
 app.set("trust proxy", true); // correct https:// URLs behind Render's proxy
@@ -72,6 +73,8 @@ app.get("/", (req, res) => {
   if (wantsHtml(req)) return res.type("html").send(landingPage({ publicUrl: PUBLIC_URL, price: SCAN_PRICE, chain: CHAIN_NAME }));
   res.json(manifest());
 });
+
+app.get("/brand-kit", (_req, res) => res.type("html").send(brandKitPage()));
 
 app.get("/health", (_req, res) => res.json({ ok: true, network: CHAIN_NAME }));
 

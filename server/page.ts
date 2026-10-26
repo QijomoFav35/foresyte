@@ -2,6 +2,8 @@
 // Structure follows Roster Finance (Stocklana winner) and LEAPSY: live tool in the hero, the problem as a timeline,
 // free vs paid, comparison, agents, live proof, objections as an FAQ, dated sources, one closing line.
 
+import { eyeIcon, faviconDataUri, seal } from "./brand.ts";
+
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 
 export function landingPage(o: { publicUrl: string; price: string; chain: string }): string {
@@ -17,9 +19,10 @@ export function landingPage(o: { publicUrl: string; price: string; chain: string
 <meta name="description" content="Paste a Polymarket link. Foresyte tells you if the bet is a trap before you place it, and when to get out.">
 <meta property="og:title" content="Foresyte: is this Polymarket bet a trap?">
 <meta property="og:description" content="Know the worst case in dollars before you bet. Free check, $0.25 deep scan, inside your PayBox agent.">
+<link rel="icon" href="${faviconDataUri()}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,500&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Cormorant+Garamond:wght@600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
 :root{
   --black:#000;--panel:#0b0b0d;--raised:#141418;--line:rgba(255,255,255,.09);--line-hi:rgba(255,255,255,.16);
@@ -44,8 +47,9 @@ img{display:block;max-width:100%}
 .nav{position:fixed;inset:0 0 auto;z-index:20;background:transparent;transition:background .2s}
 .nav.solid{background:#000;border-bottom:1px solid var(--line)}
 .nav .wrap{display:flex;align-items:center;gap:28px;height:64px;max-width:1240px}
-.mark{font-weight:700;font-size:20px;letter-spacing:-.02em;text-decoration:none;display:flex;align-items:center;gap:9px;margin-right:auto}
-.mark i{width:18px;height:18px;border-radius:50%;background:var(--blue);box-shadow:inset -5px -3px 0 #000;flex:none}
+.mark{text-decoration:none;display:flex;align-items:center;gap:11px;margin-right:auto}
+.mark svg{flex:none}
+.mark .word{font:600 19px/1 "Cormorant Garamond",Georgia,serif;letter-spacing:.3em;color:#f3efe6}
 .links{display:none;gap:24px;font-weight:600;font-size:15px;color:var(--soft)}
 .links a{text-decoration:none}.links a:hover{color:#fff}
 
@@ -77,7 +81,7 @@ img{display:block;max-width:100%}
 .chat-head{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line);font-size:14px;color:var(--muted)}
 .chat-head b{color:#fff;font-size:15px}
 .chat-head .live{display:inline-block;width:7px;height:7px;border-radius:50%;background:#3ecf8e;margin-right:6px;vertical-align:1px}
-.av{flex:none;width:28px;height:28px;border-radius:50%;background:#4d7bff;color:#fff;display:grid;place-items:center;font:700 12px/1 Montserrat,sans-serif}
+.av{flex:none;width:28px;height:28px;border-radius:50%;background:#0b1530;border:1px solid rgba(200,169,106,.55);display:grid;place-items:center}
 .av.big{width:38px;height:38px;font-size:15px}
 .who-head{display:grid;gap:2px;margin-right:auto}
 .who-head b{font-size:15px;color:#fff}.who-head span{font-size:12.5px;color:var(--muted)}
@@ -252,6 +256,8 @@ footer .cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 footer h4{color:var(--text);font-size:14px;margin-bottom:8px}
 footer ul{list-style:none;display:grid;gap:6px}
 footer a{text-decoration:none}footer a:hover{color:var(--text)}
+footer .flogo{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+footer .flogo .word{font:600 15px/1 "Cormorant Garamond",Georgia,serif;letter-spacing:.3em;color:var(--text)}
 footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
 
 @media (min-width:640px){
@@ -286,8 +292,8 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
 <body>
 <nav class="nav" id="nav" aria-label="Main">
   <div class="wrap">
-    <a class="mark" href="/"><i aria-hidden="true"></i>Foresyte</a>
-    <div class="links"><a href="#how">How it works</a><a href="#traps">Traps</a><a href="#pricing">Pricing</a><a href="#proof">Proof</a><a href="#faq">FAQ</a></div>
+    <a class="mark" href="/" aria-label="Foresyte home">${seal(32, "nav")}<span class="word">FORESYTE</span></a>
+    <div class="links"><a href="#how">How it works</a><a href="#traps">Traps</a><a href="#pricing">Pricing</a><a href="#proof">Proof</a><a href="#faq">FAQ</a><a href="/brand-kit">Brand Kit</a></div>
     <a class="pill blue small" href="https://app.paybox.sh/plugins">Add to PayBox</a>
   </div>
 </nav>
@@ -307,12 +313,12 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
 
   <div class="chat" id="try">
     <div class="chat-head">
-      <span class="av big" aria-hidden="true">F</span>
+      <span class="av big" aria-hidden="true">${eyeIcon(22)}</span>
       <div class="who-head"><b>Foresyte</b><span><i class="live"></i>Online, reads live Polymarket data</span></div>
       <span class="free">Free</span>
     </div>
     <div class="log" id="log" aria-live="polite">
-      <div class="line bot"><span class="av" aria-hidden="true">F</span><div class="stack"><span class="who"><b>Foresyte</b></span>
+      <div class="line bot"><span class="av" aria-hidden="true">${eyeIcon(16)}</span><div class="stack"><span class="who"><b>Foresyte</b></span>
         <div class="msg bot">Hi, paste a Polymarket link and tell me how much you'd put in</div>
         <div class="msg bot">I'll check three things for you
           <ul class="checks"><li>Can you get your money back out</li><li>The price you'd really pay at your amount</li><li>Can the rules make you lose even when you're right</li></ul>
@@ -471,10 +477,10 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
       <div class="cols">
         <div><h4>Product</h4><ul><li><a href="#try">Free check</a></li><li><a href="#pricing">Deep scan</a></li><li><a href="https://app.paybox.sh/plugins">PayBox plugin</a></li></ul></div>
         <div><h4>Sources</h4><ul><li><a href="https://theblock.co/post/403312/polymarket-faces-backlash-strategy-bitcoin-sale">The Block</a></li><li><a href="https://www.galaxy.com/insights/research/strategy-bitcoin-sale-polymarket-resolution-dispute-may-2026">Galaxy Research</a></li></ul></div>
-        <div><h4>Build</h4><ul><li><a href="https://github.com/QijomoFav35/foresyte">GitHub</a></li><li><a href="/api/proof">Proof (JSON)</a></li><li><a href="/?format=json">API</a></li></ul></div>
+        <div><h4>Build</h4><ul><li><a href="/brand-kit">Brand Kit</a></li><li><a href="https://github.com/QijomoFav35/foresyte">GitHub</a></li><li><a href="/api/proof">Proof (JSON)</a></li><li><a href="/?format=json">API</a></li></ul></div>
       </div>
     </div>
-    <p class="fine">&copy; 2026 Foresyte. All rights reserved</p>
+    <p class="fine"><span class="flogo">${seal(22, "foot")}<span class="word">FORESYTE</span></span>&copy; 2026 Foresyte. All rights reserved</p>
   </div>
 </footer>
 
@@ -509,7 +515,7 @@ function add(cls, html) {
   const time = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   const line = document.createElement("div");
   line.className = "line " + (me ? "me" : "bot");
-  line.innerHTML = (me ? "" : '<span class="av" aria-hidden="true">F</span>') +
+  line.innerHTML = (me ? "" : '<span class="av" aria-hidden="true">${eyeIcon(16)}</span>') +
     '<div class="stack"><span class="who">' + (me ? "You " : "<b>Foresyte</b>") + time + '</span><div class="msg ' + cls + '"></div></div>';
   const bubble = line.querySelector(".msg");
   bubble.innerHTML = html;

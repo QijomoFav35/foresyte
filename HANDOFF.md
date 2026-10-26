@@ -79,3 +79,8 @@ x402 now settles USDC on **Solana** (founder's call: PayBox/MoonPay prizes are o
 ## Both networks (Oct 26, 23:25)
 The 402 lists USDC on Solana first and on Base second (only when PAY_TO_BASE is set). Env: PAY_TO_SOLANA (required; PAY_TO also accepted), PAY_TO_BASE (optional).
 Plugin deep_scan takes payWith: "solana" (default) or "base". Proof ledger links Solscan or BaseScan per payment.
+
+## Brand (Oct 26, 23:50)
+Founder's brand: seal mark (triangle eye, rays, dotted ring), gold #C8A96A, navy #0B1530, ivory #F3EFE6, wordmark in spaced serif caps (Cormorant Garamond).
+server/brand.ts draws the seal and the app icon as SVG; used in nav (horizontal dark lockup), chat avatars, footer, and the favicon.
+/brand-kit page shows the founder's Augur + Seer = Foresyte story image and the logo sheet (server/public/brand-*.webp); linked from nav and footer.
