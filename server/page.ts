@@ -65,6 +65,8 @@ img{display:block;max-width:100%}
 .hero-in{width:100%;max-width:820px;margin:0 auto;padding:0 var(--gutter);text-align:center}
 .say h1{font-weight:800;font-size:clamp(38px,7.6vw,80px);line-height:1.02;letter-spacing:-.045em;color:#fff}
 .say h1 em{font-style:italic;font-weight:500;color:#fff;letter-spacing:-.035em}
+.swap{display:inline-block;transition:opacity .25s,transform .25s}
+.swap.out{opacity:0;transform:translateY(.15em)}
 .say p{color:#e6e6ea;font-size:clamp(17px,2.2vw,20px);max-width:44ch;margin:20px auto 0}
 .btns{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:28px}
 .pill.white{background:#fff;color:#000}.pill.white:hover{background:#e8e8e8}
@@ -254,7 +256,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
   </picture>
   <div class="hero-in">
   <div class="say">
-    <h1>Know if a contract is a trap <em>before you place it</em></h1>
+    <h1 aria-label="Know if a contract or share is a trap before you place it">Know if a <span class="swap" id="swap" aria-hidden="true">contract</span> is a trap <em>before you place it</em></h1>
     <p>Paste any Polymarket link and see the worst case in dollars, plus when to get out</p>
     <div class="btns"><a class="pill white" href="#try">Check a market</a><a class="pill ghost" href="https://app.paybox.sh/plugins">Add to PayBox &#8599;</a></div>
   </div>
@@ -394,6 +396,17 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
 </footer>
 
 <script>
+// Headline word: contract and share, taking turns
+(() => {
+  const el = document.getElementById("swap");
+  if (!el || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const words = ["contract", "share"];
+  let i = 0;
+  setInterval(() => {
+    el.classList.add("out");
+    setTimeout(() => { i = (i + 1) % words.length; el.textContent = words[i]; el.classList.remove("out"); }, 250);
+  }, 2600);
+})();
 const navEl = document.getElementById("nav");
 const onScroll = () => navEl.classList.toggle("solid", window.scrollY > 40);
 addEventListener("scroll", onScroll, { passive: true }); onScroll();
