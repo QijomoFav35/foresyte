@@ -348,7 +348,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
 
 <section id="traps" class="p2">
   <h2>Previously Recorded Traps</h2>
-  <p class="sub">Real Polymarket losses from the last two years, and what Foresyte checks for each</p>
+  <p class="sub">Documented Polymarket losses &amp; Foresyte risk mapping vectors</p>
   <div class="cases">
     <article class="card trap">
       <p class="where">Strategy bitcoin market, 2026</p>
