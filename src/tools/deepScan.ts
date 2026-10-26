@@ -7,7 +7,7 @@ import { errorResult, messageOf } from "./common.ts";
 // The paid deep scan runs on Foresyte's server; this tool only builds the x402 request for PayBox.
 // No network call here: PayBox fetches the live 402 price, shows it to the person, and pays on approval.
 export const FORESYTE_URL = "https://foresyte.onrender.com"; // change to the Render URL after deploy, and allowlist its host
-const PRICE_ATOMIC = "250000"; // 0.25 USDC (6 decimals)
+const PRICE_ATOMIC = "100000"; // 0.10 USDC (6 decimals)
 const CHAINS = { solana: "solana:mainnet", base: "eip155:8453" } as const; // USDC on either; Solana is the default
 
 const inputSchema = z
@@ -24,9 +24,9 @@ export function registerDeepScan(server: McpServer) {
   server.registerTool(
     "deep_scan",
     {
-      title: "Foresyte deep scan (0.25 USDC)",
+      title: "Foresyte deep scan (0.10 USDC)",
       description:
-        "Paid, 0.25 USDC over x402, on Solana by default or Base if the person prefers. The full Foresyte report for one Polymarket market: what you'd get back at every bet size, the biggest bet you can still get out of, the last day to sell, the other side, and a numbered plain-English plan. " +
+        "Paid, 0.10 USDC over x402, on Solana by default or Base if the person prefers. The full Foresyte report for one Polymarket market: what you'd get back at every bet size, the biggest bet you can still get out of, the last day to sell, the other side, and a numbered plain-English plan. " +
         "Use it when the person pastes a Foresyte code (FSY-XXXXXX) or asks for a deep scan of a market. Use the free trap_check for a quick verdict. " +
         "This returns a payment proposal; after PayBox pays and the request returns, show the person the 'report' field exactly as written, without rewording or adding numbers.",
       inputSchema,

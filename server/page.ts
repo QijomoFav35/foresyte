@@ -18,7 +18,7 @@ export function landingPage(o: { publicUrl: string; price: string; chain: string
 <title>Foresyte</title>
 <meta name="description" content="Paste a Polymarket link. Foresyte tells you if the bet is a trap before you place it, and when to get out.">
 <meta property="og:title" content="Foresyte: is this Polymarket bet a trap?">
-<meta property="og:description" content="Know the worst case in dollars before you bet. Free check, $0.25 deep scan, inside your PayBox agent.">
+<meta property="og:description" content="Know the worst case in dollars before you bet. Free check, $0.10 deep scan, inside your PayBox agent.">
 <link rel="icon" href="${faviconDataUri()}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

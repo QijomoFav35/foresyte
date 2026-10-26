@@ -13,7 +13,7 @@ export const SOLANA = main ? "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp" : "solana
 export const BASE = main ? "eip155:8453" : "eip155:84532";
 export const FACILITATOR_URL = process.env.FACILITATOR_URL || ""; // empty = PayAI's hosted facilitator
 
-// Wallets that receive the $0.25. Solana is required; Base is optional (leave it out to accept Solana only).
+// Wallets that receive the $0.10. Solana is required; Base is optional (leave it out to accept Solana only).
 export const PAY_TO_SOLANA = process.env.PAY_TO_SOLANA || required("PAY_TO");
 if (!/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(PAY_TO_SOLANA)) throw new Error("PAY_TO_SOLANA must be a Solana wallet address with a USDC token account.");
 export const PAY_TO_BASE = process.env.PAY_TO_BASE || "";
@@ -25,5 +25,5 @@ export function explorerFor(network: string | undefined, tx: string): string {
   return `https://solscan.io/tx/${tx}${main ? "" : "?cluster=devnet"}`;
 }
 export const PUBLIC_URL = required("PUBLIC_URL").replace(/\/+$/, "");
-export const SCAN_PRICE = process.env.SCAN_PRICE || "$0.25";
+export const SCAN_PRICE = process.env.SCAN_PRICE || "$0.10";
 export const PORT = Number(process.env.PORT || "3000");

@@ -27,7 +27,7 @@ More than 70% of Polymarket users lose money, and 0.1% of accounts took 67% of t
 
 `propose_claim` prepares a one-tap claim for PayBox approval when the winnings sit in the PayBox wallet itself.
 
-**Next: The Desk.** Every live market in a topic run through the same checks, sold to agents for $0.25 per call over x402: today's 10 safest liquid markets and 10 worst traps, each with its worst case in dollars. Not live yet.
+**Next: The Desk.** Every live market in a topic run through the same checks, sold to agents for $0.10 per call over x402: today's 10 safest liquid markets and 10 worst traps, each with its worst case in dollars. Not live yet.
 
 ## 3. How each verdict is decided
 

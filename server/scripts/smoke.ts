@@ -54,7 +54,7 @@ if (!market) {
     console.log(`      networks offered: ${(challenge?.accepts ?? []).map((a: any) => a.network).join(", ")}`);
     ok("402 names the exact scheme", accept?.scheme === "exact", accept?.scheme);
     ok("402 is on Solana", typeof accept?.network === "string" && accept.network.startsWith("solana:"), accept?.network);
-    ok("402 price is 0.25 USDC (250000)", String(accept?.amount ?? accept?.maxAmountRequired) === "250000", String(accept?.amount ?? accept?.maxAmountRequired));
+    ok("402 price is 0.10 USDC (100000)", String(accept?.amount ?? accept?.maxAmountRequired) === "100000", String(accept?.amount ?? accept?.maxAmountRequired));
     if (base) ok("Base option pays a 0x address", /^0x[0-9a-fA-F]{40}$/.test(base.payTo ?? ""), base.payTo);
     ok("402 pays a Solana PAY_TO address", typeof accept?.payTo === "string" && /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(accept.payTo), accept?.payTo);
   }

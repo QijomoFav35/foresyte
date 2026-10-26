@@ -22,7 +22,7 @@ The two traps (real stories, the whole pitch rests on them):
 | Plain-English layer | src/lib/plain.ts | Done: "This is a trap." / "Be careful." / "Looks safe at this size." + "What to do:" |
 | Deep scan logic (paid) | src/lib/deepScan.ts | Done: exit ladder, biggest bet you can get out of, sell-by date, other side, numbered plan |
 | Request codes FSY-XXXXXX | src/lib/codes.ts | Done |
-| deep_scan plugin tool | src/tools/deepScan.ts | Done: returns x402 proposal (0.25 USDC, Base). **FORESYTE_URL must match the Render URL** |
+| deep_scan plugin tool | src/tools/deepScan.ts | Done: returns x402 proposal (0.10 USDC, Solana default, Base option). **FORESYTE_URL must match the Render URL** |
 | Web server | server/ (index.ts, scan.ts, page.ts, store.ts, config.ts) | Written, **not yet run** (no npm access where it was written) |
 | Render setup | render.yaml | Written |
 | check_unclaimed / propose_claim / pattern_summary | src/tools/ | From v1.1.0. Polymarket now auto-claims, so unclaimed is out of the pitch |
@@ -33,14 +33,14 @@ Unit tests: 60 pass (`node --test test/*.test.ts`). All math is in pure function
 Copied from TrueBill (github.com/big14way/truebill), a PayBox finalist tested end to end on Base mainnet:
 Express 5 + `@x402/express` v2, exact scheme, `@payai/facilitator`, USDC on Solana (was Base). No API keys.
 1. Page: paste link → free check → "Get a deep scan" → code FSY-XXXXXX + prompt "Use the Foresyte plugin to run a deep scan with code FSY-XXXXXX."
-2. Person pastes prompt in PayBox chat → plugin `deep_scan` returns x402 proposal → PayBox shows $0.25 → person approves → paid GET /api/deep-scan → report.
+2. Person pastes prompt in PayBox chat → plugin `deep_scan` returns x402 proposal → PayBox shows $0.10 → person approves → paid GET /api/deep-scan → report.
 3. Agents with their own wallet call GET /api/deep-scan directly (402 → pay → 200).
 A guard before the paywall refuses bad codes or links for free, so nobody pays for a scan that can't run.
 
 ## Next steps, in order
 1. On the founder's PC (Ubuntu/WSL, ~/foresyte): `git fetch origin && git checkout v1.2-plain-english && pnpm install && pnpm test`. Fix any typecheck error.
 2. Run the server locally: `cd server && npm install && PUBLIC_URL=http://localhost:3000 PAY_TO=<base address> npm start`, open http://localhost:3000, paste a live Polymarket link. Fix anything broken.
-   Then in a second terminal: `cd server && npm run smoke -- http://localhost:3000 "<live Polymarket link>"`. It checks the free routes, the request code, and the x402 402 challenge (price 250000, Base, payTo) without paying.
+   Then in a second terminal: `cd server && npm run smoke -- http://localhost:3000 "<live Polymarket link>"`. It checks the free routes, the request code, and the x402 402 challenge (price 100000, Solana, payTo) without paying.
    Optional full payment test on Base Sepolia (free test USDC from faucet.circle.com): start the server with `NETWORK=testnet`, then `TEST_BUYER_KEY=0x<throwaway test key> npm run buy -- "<payUrl>"`. Also confirm a failed scan (bad market after payment) is NOT settled.
 3. Deploy: Render → New → Blueprint → this repo. Set PUBLIC_URL (the onrender.com URL) and PAY_TO. Starter plan ($7/mo).
 4. Set `FORESYTE_URL` in src/tools/deepScan.ts to that URL; `pnpm test`; upload dist/plugin.mjs to developer.paybox.sh; allowlist gamma-api.polymarket.com, clob.polymarket.com, data-api.polymarket.com **and the Render host**; Submit Project → Enable.
@@ -72,7 +72,7 @@ Left out: "BTC daily markers secret rule edit" (no source found), unclaimed winn
 x402 now settles USDC on **Solana** (founder's call: PayBox/MoonPay prizes are on Solana).
 - Server: `@x402/svm` ExactSvmScheme, network `solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp` (Devnet `solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1`), PayAI facilitator by default, `FACILITATOR_URL` overrides. Setup from solana.com/docs/payments/agentic-payments/x402.
 - PAY_TO is a Solana address and must already have a USDC token account (receive any USDC once first).
-- Plugin deep_scan proposes `solana:mainnet`, 250000 (0.25 USDC); PayBox's proposeX402 fills the USDC mint.
+- Plugin deep_scan proposes `solana:mainnet`, 100000 (0.10 USDC); PayBox's proposeX402 fills the USDC mint.
 - Test: `npm run smoke` (no wallet) then Devnet `npm run buy` with a throwaway Devnet key.
 - Unproven until tested: PayAI facilitator on Solana mainnet (check `https://facilitator.payai.network/supported`). Base path (TrueBill) is the fallback if Solana fails.
 

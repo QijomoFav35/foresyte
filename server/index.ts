@@ -3,7 +3,7 @@
 //          POST /api/code        turn a link into a request code + a prompt to paste into PayBox
 //          GET  /api/code/:code  what a code asks for, and its pay URL
 //          GET  /api/proof       every paid scan with its transaction on Solana or Base
-//   Paid:  GET  /api/deep-scan   the full deep scan, $0.25 USDC on Solana or Base over x402
+//   Paid:  GET  /api/deep-scan   the full deep scan, $0.10 USDC on Solana or Base over x402
 // x402 v2 with @x402/express, exact scheme, USDC on Solana (setup per solana.com x402 docs), PayAI facilitator.
 // The server never holds keys or funds.
 

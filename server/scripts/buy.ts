@@ -18,9 +18,9 @@ if (!url || !secret) {
 
 const signer = await createKeyPairSignerFromBytes(base58.decode(secret));
 const client = new x402Client();
-// Only ever pay on Devnet, and never more than 0.25 USDC
+// Only ever pay on Devnet, and never more than 0.10 USDC
 client.registerPolicy((_version, requirements) =>
-  requirements.filter(({ network, amount }) => network === "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1" && BigInt(amount) <= 250_000n),
+  requirements.filter(({ network, amount }) => network === "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1" && BigInt(amount) <= 100_000n),
 );
 client.register("solana:*", new ExactSvmScheme(signer));
 const pay = wrapFetchWithPayment(fetch, client);
