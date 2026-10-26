@@ -252,9 +252,7 @@ footer .founder{color:#fff;font-weight:700;font-size:16px;margin-bottom:8px}
 }
 @media (min-width:900px){
   .hero{padding-top:40px}
-  .hero-top{grid-template-columns:1fr 1.05fr;align-items:center;gap:40px}
-  .hero-art{order:2;aspect-ratio:1/1}
-  .hero-art img{object-position:36% 40%}
+  .hero-top{gap:32px} /* same stacked layout as phones: picture, then headline, then chat */
   .log{padding:22px}
 }
 </style>
@@ -273,7 +271,7 @@ footer .founder{color:#fff;font-weight:700;font-size:16px;margin-bottom:8px}
   <div class="hero-top">
     <figure class="hero-art">
       <picture>
-        <source type="image/webp" srcset="/hero-760.webp 760w, /hero-1280.webp 1280w" sizes="(min-width:900px) 55vw, 100vw">
+        <source type="image/webp" srcset="/hero-760.webp 760w, /hero-1280.webp 1280w" sizes="(min-width:1120px) 1120px, 100vw">
         <img src="/hero-1280.webp" width="1280" height="757" alt="Engraved illustration of a blue bird beside a face playing a golden flute" fetchpriority="high">
       </picture>
     </figure>
