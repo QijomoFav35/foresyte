@@ -28,7 +28,7 @@ export function registerDeepScan(server: McpServer) {
       description:
         "Paid, 0.10 USDC over x402, on Solana by default or Base if the person prefers. The full Foresyte report for one Polymarket market: what you'd get back at every position size, the largest size that can still exit, the start of the 3-day deadline window, the other side, and a numbered plain-English risk read. " +
         "Use it when the person pastes a Foresyte code (FSY-XXXXXX) or asks for a deep scan of a market. Use the free trap_check for a quick verdict. " +
-        "This returns a payment proposal; after PayBox pays and the request returns, show the person the 'report' field exactly as written, without rewording or adding numbers.",
+        "This returns a payment proposal. After the person approves, call PayBox get_request with the returned request id until it is complete (never rerun deep_scan to poll), then show the person the 'report' field exactly as written, without rewording or adding numbers.",
       inputSchema,
       outputSchema: x402OutputSchema,
       annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: false, openWorldHint: true },

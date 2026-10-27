@@ -14,13 +14,13 @@ import { registerDeepScan } from "./tools/deepScan.ts";
 const INSTRUCTIONS = [
   "Foresyte checks Polymarket markets for traps. It reads public data only and never places, blocks or signs a trade.",
   "Before someone buys: call trap_check with the market link, the outcome and their amount. While they hold: call trap_watch with their wallet. For their history: pattern_summary.",
-  "If they paste a Foresyte code (FSY-XXXXXX) or ask for a deep scan or full audit: call deep_scan. It costs 0.10 USDC, paid on Solana by default; use payWith base only if they ask or have no USDC on Solana. After payment, show the report text exactly as written.",
+  "If they paste a Foresyte code (FSY-XXXXXX) or ask for a deep scan or full audit: call deep_scan. It costs 0.10 USDC, paid on Solana by default; use payWith base only if they ask or have no USDC on Solana. The payment finishes after the user approves: call get_request with the returned request id until it is complete (do not rerun deep_scan), then show the report text exactly as written.",
   "Show the person Foresyte's text as written. Never round, change or invent a number. Lead with the worst case. This is information, not financial advice.",
 ].join(" ");
 
 serveStdio(() => {
   const server = new McpServer(
-    { name: "foresyte", version: "1.2.0" },
+    { name: "foresyte", version: "1.2.1" },
     {
       supportedProtocolVersions: ["2026-07-28"],
       instructions: INSTRUCTIONS,
