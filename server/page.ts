@@ -4,6 +4,10 @@
 
 import { faviconDataUri, seal } from "./brand.ts";
 
+// Arrows drawn as SVG: text arrows like ↗ turn into colour emoji on iPhone Safari
+const ARROW_OUT = '<svg class="ic" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5l5-5M4.5 3.5h4v4"/></svg>';
+const ARROW_DOWN = '<svg class="ic" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2.5v7M3 6.5l3 3 3-3"/></svg>';
+
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 
 export function landingPage(o: { publicUrl: string; price: string; chain: string }): string {
@@ -116,6 +120,7 @@ footer .legal{display:block;margin-top:10px;font-size:12.5px;line-height:1.6;max
 .risk{display:inline-flex;align-items:center;gap:7px;font:600 13px/1 Montserrat,sans-serif;padding:8px 11px;border-radius:999px;border:1px solid}
 .risk.t{color:#ff6b76;border-color:rgba(255,77,90,.5);background:rgba(255,77,90,.08)}
 .risk.c{color:#f5b54a;border-color:rgba(245,166,35,.5);background:rgba(245,166,35,.08)}
+.ic{display:inline-block;vertical-align:-1px;margin-left:4px;flex:none}
 .next{margin-top:12px;font-size:13.5px;color:var(--muted)}
 .log{display:flex;flex-direction:column;gap:14px;padding:18px;min-height:200px;max-height:min(55vh,520px);overflow-y:auto;overscroll-behavior:contain;scroll-behavior:smooth}
 .msg{max-width:100%;border-radius:18px;padding:14px 16px;animation:rise .3s ease-out}
@@ -327,7 +332,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
   <div class="say">
     <h1>Know if a contract is a trap <em>before you place it</em></h1>
     <p>Paste any Polymarket link and see the worst case in dollars, plus how the exit holds up to the deadline</p>
-    <div class="btns"><a class="pill blue" href="#try">Check a market</a><a class="pill ghost" href="https://app.paybox.sh/plugins">Add to PayBox &#8599;</a></div>
+    <div class="btns"><a class="pill blue" href="#try">Check a market</a><a class="pill ghost" href="https://app.paybox.sh/plugins">Add to PayBox&#8202;${ARROW_OUT}</a></div>
   </div>
 
   <div class="chat" id="try">
@@ -354,7 +359,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
       </div>
     </form>
   </div>
-  <a class="cue" href="#how">Scroll to see how it works &#8595;</a>
+  <a class="cue" href="#how">Scroll to see how it works&#8202;${ARROW_DOWN}</a>
   </div>
 </header>
 
@@ -378,7 +383,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
       <h3>Right, and still lost</h3>
       <p class="cap">Strategy sold 32 BTC between May 26 and 31, but the filing only came out on Monday June 1, and a note added to the rules that day said confirmation after the deadline didn't count<br>Yes went from 81% to almost zero, 1,838 accounts were cleared and one trader reports losing $500K</p>
       <p class="fix"><b>Foresyte</b> flags a market decided by what gets reported by a Sunday deadline as a trap, warns when a note is added to the rules, and shows when the 3-day deadline window opens</p>
-      <a class="src-l" href="https://theblock.co/post/403312/polymarket-faces-backlash-strategy-bitcoin-sale">Source: The Block &#8599;</a>
+      <a class="src-l" href="https://theblock.co/post/403312/polymarket-faces-backlash-strategy-bitcoin-sale">Source: The Block&#8202;${ARROW_OUT}</a>
     </article>
     <article class="card trap">
       <p class="where">Zelenskyy suit market, 2025</p>
@@ -386,7 +391,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
       <h3>A word nobody defined</h3>
       <p class="cap">The market asked if he'd be seen wearing a suit before July and settled on a consensus of credible reporting<br>He wore a black jacket and matching trousers at a NATO event, many outlets called it a suit, a first Yes was challenged and the vote settled No</p>
       <p class="fix"><b>Foresyte</b> flags markets settled by credible reporting instead of the event itself, and any note added after the market opened</p>
-      <a class="src-l" href="https://decrypt.co/329210/polymarket-rules-no-237m-bet-zelenskyys">Source: Decrypt &#8599;</a>
+      <a class="src-l" href="https://decrypt.co/329210/polymarket-rules-no-237m-bet-zelenskyys">Source: Decrypt&#8202;${ARROW_OUT}</a>
     </article>
     <article class="card trap">
       <p class="where">Ukraine minerals market, 2025</p>
@@ -394,7 +399,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
       <h3>A quarter of the votes, one voter</h3>
       <p class="cap">The market resolved Yes even though no deal had been accepted<br>A researcher traced about 25% of the deciding votes to one large holder across three accounts, and no refunds were given</p>
       <p class="fix"><b>Foresyte</b> flags markets where a reporting judgment decides the result, the kind a vote can swing, so you size them knowing that</p>
-      <a class="src-l" href="https://cointelegraph.com/news/polymarket-trump-ukraine-bet-whale-governance-attack">Source: Cointelegraph &#8599;</a>
+      <a class="src-l" href="https://cointelegraph.com/news/polymarket-trump-ukraine-bet-whale-governance-attack">Source: Cointelegraph&#8202;${ARROW_OUT}</a>
     </article>
     <article class="card trap">
       <p class="where">Paris temperature markets, 2026</p>
@@ -402,7 +407,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
       <h3>One sensor, one spike</h3>
       <p class="cap">On two April evenings the airport sensor that settled the daily high jumped several degrees for under an hour and set the day's high<br>Météo-France filed a police complaint and Polymarket moved the market to another airport</p>
       <p class="fix"><b>Foresyte</b> shows your worst case in dollars and, in the Full Audit, what you'd get back at every amount, so a single reading never takes more than you planned to risk</p>
-      <a class="src-l" href="https://www.bostonglobe.com/2026/04/24/world/france-investigates-temperature-spikes-that-led-big-payouts-polymarket/">Source: Boston Globe &#8599;</a>
+      <a class="src-l" href="https://www.bostonglobe.com/2026/04/24/world/france-investigates-temperature-spikes-that-led-big-payouts-polymarket/">Source: Boston Globe&#8202;${ARROW_OUT}</a>
     </article>
     <article class="card trap">
       <p class="where">One whale's 35 days, 2026</p>
@@ -410,7 +415,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
       <h3>Right half the time, down $2M</h3>
       <p class="cap">A whale won 51% of 53 trades yet lost $2.07M, with an average stake near $400K and a worst single loss of $1.58M<br>Winning half the time isn't enough when you pay high prices for small upside</p>
       <p class="fix"><b>Foresyte</b> compares what a wallet paid with how often it actually won at that price, flags bigger buys after losses, and the Full Audit shows the largest size that can still exit</p>
-      <a class="src-l" href="https://coinpedia.org/crypto-live-news/polymarket-trader-loses-2m-despite-winning-bets/">Source: Coinpedia &#8599;</a>
+      <a class="src-l" href="https://coinpedia.org/crypto-live-news/polymarket-trader-loses-2m-despite-winning-bets/">Source: Coinpedia&#8202;${ARROW_OUT}</a>
     </article>
   </div>
 </section>
@@ -655,7 +660,7 @@ async function deepScanCode(btn) {
       '<p class="code-big">' + esc(d.code) + "</p>" +
       '<ol class="paysteps"><li>Copy the prompt</li><li>Paste it in your PayBox chat</li><li>Approve ' + esc(d.price) + ' and the Full Audit comes back right there</li></ol>' +
       '<div class="prompt"><output>' + esc(d.prompt) + '</output><button class="pill blue small" type="button">Copy prompt</button></div>' +
-      '<div class="paybox"><a class="pill blue small" href="https://app.paybox.sh" target="_blank" rel="noopener">Open PayBox &#8599;</a><a class="newpb" href="https://paybox.sh" target="_blank" rel="noopener">New to PayBox? Set it up &#8599;</a></div>' +
+      '<div class="paybox"><a class="pill blue small" href="https://app.paybox.sh" target="_blank" rel="noopener">Open PayBox&#8202;${ARROW_OUT}</a><a class="newpb" href="https://paybox.sh" target="_blank" rel="noopener">New to PayBox? Set it up&#8202;${ARROW_OUT}</a></div>' +
       '<p class="meta">Code works for 24 hours<br>Agents with their own x402 wallet can pay directly at ' + esc(d.payUrl) + "</p>";
     wait.querySelector(".prompt button").addEventListener("click", (e) => copy(d.prompt, e.currentTarget));
     log.scrollTop = log.scrollHeight;
@@ -675,7 +680,7 @@ fetch("/api/proof", { headers: { accept: "application/json" } }).then((r) => r.j
   $("ledger").innerHTML = d.scans.slice(0, 12).map((s) =>
     '<div class="row"><b>' + esc(s.market) + "</b>" +
     '<span class="meta-row"><span class="num">' + esc(short(s.payer)) + "</span> paid on " + net(s.network) + " " + new Date(s.at).toLocaleString() + ", verdict: " + esc(s.verdict) + "</span>" +
-    (s.explorer ? '<a href="' + esc(s.explorer) + '">View payment on ' + (net(s.network) === "Base" ? "BaseScan" : "Solscan") + " &#8599;</a>" : "") + "</div>").join("");
+    (s.explorer ? '<a href="' + esc(s.explorer) + '">View payment on ' + (net(s.network) === "Base" ? "BaseScan" : "Solscan") + '&#8202;${ARROW_OUT}</a>' : "") + "</div>").join("");
 }).catch(() => {});
 </script>
 </body>
