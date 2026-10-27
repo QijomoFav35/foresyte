@@ -20,7 +20,7 @@ export function normalizeCode(input: string): string | null {
 export type ScanRequest = { market: string; outcome: string | null; stakeUsdc: number };
 
 // The prompt a person pastes into their PayBox chat (the Full Audit is the deep_scan tool). Agents can also call the paid URL directly.
-export function agentPrompt(code: string): string {
+export function agentPrompt(code: string, chain: "Solana" | "Base" = "Solana"): string {
   // "@PayBox" summons the connector in ChatGPT and names it for Grok and Claude, which pick connectors up automatically
-  return `@PayBox run the Foresyte plugin's deep_scan with code ${code}. Show me the 0.10 USDC payment on Solana to approve, then call get_request until it finishes and show the report exactly as written.`;
+  return `@PayBox run the Foresyte plugin's deep_scan with code ${code}. Show me the 0.10 USDC payment on ${chain} to approve, then call get_request until it finishes and show the report exactly as written.`;
 }

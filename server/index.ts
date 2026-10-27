@@ -134,6 +134,7 @@ app.post("/api/code", freeLimit, async (req, res) => {
     res.status(201).json({
       code,
       prompt: agentPrompt(code),
+      prompts: { Solana: agentPrompt(code, "Solana"), ...(PAY_TO_BASE ? { Base: agentPrompt(code, "Base") } : {}) },
       price: SCAN_PRICE,
       payUrl: payUrl({ code }),
       preview,

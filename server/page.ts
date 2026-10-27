@@ -161,6 +161,11 @@ footer .legal{display:block;margin-top:10px;font-size:12.5px;line-height:1.6;max
 .choices button{all:unset;cursor:pointer;color:var(--blue-hi);font-weight:600;padding:4px 0}
 .code-big{font-weight:700;font-size:clamp(28px,7vw,40px);letter-spacing:.02em;color:var(--blue-hi)}
 .prompt{display:grid;gap:10px;margin-top:12px}
+.chain{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:14px;font-size:14px;color:#c4cbdb}
+.chain span{flex-basis:100%}
+.chain button{font:inherit;font-weight:600;color:#fff;background:transparent;border:1px solid #2a3350;border-radius:999px;padding:6px 14px;cursor:pointer}
+.chain button[aria-pressed="true"]{background:var(--blue);border-color:var(--blue)}
+.chain button:focus-visible{outline:2px solid var(--blue-hi);outline-offset:2px}
 .prompt output{background:var(--black);border-radius:var(--r-sm);padding:12px 14px;font-weight:600;overflow-wrap:anywhere}
 .composer{border-top:1px solid var(--line);padding:12px;display:grid;gap:10px;background:var(--panel)}
 .ask{display:flex;align-items:flex-end;gap:8px;background:var(--raised);border:1px solid #3a3a3a;border-radius:22px;padding:8px 8px 8px 16px;transition:border-color .12s}
@@ -660,15 +665,24 @@ async function deepScanCode(btn) {
     const res = await fetch("/api/code", { method: "POST", headers: { "content-type": "application/json", accept: "application/json" }, body: JSON.stringify({ market: f.market, outcome: last?.outcome || f.outcome || undefined, stake: Number(f.stake) }) });
     const d = await res.json();
     if (!res.ok) { showError(d, wait); return; }
+    const prompts = d.prompts || { Solana: d.prompt };
+    const chains = Object.keys(prompts);
+    let prompt = prompts[chains[0]];
     wait.className = "msg bot";
     wait.innerHTML =
       "<p>Here's your Full Audit code</p>" +
       '<p class="code-big">' + esc(d.code) + "</p>" +
       '<ol class="paysteps"><li>Copy the prompt</li><li>Paste it in your AI chat with PayBox connected (ChatGPT, Claude or Grok)</li><li>Approve ' + esc(d.price) + ' and the Full Audit comes back right there</li></ol>' +
-      '<div class="prompt"><output>' + esc(d.prompt) + '</output><button class="pill blue small" type="button">Copy prompt</button></div>' +
+      (chains.length > 1 ? '<div class="chain" role="group" aria-label="Pay with"><span>Pay USDC on</span>' + chains.map((c, i) => '<button type="button" data-chain="' + esc(c) + '" aria-pressed="' + (i === 0) + '">' + esc(c) + "</button>").join("") + "</div>" : "") +
+      '<div class="prompt"><output>' + esc(prompt) + '</output><button class="pill blue small" type="button">Copy prompt</button></div>' +
       '<div class="paybox"><a class="pill blue small" href="https://app.paybox.sh" target="_blank" rel="noopener">Open PayBox&#8202;${ARROW_OUT}</a><a class="newpb" href="https://paybox.sh" target="_blank" rel="noopener">New to PayBox? Set it up&#8202;${ARROW_OUT}</a></div>' +
       '<p class="meta">Code works for 24 hours<br>Agents with their own x402 wallet can pay directly at ' + esc(d.payUrl) + "</p>";
-    wait.querySelector(".prompt button").addEventListener("click", (e) => copy(d.prompt, e.currentTarget));
+    wait.querySelector(".prompt button").addEventListener("click", (e) => copy(prompt, e.currentTarget));
+    wait.querySelectorAll("[data-chain]").forEach((b) => b.addEventListener("click", () => {
+      prompt = prompts[b.dataset.chain];
+      wait.querySelector(".prompt output").textContent = prompt;
+      wait.querySelectorAll("[data-chain]").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    }));
     log.scrollTop = log.scrollHeight;
   } catch { showError({ error: "Couldn't make a code, try again" }, wait); }
   finally { btn.disabled = false; }

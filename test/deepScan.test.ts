@@ -77,5 +77,7 @@ test("the pay prompt tells the agent where Foresyte lives", async () => {
   assert.match(p, /^@PayBox /);
   assert.match(p, /Foresyte plugin/);
   assert.match(p, /get_request/);
+  assert.match(p, /on Solana/);
+  assert.match(agentPrompt("FSY-7K2QXM", "Base"), /0\.10 USDC payment on Base/);
   assert.match(p, /deep_scan with code FSY-7K2QXM/);
 });
