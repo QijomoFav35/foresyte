@@ -1,125 +1,148 @@
 # Foresyte
 
-**Know if a Polymarket bet is a trap before you place it.**
+**Know if a Polymarket contract is a trap before you buy it.**
 
-`43` unit tests on fixtures · `5` tools · read-only by default · no keys, ever · a PayBox plugin
+Live: **[foresyte.onrender.com](https://foresyte.onrender.com)** · PayBox plugin `foresyte` v1.2.1 · Full Audit $0.10 USDC on Solana or Base over x402 · 61 unit tests
 
-Ask your agent "is this a trap?" and Foresyte reads Polymarket's live order book and rules, computes every number, and answers CLEAR, CAUTION or HIGH_RISK. Every answer follows one rule: **the worst case comes first, in dollars.** What you'd actually get back, and how you could lose even if you're right, before you click. The agent explains; Foresyte computes. It never places, blocks or signs a bet.
+Paste a Polymarket link. Foresyte reads the live order book and the market's rules and tells you, in plain English, whether you could get back out and whether the rules could make you lose even if you're right. The free check gives the verdict. The Full Audit, paid in your AI chat and approved in PayBox, gives the numbers.
+
+Analysis, not financial advice. Foresyte never places, blocks or signs a trade.
 
 ---
 
-## 1. The problem
+## Proof it works
 
-More than 70% of Polymarket users lose money, and 0.1% of accounts took 67% of the profits (Wall Street Journal analysis of 1.6 million accounts, May 2026). Some of those losses come from two traps you can see coming if you know where to look.
+| What | Where |
+| --- | --- |
+| Live site with the free check and the Full Audit | [foresyte.onrender.com](https://foresyte.onrender.com) |
+| Every paid Full Audit, with its onchain payment (Solscan or BaseScan) | the **Log** on the site, or [`/api/proof`](https://foresyte.onrender.com/api/proof) |
+| The paywall answers with a real x402 challenge (Solana first, Base second, 0.10 USDC) | `curl -i "https://foresyte.onrender.com/api/deep-scan?market=<polymarket link>"` |
+| No charge when a scan can't run: the server returns an error and the payment is never settled | [`server/index.ts`](server/index.ts), the guard before the paywall and the paid handler |
+| The trap math, on saved order books and rules | `pnpm unit` (61 tests) |
 
-**The liquidity trap: you can't get out.** The app shows your position's value, but value is not cash. If nobody is bidding near the price, you can't sell. The founder's own story: a $50 bet on a German basketball game was up at halftime, and there was nobody to sell to. The game turned; the $50 was gone.
+## The two traps
 
-**The rules trap: you can be right and still lose.** Polymarket's "MicroStrategy sells any Bitcoin by May 31?" market. Strategy sold 32 BTC between May 26 and May 31, 2026. May 31 was a Sunday. The 8-K disclosing the sale was filed Monday, June 1. Polymarket added a note that confirmation outside the timeframe does not count, and the market resolved No. One trader says he lost about $500,000; two traders have sued.
+**You can't get out.** The app shows what a position is worth, but worth is not cash. If nobody is buying near the price, you can't sell, or you sell far below it.
 
-## 2. One promise, proved at every moment
+**You can be right and still lose.** In May 2026, Strategy sold 32 BTC before the market's May 31 deadline, but the filing came out on Monday, June 1. A note added to the rules said late confirmation didn't count, and Yes went from 81% to almost zero. One trader reports losing $500K ([The Block](https://theblock.co/post/403312/polymarket-faces-backlash-strategy-bitcoin-sale)).
 
-| Moment | Tool | How it proves the promise |
+More cases, each with its source, are on the site under **Previously Recorded Traps**.
+
+## How it works
+
+1. **Free check.** Paste a link with an amount and a side ("$50 on Yes"). Foresyte gives the verdict (*Looks safe at this size*, *Be careful* or *This is a trap*) and names the risks it found.
+2. **Full Audit, $0.10.** Click Unlock. The site gives a code and a short prompt, plus a choice of Solana or Base. Paste the prompt in the AI chat that has PayBox connected (ChatGPT, Claude or Grok), approve 0.10 USDC in PayBox, and the report comes back in the chat.
+3. **Agents pay directly.** Any agent with an x402 wallet can call `/api/deep-scan` and pay for itself.
+
+The prompt the site hands out:
+
+```
+@PayBox run the Foresyte plugin's deep_scan with code FSY-XXXXXX. Show me the 0.10 USDC payment on Solana to approve, then call get_request until it finishes and show the report exactly as written.
+```
+
+### What the Full Audit adds
+
+- **Exit ladder:** buy $10, $50, $100, $250, $1,000, $5,000, $25,000 and sell straight back. What comes back at each size.
+- **Largest size that can still exit**, losing at most 10% on the way out.
+- **Deadline window:** the day the last 3 days begin, when buyers tend to disappear and the rules decide the result.
+- **The other side** of the market, checked the same way.
+- **Risk read:** a short numbered summary in plain English.
+
+## PayBox plugin tools
+
+| Tool | What it does | Cost |
 | --- | --- | --- |
-| Before you bet | `trap_check` | It is the promise. At your stake: what you'd actually pay per share, what you'd get back selling right away, how many buyers sit near the price, the spread, and whether the rules pay on the event or on a report due by a weekend or holiday deadline |
-| While you hold | `trap_watch` | A trap can close after you buy. For your five largest open positions: what selling everything now actually returns, whether buyers are thinning out, deadline risk, and when locking in profit beats waiting |
-| Your history | `pattern_summary` | What traps have already cost you. A plain-English review across every kind of market: results by topic, by entry price against the odds you paid, and by market type; habits like chasing losses; your biggest leaks ranked by dollars; and a short plan tied to those numbers |
-| After it resolves | `check_unclaimed` | The last trap: money you won and never collected, with the link to claim each one |
+| `trap_check` | Is this contract a trap at this size? Exit liquidity, fill price, spread, and how the rules settle it | free |
+| `deep_scan` | The Full Audit above, paid over x402 through PayBox | $0.10 |
+| `trap_watch` | For positions you hold: what selling now returns, buyers thinning out, the deadline window | free |
+| `pattern_summary` | A wallet's history: where it loses, judged against the odds it paid, and habits like bigger buys after losses | free |
+| `check_unclaimed` | Winnings never collected, with links | free |
+| `propose_claim` | Prepares a claim for PayBox approval when the winnings sit in the PayBox wallet | free |
 
-`propose_claim` prepares a one-tap claim for PayBox approval when the winnings sit in the PayBox wallet itself.
+## How a verdict is decided
 
-**Next: The Desk.** Every live market in a topic run through the same checks, sold to agents for $0.10 per call over x402: today's 10 safest liquid markets and 10 worst traps, each with its worst case in dollars. Not live yet.
-
-## 3. How each verdict is decided
-
-Any HIGH_RISK check makes the verdict HIGH_RISK; otherwise any CAUTION makes it CAUTION; otherwise CLEAR. The thresholds live in [`src/lib/traps.ts`](src/lib/traps.ts) and [`src/lib/book.ts`](src/lib/book.ts).
+Any trap-level finding makes the verdict *This is a trap*; otherwise any warning makes it *Be careful*; otherwise *Looks safe at this size*. Thresholds live in [`src/lib/traps.ts`](src/lib/traps.ts), [`src/lib/book.ts`](src/lib/book.ts) and [`src/lib/rules.ts`](src/lib/rules.ts).
 
 | Check | Rule | Level |
 | --- | --- | --- |
-| No sellers / can't fill | the asks can't absorb your stake | HIGH_RISK |
-| No buyers | zero bids | HIGH_RISK |
-| Exit thinner than stake | USDC of bids within 5¢ of the best bid is below your stake | HIGH_RISK |
-| Exit thin | that depth is below 2× your stake | CAUTION |
-| Slippage | your average fill is more than 5% worse than the shown price | CAUTION |
-| Wide spread | best ask minus best bid above 5¢ | CAUTION |
-| Reporting deadline near a weekend | a deadline market whose rules pay on what's announced, reported, filed or confirmed, with the deadline (New York time) on a Friday, Saturday, Sunday or within a day of a US market holiday | HIGH_RISK |
-| Reporting-dependent | the same, on an ordinary weekday | CAUTION |
-| Clarification added | the rules carry added context or an update | CAUTION |
-| Vague wording | discretion, ambiguous, unclear, subjective, interpretation | CAUTION |
-| Exit closing (while holding) | bids can't absorb your whole position | HIGH_RISK |
-| Exit discount (while holding) | selling now returns more than 3% under the displayed value | CAUTION |
+| Can't fill | not enough contracts for sale at this size | trap |
+| No buyers | nobody is bidding | trap |
+| Exit thinner than the size | buyers within 5¢ of the best bid hold less than the amount checked | trap |
+| Deadline window | a risky market inside its last 3 days | trap |
+| Reporting deadline near a weekend or holiday | the market pays on what is reported by a deadline that falls on a Friday to Sunday or next to a US market holiday (New York time) | trap |
+| Exit thin | buyers hold less than 2× the amount | warning |
+| Slippage | the average fill is more than 5% worse than the shown price | warning |
+| Wide spread | buy and sell prices more than 5¢ apart | warning |
+| Settled by reporting | the same reporting rule on an ordinary weekday | warning |
+| Note added to the rules | the rules carry added context or an update | warning |
+| Vague wording | discretion, ambiguous, unclear, subjective, interpretation | warning |
 
-The rules check is the split Galaxy Research proposed after the Strategy dispute: is a market **event-based** (pays on what happens) or **confirmation-based** (pays on what is reported by a deadline)? Sports results and price-feed markets are event-based and are not flagged.
+The rules check follows the split Galaxy Research proposed after the Strategy dispute: is a market **event-based** (pays on what happens) or **confirmation-based** (pays on what is reported by a deadline)? Sports results and price-feed markets are event-based and aren't flagged.
 
-### How `pattern_summary` reads a wallet
+## Where every number comes from
 
-It reads up to 200 closed bets and the last 500 trades. Every bet is sorted three ways: topic (sports, crypto, politics, economy and markets, world affairs, culture, science and tech), entry price (longshot under 15¢, underdog, coin flip, favorite, heavy favorite 85¢+) and market type (live game, short-term crypto up/down, price target, "by date" deadline). A price band is a leak only when it lost money **and** won less often than the price you paid implied, so a longshot habit is judged against longshot odds, not against a coin flip. When the same bets cause several leaks (longshots that were all live sports games), they are reported once, with the context, so no dollar is counted twice. Groups under 5 bets are never reported.
+| Figure | Source |
+| --- | --- |
+| Question, rules, end date, outcomes, prices | Gamma API, `gamma-api.polymarket.com` |
+| Bids and asks at every price | CLOB API, `clob.polymarket.com/book` |
+| Positions, closed positions, trades | Data API, `data-api.polymarket.com` |
 
-## 4. Where every number comes from
+Fetched live on every call. Nothing is estimated: if Polymarket doesn't answer in time, Foresyte says so instead of guessing. The free check on the site reuses an answer for at most 20 seconds.
 
-| Figure | Source | Freshness |
-| --- | --- | --- |
-| Question, rules text, end date, outcomes, shown prices, order book ids | Gamma API, `gamma-api.polymarket.com/markets` | fetched on every call |
-| Bids and asks at every price | CLOB API, `clob.polymarket.com/book` | fetched on every call |
-| Open and resolved positions, cost basis, value | Data API, `data-api.polymarket.com/positions` | fetched on every call |
-| Closed bets: entry price, realized P&L, final price | Data API, `data-api.polymarket.com/closed-positions` | fetched on every call |
-| Trades: side, price, dollar size, time | Data API, `data-api.polymarket.com/activity` | fetched on every call |
-| Which wallet holds a user's positions | Gamma public profile | fetched on every call |
+## Payments
 
-Nothing is cached and nothing is estimated. If Polymarket doesn't answer within 2.5 seconds, Foresyte says so instead of guessing.
+- x402 v2 with `@x402/express`, the `exact` scheme and the PayAI facilitator
+- USDC on Solana (default) and Base, $0.10 per Full Audit
+- The server never holds keys or funds. Payment is settled only after the scan succeeds, so a scan that fails costs nothing
+- Request codes (`FSY-XXXXXX`) expire after 24 hours. The paid scan also accepts the market link directly
 
-## 5. What is live, and how to check it
+## Security and privacy
 
-| Claim | Where | Verify |
-| --- | --- | --- |
-| Book math: fills, sell-back value, exit depth, spread | [`src/lib/book.ts`](src/lib/book.ts) | `pnpm unit` |
-| The Strategy May 31 market comes back HIGH_RISK; sports and price markets come back clean | [`src/lib/rules.ts`](src/lib/rules.ts), [`test/rules.test.ts`](test/rules.test.ts) | `pnpm unit` |
-| Longshots are judged against the odds paid; overlapping leaks are reported once; small samples are never reported | [`src/lib/history.ts`](src/lib/history.ts), [`test/history.test.ts`](test/history.test.ts) | `pnpm unit` |
-| Losing positions are never counted as unclaimed winnings | [`src/lib/traps.ts`](src/lib/traps.ts) | `pnpm unit` |
-| Any verdict on a live market | `trap_check` | open the same market on Polymarket and compare its order book with the numbers returned |
+- No accounts, no cookies, no trackers
+- Security headers (CSP, HSTS, nosniff, frame blocking), per-visitor rate limits on free and paid routes, request size limits
+- Links are only ever looked up on Polymarket's own APIs
+- The Log shows the market, the verdict and the public onchain payment, with the wallet shortened
 
-## 6. Not live, and why
+**Known issue:** `npm audit` reports a high-severity advisory in `zod` ([GHSA-mrhx-c7xc-m3w5](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5)), pulled in by the `@x402/*` packages, with no upstream fix yet. Exposure is low here: the only input it validates is the payment header, which Node caps at 16 KB. It will be updated when the x402 packages ship the fix.
 
-- **Background alerts.** PayBox runs each call in a fresh sandbox with no memory, so `trap_watch` checks when you ask, not continuously.
-- **One-tap claims for normal Polymarket accounts.** Polymarket holds positions in a proxy or Safe wallet that only Polymarket's site can claim from. `check_unclaimed` finds those winnings and links to them; `propose_claim` refuses rather than build a transaction that would redeem nothing.
-- **Newer collateral.** `propose_claim` redeems against USDC.e. Markets settled in Polymarket's newer collateral may not redeem through it.
-- **History depth.** `pattern_summary` reads the 200 most recent closed bets and 500 most recent trades. Polymarket's API does not document units for every field, so dollar stakes come from trades where they exist and from shares times price otherwise.
-- **Exact Strategy rules text.** The Strategy test fixture is reconstructed from news coverage; it will be replaced with the text saved from Gamma.
+## Not live yet, and why
 
-## 7. Who has named this problem
+- **Background alerts.** PayBox runs each call in a fresh sandbox, so `trap_watch` checks when asked, not continuously.
+- **One-tap claims for normal Polymarket accounts.** Those positions sit in a Polymarket proxy wallet that only Polymarket can claim from, so `check_unclaimed` links to them and `propose_claim` refuses rather than build a claim that would do nothing. Polymarket now auto-claims for most users.
+- **History depth.** `pattern_summary` reads the 200 most recent closed positions and 500 most recent trades.
 
-- **Wall Street Journal, May 2026.** Over 70% of 1.6 million Polymarket accounts lost money; 0.1% captured 67% of profits.
-- **Kalshi.** Losing users outnumber winners about 2.9 to 1.
-- **[The Block](https://theblock.co/post/403312/polymarket-faces-backlash-strategy-bitcoin-sale), June 2026.** Traders' backlash over the Strategy market's "No" resolution.
-- **[Galaxy Research](https://www.galaxy.com/insights/research/strategy-bitcoin-sale-polymarket-resolution-dispute-may-2026).** Markets should be labelled event-based or confirmation-based.
-- **[The Defiant](https://thedefiant.io/news/regulation/traders-sue-polymarket-ceo-coplan-over-strategy-market-decision).** Two traders sued Polymarket and its CEO over the Strategy resolution.
-
-## 8. Run it
+## Run it
 
 Node.js 24 and pnpm 11.11.0 (Windows: WSL2).
 
 ```bash
 pnpm install --frozen-lockfile
-pnpm unit        # unit tests on fixtures, no network
-pnpm test        # typecheck, reproducible build, PayBox conformance
+pnpm unit        # unit tests on saved data, no network
+pnpm test        # typecheck, build, PayBox conformance; writes dist/plugin.mjs
 ```
 
-`pnpm test` writes `dist/plugin.mjs`. Upload only that file in the PayBox developer portal and allowlist:
+Upload `dist/plugin.mjs` in the PayBox developer portal and allow these hosts: `gamma-api.polymarket.com`, `clob.polymarket.com`, `data-api.polymarket.com`, `foresyte.onrender.com`.
 
-- `gamma-api.polymarket.com`
-- `clob.polymarket.com`
-- `data-api.polymarket.com`
+The web service (in `server/`) deploys to Render from `render.yaml`:
 
-```
-src/plugin.ts          wiring: server "foresyte" v1.1.0, five tools
-src/tools/             trapCheck, trapWatch, patternSummary, unclaimed, proposeClaim
-src/lib/http.ts        2.5 s per request, 8 s per call (PayBox allows 10)
-src/lib/polymarket.ts  Gamma, CLOB and Data API reads
-src/lib/book.ts        order-book math
-src/lib/rules.ts       event-based vs confirmation-based, deadlines in New York time
-src/lib/traps.ts       the two traps, thresholds, verdicts
-src/lib/history.ts     pattern_summary: topics, price bands, market types, habits, the plan
-src/lib/verdict.ts     levels and number formatting
-test/                  unit tests and fixtures
+```bash
+cd server && npm install
+PAY_TO_SOLANA=<your Solana address> PUBLIC_URL=http://localhost:3000 npm start
+npm run smoke -- http://localhost:3000 "<a live Polymarket link>"   # page, free check, codes, the 402; nothing is paid
 ```
 
-Built for the PayBox × MoonPay Hackathon. Foresyte is information, not financial advice.
+Optional: `PAY_TO_BASE` to accept Base, and `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` so codes and the Log survive redeploys.
+
+```
+src/plugin.ts          the PayBox plugin: six tools
+src/tools/             one file per tool
+src/lib/               order-book math, rules, traps, the Full Audit, wallet history
+server/                the website, the free API and the x402 paywall
+test/                  unit tests and saved Polymarket data
+```
+
+## How this was built
+
+Designed and built by the Foresyte founder for the PayBox × MoonPay Hackathon, with AI coding assistants (Claude and Grok) helping write and review code.
+
+Foresyte is analysis, not financial advice.
