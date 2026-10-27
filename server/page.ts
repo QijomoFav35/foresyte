@@ -596,11 +596,15 @@ function errorHtml(d) {
   if (d.options) html += '<div class="choices">' + d.options.map((o) => '<button type="button" data-slug="' + esc(o.slug) + '">' + esc(o.question) + "</button>").join("") + "</div>";
   return html;
 }
-function showError(d, el) {
+function showError(d, el, asked) {
   el = el || add("bot", "");
   el.className = "msg bot";
+  // An event with several markets: say it plainly and keep the amount and side the person typed
+  if (d.options?.length) d = { ...d, error: "This event has " + d.options.length + " markets, tap one to analyze" };
   el.innerHTML = errorHtml(d);
-  el.querySelectorAll("[data-slug]").forEach((b) => b.addEventListener("click", () => { $("q").value = b.dataset.slug + " $" + (last?.stakeUsdc || 50); $("check").requestSubmit(); }));
+  const stake = asked?.stake || last?.stakeUsdc || 50;
+  const side = asked?.outcome ? " on " + asked.outcome : "";
+  el.querySelectorAll("[data-slug]").forEach((b) => b.addEventListener("click", () => { $("q").value = b.dataset.slug + " $" + stake + side; $("check").requestSubmit(); }));
   log.scrollTop = log.scrollHeight;
 }
 
@@ -623,7 +627,7 @@ $("check").addEventListener("submit", async (e) => {
     const res = await fetch("/api/check?" + q, { headers: { accept: "application/json" } });
     const d = await res.json();
     wait.closest(".line").remove();
-    if (!res.ok) showError(d); else { last = { ...d, input: f }; render(d); }
+    if (!res.ok) showError(d, null, f); else { last = { ...d, input: f }; render(d); }
   } catch { showError({ error: "Couldn't reach Foresyte, check your connection and try again" }, wait); }
   $("go").disabled = false;
 });
