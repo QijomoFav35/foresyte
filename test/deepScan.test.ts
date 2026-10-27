@@ -74,7 +74,8 @@ test("codes: format, normalising, and no look-alike letters", () => {
 test("the pay prompt tells the agent where Foresyte lives", async () => {
   const { agentPrompt } = await import("../src/lib/codes.ts");
   const p = agentPrompt("FSY-7K2QXM");
-  assert.match(p, /^Using my PayBox connector/);
+  assert.match(p, /^@PayBox /);
   assert.match(p, /Foresyte plugin/);
-  assert.match(p, /deep_scan tool with code FSY-7K2QXM/);
+  assert.match(p, /get_request/);
+  assert.match(p, /deep_scan with code FSY-7K2QXM/);
 });
