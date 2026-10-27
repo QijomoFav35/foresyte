@@ -25,7 +25,7 @@
   "devDependencies": {
     "@types/express": "^5.0.3",
     "@x402/fetch": "^2.27.0",
-    "@solana/kit": "^3.0.0",
+    "@solana/kit": "^5.1.0",
     "@scure/base": "^1.2.6",
     "viem": "^2.57.2"
   }
