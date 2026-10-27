@@ -84,7 +84,7 @@ async function runQuickCheck(req: ScanRequest) {
     level: r.level,
     verdict: VERDICT[r.level],
     headline: r.headline,
-    reasons: r.flags.map((f) => ({ level: f.level, message: f.message })),
+    reasons: r.flags.map((f) => ({ level: f.level, check: f.check, message: f.message })),
     whatToDo: r.whatToDo,
     outcome: r.outcome,
     stakeUsdc: req.stakeUsdc,

@@ -111,6 +111,11 @@ footer .legal{display:block;margin-top:10px;font-size:12.5px;line-height:1.6;max
 .paybox{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-top:12px}
 .paybox .newpb{font-size:13.5px;font-weight:600;color:#9db4ff;text-decoration:none}
 .paybox .newpb:hover{text-decoration:underline}
+.count{margin-top:8px;font-size:16px;font-weight:600;color:#fff}
+.risks{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.risk{display:inline-flex;align-items:center;gap:7px;font:600 13px/1 Montserrat,sans-serif;padding:8px 11px;border-radius:999px;border:1px solid}
+.risk.t{color:#ff6b76;border-color:rgba(255,77,90,.5);background:rgba(255,77,90,.08)}
+.risk.c{color:#f5b54a;border-color:rgba(245,166,35,.5);background:rgba(245,166,35,.08)}
 .next{margin-top:12px;font-size:13.5px;color:var(--muted)}
 .log{display:flex;flex-direction:column;gap:14px;padding:18px;min-height:200px;max-height:min(55vh,520px);overflow-y:auto;overscroll-behavior:contain;scroll-behavior:smooth}
 .msg{max-width:100%;border-radius:18px;padding:14px 16px;animation:rise .3s ease-out}
@@ -543,33 +548,41 @@ function add(cls, html) {
 function typing() { return add("bot typing", "<i></i><i></i><i></i>"); }
 function shortLink(u) { const t = u.replace("https://", "").replace("http://", "").replace("www.", ""); return t.length > 60 ? t.slice(0, 60) + "..." : t; }
 
+// Free scan reply: the verdict and the kinds of risk found stay free, so nobody walks into a known trap blind.
+// The specifics (numbers, reasons, ladder, deadline window) are the Full Audit.
+const RISK_LABEL = {
+  no_sellers: "Fill risk", cannot_fill: "Fill risk",
+  no_buyers: "Exit liquidity", exit_thinner_than_stake: "Exit liquidity", exit_thin: "Exit liquidity",
+  slippage: "Hidden price impact", wide_spread: "Spread cost",
+  reporting_deadline_near_weekend: "Rules timing", reporting_dependent: "Rules timing",
+  clarification_added: "Rule change", vague_wording: "Vague rules", exit_window: "Deadline window",
+};
+const LOCK = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+
 function verdictHtml(d) {
-  const worst = d.headline.replace(d.verdict, "").trim();
-  const why = d.reasons.map((r) => '<li class="' + (r.level === "HIGH_RISK" ? "t" : "c") + '">' + esc(r.message) + "</li>").join("");
-  const fill = d.numbers.fillPriceCents == null ? "n/a" : d.numbers.fillPriceCents + "¢";
-  // Red = danger, amber = careful, green = fine, using the same lines as the trap checks
-  const stake = Number(d.stakeUsdc) || 50, n = d.numbers;
+  const seen = new Map();
+  for (const r of d.reasons) {
+    const label = RISK_LABEL[r.check] || "Market risk";
+    if (!seen.has(label) || r.level === "HIGH_RISK") seen.set(label, r.level);
+  }
+  const risks = [...seen.entries()];
   const other = (d.market.outcomes || []).find((o) => o !== d.outcome) || "";
-  const backTone = n.sellBackNowUsdc < stake * 0.9 ? "bad" : n.sellBackNowUsdc < stake * 0.97 ? "meh" : "ok";
-  const buyersTone = n.buyersNearPriceUsdc < stake ? "bad" : n.buyersNearPriceUsdc < stake * 2 ? "meh" : "ok";
-  const slip = n.fillPriceCents && n.shownPriceCents ? n.fillPriceCents / n.shownPriceCents - 1 : null;
-  const priceTone = slip == null ? "bad" : slip > 0.15 ? "bad" : slip > 0.05 ? "meh" : "ok";
-  return '<p class="tag-l">Verdict for $' + esc(d.stakeUsdc) + " on " + esc(d.outcome) + "</p>" +
+  const count = risks.length
+    ? risks.length + " risk" + (risks.length === 1 ? "" : "s") + " found at this size"
+    : "No traps found at this size";
+  const chips = risks.map(([label, level]) =>
+    '<span class="risk ' + (level === "HIGH_RISK" ? "t" : "c") + '">' + LOCK + esc(label) + "</span>").join("");
+  const pitch = risks.length
+    ? "The Full Audit shows the exact numbers behind " + (risks.length === 1 ? "this risk" : "each risk") + ", the exit at every size and the deadline window"
+    : "The Full Audit shows the exit at every size, the largest position this book can take and the deadline window";
+  return '<p class="tag-l">Free scan, $' + esc(d.stakeUsdc) + " on " + esc(d.outcome) + "</p>" +
     '<p class="verdict ' + tone[d.level] + '">' + esc(d.verdict) + "</p>" +
-    '<p class="worst">' + esc(worst) + "</p>" +
-    '<div class="facts num">' +
-      '<div class="' + backTone + '"><b>' + money(d.numbers.sellBackNowUsdc) + "</b><span>back if you sell right away</span></div>" +
-      '<div class="' + buyersTone + '"><b>' + money(d.numbers.buyersNearPriceUsdc) + "</b><span>of buyers near the price</span></div>" +
-      '<div class="' + priceTone + '"><b>' + fill + "</b><span>your real price (shown " + (d.numbers.shownPriceCents ?? "n/a") + "¢)</span></div>" +
-    "</div>" +
-    '<p class="todo"><b>Risk read</b>' + esc(d.whatToDo) + "</p>" +
-    '<details class="more"><summary>Details</summary>' +
-      (why ? '<p class="why-l">Why</p><ul class="why">' + why + "</ul>" : "") +
-      '<p class="meta">' + esc(d.market.question) + "<br>Decided by " + esc(d.rules.decidedBy) + (d.rules.deadline ? ", ends " + esc(d.rules.deadline) : "") + "</p>" +
-    "</details>" +
-    '<p class="next">Checked $' + esc(d.stakeUsdc) + " on " + esc(d.outcome) + (other ? ", type something like $200 on " + esc(other) + " to check again" : ", type a new amount to check again") + "</p>" +
-    '<div class="offer"><p><b>Full Audit in PayBox, ${price}</b><br>The exit at every amount, the largest size that can still exit and the last day before the deadline window, delivered in your PayBox chat</p>' +
-    '<button class="pill blue small" type="button" data-scan>Get a Full Audit code</button></div>';
+    '<p class="count">' + count + "</p>" +
+    (chips ? '<div class="risks">' + chips + "</div>" : "") +
+    '<div class="offer"><p>' + pitch + "</p>" +
+    '<button class="pill blue small" type="button" data-scan>Unlock the Full Audit for ${price}</button></div>' +
+    '<p class="meta">' + esc(d.market.question) + "<br>Decided by " + esc(d.rules.decidedBy) + (d.rules.deadline ? ", ends " + esc(d.rules.deadline) : "") + "</p>" +
+    '<p class="next">Checked $' + esc(d.stakeUsdc) + " on " + esc(d.outcome) + (other ? ", type something like $200 on " + esc(other) + " to check again" : ", type a new amount to check again") + "</p>";
 }
 
 function render(d) {
@@ -625,7 +638,7 @@ $("q").addEventListener("input", (e) => { const t = e.currentTarget; t.style.hei
 async function deepScanCode(btn) {
   const f = last?.input || fields();
   btn.disabled = true;
-  add("me", "Full Audit please");
+  add("me", "Unlock the Full Audit");
   const wait = typing();
   try {
     const res = await fetch("/api/code", { method: "POST", headers: { "content-type": "application/json", accept: "application/json" }, body: JSON.stringify({ market: f.market, outcome: last?.outcome || f.outcome || undefined, stake: Number(f.stake) }) });
