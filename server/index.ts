@@ -161,6 +161,22 @@ app.use("/api/deep-scan", async (req: WithScan, res, next) => {
   next();
 });
 
+// Log why a payment was refused (no secrets: only the network, status and the payment service's reason)
+app.use("/api/deep-scan", (req, res, next) => {
+  const paid = req.header("payment-signature") || req.header("x-payment");
+  if (paid) {
+    res.on("finish", () => {
+      let reason = "";
+      const challenge = res.getHeader("payment-required");
+      if (typeof challenge === "string") {
+        try { const c = JSON.parse(Buffer.from(challenge, "base64").toString("utf8")); reason = c.error ?? ""; } catch {}
+      }
+      console.log(`[pay] ${req.method} ${req.originalUrl} -> ${res.statusCode}${reason ? ` reason=${reason}` : ""} header=${req.header("payment-signature") ? "payment-signature" : "x-payment"}`);
+    });
+  }
+  next();
+});
+
 // ───────────────────────── x402 paywall ─────────────────────────
 
 const facilitatorClient = new HTTPFacilitatorClient(FACILITATOR_URL ? { url: FACILITATOR_URL } : facilitator);
