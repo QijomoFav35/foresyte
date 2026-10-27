@@ -32,12 +32,19 @@ ok("non-GET refused (405)", head.status === 405);
 if (!market) {
   console.log("\nSkipping live checks: pass a live Polymarket link as the second argument.");
 } else {
-  const q = new URLSearchParams({ market, stake: "50" });
-  const c = await get(`/api/check?${q}`);
+  let target = market;
+  let c = await get(`/api/check?${new URLSearchParams({ market: target, stake: "50" })}`);
+  if (c.res.status === 409 && Array.isArray(c.body?.options) && c.body.options[0]?.slug) {
+    // An event with several markets: the page lists them; here we take the first one
+    ok("multi-market event lists its markets", true, `${c.body.options.length} markets`);
+    target = c.body.options[0].slug;
+    console.log(`      using: ${c.body.options[0].question}`);
+    c = await get(`/api/check?${new URLSearchParams({ market: target, stake: "50" })}`);
+  }
   ok("free check returns a verdict", c.res.ok && typeof c.body?.verdict === "string", c.body?.verdict ?? c.body?.error);
   if (c.res.ok) console.log(`      ${c.body.headline}\n      What to do: ${c.body.whatToDo}`);
 
-  const code = await get("/api/code", { method: "POST", headers: { "content-type": "application/json", accept: "application/json" }, body: JSON.stringify({ market, stake: 50 }) });
+  const code = await get("/api/code", { method: "POST", headers: { "content-type": "application/json", accept: "application/json" }, body: JSON.stringify({ market: target, stake: 50 }) });
   ok("request code created", code.res.status === 201 && /^FSY-[A-Z2-9]{6}$/.test(code.body?.code ?? ""), code.body?.code ?? code.body?.error);
 
   if (code.body?.code) {
