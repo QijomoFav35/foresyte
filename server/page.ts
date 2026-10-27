@@ -69,6 +69,11 @@ img{display:block;max-width:100%}
 .hero{position:relative;isolation:isolate;width:100vw;margin-left:calc(50% - 50vw);min-height:100svh;display:flex;align-items:center;padding:112px 0 40px;overflow:hidden}
 .hero-bg{position:absolute;inset:0;z-index:-2}
 .hero-bg img{width:100%;height:100%;object-fit:cover;object-position:45% 35%}
+/* Phones and portrait tablets: show a band wide enough to hold the bird's eye (36% across) and both of the woman's eyes (61% and 77%) */
+@media (max-width:899px) and (orientation:portrait){
+  .hero-bg{inset:0 0 auto 0;height:100vw}
+  .hero-bg img{object-position:66% 30%}
+}
 .hero:after{content:"";position:absolute;inset:0;z-index:-1;background:rgba(0,0,0,.66)}
 .hero-in{width:100%;max-width:820px;margin:0 auto;padding:0 var(--gutter);text-align:center}
 .say h1{font-weight:700;font-size:clamp(38px,7.6vw,80px);line-height:1.02;letter-spacing:-.025em;color:#fff}
