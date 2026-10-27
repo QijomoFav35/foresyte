@@ -18,7 +18,7 @@ export function landingPage(o: { publicUrl: string; price: string; chain: string
 <title>Foresyte</title>
 <meta name="description" content="Paste a Polymarket link. Foresyte tells you if the contract is a trap before you buy it, and how the exit holds up.">
 <meta property="og:title" content="Foresyte: is this Polymarket contract a trap?">
-<meta property="og:description" content="Know the worst case in dollars before you buy. Free check, $0.10 deep scan, inside your PayBox agent.">
+<meta property="og:description" content="Know the worst case in dollars before you buy. Free check, $0.10 Full Audit, inside your PayBox agent.">
 <link rel="icon" href="${faviconDataUri()}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -363,7 +363,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
   <ol class="steps">
     <li><b>Paste a link</b><span>Any Polymarket market, plus your amount</span></li>
     <li><b>Get the verdict</b><span>Trap, careful or safe, free</span></li>
-    <li><b>Go deeper</b><span>Grab a code for the ${price} deep scan</span></li>
+    <li><b>Full audit</b><span>Grab a code for the ${price} Full Audit</span></li>
     <li><b>Approve in PayBox</b><span>Your full plan lands in the chat</span></li>
   </ol>
 </section>
@@ -401,7 +401,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
       <p class="big num">$1.4M</p>
       <h3>One sensor, one spike</h3>
       <p class="cap">On two April evenings the airport sensor that settled the daily high jumped several degrees for under an hour and set the day's high<br>Météo-France filed a police complaint and Polymarket moved the market to another airport</p>
-      <p class="fix"><b>Foresyte</b> shows your worst case in dollars and, in the deep scan, what you'd get back at every amount, so a single reading never takes more than you planned to risk</p>
+      <p class="fix"><b>Foresyte</b> shows your worst case in dollars and, in the Full Audit, what you'd get back at every amount, so a single reading never takes more than you planned to risk</p>
       <a class="src-l" href="https://www.bostonglobe.com/2026/04/24/world/france-investigates-temperature-spikes-that-led-big-payouts-polymarket/">Source: Boston Globe &#8599;</a>
     </article>
     <article class="card trap">
@@ -409,7 +409,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
       <p class="big num">$2.07M</p>
       <h3>Right half the time, down $2M</h3>
       <p class="cap">A whale won 51% of 53 trades yet lost $2.07M, with an average stake near $400K and a worst single loss of $1.58M<br>Winning half the time isn't enough when you pay high prices for small upside</p>
-      <p class="fix"><b>Foresyte</b> compares what a wallet paid with how often it actually won at that price, flags bigger buys after losses, and the deep scan shows the largest size that can still exit</p>
+      <p class="fix"><b>Foresyte</b> compares what a wallet paid with how often it actually won at that price, flags bigger buys after losses, and the Full Audit shows the largest size that can still exit</p>
       <a class="src-l" href="https://coinpedia.org/crypto-live-news/polymarket-trader-loses-2m-despite-winning-bets/">Source: Coinpedia &#8599;</a>
     </article>
   </div>
@@ -426,7 +426,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
     </div>
     <div class="tcol"><h2>Full Audit</h2>
     <div class="card tier paid">
-      <h3>Deep scan</h3>
+      <h3>Unlocked in PayBox</h3>
       <p class="cost num">${price}</p>
       <ul><li>The largest size that can still exit</li><li>When the 3-day deadline window opens</li><li>The other side of the market</li><li>A step-by-step plan</li></ul>
     </div>
@@ -479,7 +479,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
     <details><summary>What is the 3-day rule?</summary><p>In the last 3 days of a market buyers tend to vanish and the rules start deciding it, so if a risky market is in that window Foresyte tells you to get out</p></details>
     <details><summary>Will it alert me while I hold a position?</summary><p>Not in the background yet, ask your agent to check your positions any time and always before you sell</p></details>
     <details><summary>How do I pay ${price}?</summary><p>Right in your PayBox chat, your agent shows the price, you approve and USDC moves on ${chain} over x402, no account or card, and if the scan can't run you aren't charged</p></details>
-    <details><summary>Can my own agent pay?</summary><p>Yes, any agent with an x402 wallet can call the deep scan link and pay for itself</p></details>
+    <details><summary>Can my own agent pay?</summary><p>Yes, any agent with an x402 wallet can call the Full Audit link and pay for itself</p></details>
     <details><summary>Does Foresyte place trades or hold my money?</summary><p>No, it only reads public data, it never places trades, never asks for keys and never holds funds</p></details>
   </div>
 </section>
@@ -490,7 +490,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
     <div class="top">
       <div class="cta"><p>Know the worst case beforehand</p><a class="pill blue small" href="#try">Check a market</a></div>
       <div class="cols">
-        <div><h4>Product</h4><ul><li><a href="#try">Free check</a></li><li><a href="#pricing">Deep scan</a></li><li><a href="https://app.paybox.sh/plugins">PayBox plugin</a></li></ul></div>
+        <div><h4>Product</h4><ul><li><a href="#try">Free check</a></li><li><a href="#pricing">Full Audit</a></li><li><a href="https://app.paybox.sh/plugins">PayBox plugin</a></li></ul></div>
         <div><h4>Build</h4><ul><li><a href="/brand-kit">Brand Kit</a></li><li><a href="https://github.com/QijomoFav35/foresyte">GitHub</a></li></ul></div>
       </div>
     </div>
