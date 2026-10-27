@@ -471,7 +471,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
       <div class="row"><code>GET /api/deep-scan?code=FSY-…</code><span class="p paid">${price}</span><span>402, pay, then the report</span></div>
       <div class="row"><code>GET /api/proof</code><span class="p">Free</span><span>Paid scans with transactions</span></div>
     </div>
-    <div class="copyrow" style="margin-top:16px"><pre id="agent-prompt">Use the Foresyte plugin to check if &lt;Polymarket link&gt; is a trap for $50</pre><button class="pill ghost small" type="button" data-copy="agent-prompt">Copy</button></div>
+    <div class="copyrow" style="margin-top:16px"><pre id="agent-prompt">Using my PayBox connector, open the Foresyte plugin and run its trap_check tool on &lt;Polymarket link&gt; for $50</pre><button class="pill ghost small" type="button" data-copy="agent-prompt">Copy</button></div>
   </details>
 </section>
 

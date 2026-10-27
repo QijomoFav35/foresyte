@@ -70,3 +70,11 @@ test("codes: format, normalising, and no look-alike letters", () => {
   assert.equal(normalizeCode("FSY7K2QXM"), "FSY-7K2QXM");
   assert.equal(normalizeCode("FSY-0O1IL2"), null);
 });
+
+test("the pay prompt tells the agent where Foresyte lives", async () => {
+  const { agentPrompt } = await import("../src/lib/codes.ts");
+  const p = agentPrompt("FSY-7K2QXM");
+  assert.match(p, /^Using my PayBox connector/);
+  assert.match(p, /Foresyte plugin/);
+  assert.match(p, /deep_scan tool with code FSY-7K2QXM/);
+});

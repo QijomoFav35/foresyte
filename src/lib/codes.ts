@@ -21,5 +21,6 @@ export type ScanRequest = { market: string; outcome: string | null; stakeUsdc: n
 
 // The prompt a person pastes into their PayBox chat (the Full Audit is the deep_scan tool). Agents can also call the paid URL directly.
 export function agentPrompt(code: string): string {
-  return `Use the Foresyte plugin to run a full audit with code ${code}`;
+  // Spell out the path (PayBox connector, then the Foresyte plugin, then the tool) so the agent doesn't go searching the web
+  return `Using my PayBox connector, open the Foresyte plugin (find it with discover_plugins, then use_plugin) and run its deep_scan tool with code ${code}. It costs 0.10 USDC on Solana: show me the payment to approve, then show the report exactly as written.`;
 }
