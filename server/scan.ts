@@ -27,7 +27,7 @@ export function parseRequest(q: Record<string, unknown>): ScanRequest {
   const outcome = typeof q.outcome === "string" && q.outcome.trim() ? q.outcome.trim().slice(0, 120) : null;
   const rawStake = q.stake ?? q.stakeUsdc;
   const stake = rawStake === undefined || rawStake === "" ? 50 : Number(rawStake);
-  if (!Number.isFinite(stake) || stake <= 0 || stake > 1_000_000) throw new UserError("Stake must be between $1 and $1,000,000.");
+  if (!Number.isFinite(stake) || stake < 1 || stake > 1_000_000) throw new UserError("Stake must be between $1 and $1,000,000.");
   return { market, outcome, stakeUsdc: Math.round(stake * 100) / 100 };
 }
 
@@ -126,6 +126,6 @@ export async function fullScan(req: ScanRequest) {
     stakeUsdc: req.stakeUsdc,
     market: marketInfo(market, link),
     checkedAt: new Date().toISOString(),
-    note: "Show the person the 'report' text exactly as written. Not betting advice.",
+    note: "Show the person the 'report' text exactly as written. Analysis, not financial advice.",
   };
 }

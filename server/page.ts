@@ -31,7 +31,7 @@ export function landingPage(o: { publicUrl: string; price: string; chain: string
 :root{
   --black:#000;--panel:#0b0b0d;--raised:#141418;--line:rgba(255,255,255,.09);--line-hi:rgba(255,255,255,.16);
   --text:#fff;--soft:#d4d4d8;--muted:#9a9aa3;
-  --blue:#3d6bff;--blue-hi:#7b98ff;--glow:rgba(61,107,255,.35);--trap:#ff4d5a;--careful:#f5a623;
+  --blue:#3563ff;--blue-hi:#7b98ff;--glow:rgba(61,107,255,.35);--trap:#ff4d5a;--careful:#f5a623;
   --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
   --r-sm:10px;--r-md:18px;--r-pill:999px;
   --gutter:20px;--section:88px;
@@ -60,7 +60,7 @@ img{display:block;max-width:100%}
 /* buttons */
 .pill{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:var(--r-pill);font:700 15px/1 Montserrat,sans-serif;padding:14px 22px;min-height:46px;cursor:pointer;text-decoration:none;transition:background .15s,box-shadow .15s;white-space:nowrap}
 .pill.blue{background:var(--blue);color:#fff}
-.pill.blue:hover{background:#5179ff}
+.pill.blue:hover{background:#2f5ef0}
 .pill.ghost{background:transparent;color:#fff;box-shadow:inset 0 0 0 1px var(--line-hi)}.pill.ghost:hover{box-shadow:inset 0 0 0 1px #fff}
 .pill.small{min-height:38px;padding:9px 16px;font-size:14px}
 .pill:disabled{opacity:.55;cursor:wait}
@@ -168,7 +168,7 @@ footer .legal{display:block;margin-top:10px;font-size:12.5px;line-height:1.6;max
 .ask textarea{flex:1;min-width:0;background:transparent;border:0;outline:none;resize:none;color:#fff;font:500 16px/1.45 Montserrat,sans-serif;padding:7px 0;max-height:160px}
 .ask textarea::placeholder{color:#8a8a8a}
 .send{flex:none;width:42px;height:42px;border-radius:50%;border:0;background:var(--blue);color:#fff;display:grid;place-items:center;cursor:pointer;transition:background .12s}
-.send:hover{background:#5179ff}.send:disabled{opacity:.5;cursor:wait}
+.send:hover{background:#2f5ef0}.send:disabled{opacity:.5;cursor:wait}
 .send svg{width:20px;height:20px}
 .chips{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:0 6px;font-size:13px;color:var(--muted)}
 .chips label{display:flex;align-items:center;gap:6px;font-weight:600}
@@ -411,7 +411,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
       <p class="big num">$1.4M</p>
       <h3>One sensor, one spike</h3>
       <p class="cap">On two April evenings the airport sensor that settled the daily high jumped several degrees for under an hour and set the day's high<br>Météo-France filed a police complaint and Polymarket moved the market to another airport</p>
-      <p class="fix"><b>Foresyte</b> shows your worst case in dollars and, in the Full Audit, what you'd get back at every amount, so a single reading never takes more than you planned to risk</p>
+      <p class="fix"><b>Foresyte</b> shows your worst case in dollars and, in the Full Audit, what you'd get back at every amount, so you can size a position knowing the worst case before a single reading decides it</p>
       <a class="src-l" href="https://www.bostonglobe.com/2026/04/24/world/france-investigates-temperature-spikes-that-led-big-payouts-polymarket/">Source: Boston Globe&#8202;${ARROW_OUT}</a>
     </article>
     <article class="card trap">
@@ -490,6 +490,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
     <details><summary>Will it alert me while I hold a position?</summary><p>Not in the background yet, ask your agent to check your positions any time and always before you sell</p></details>
     <details><summary>How do I pay ${price}?</summary><p>Paste the prompt in your AI chat with PayBox connected, it shows the price, you approve in PayBox and USDC moves on ${chain} over x402, no account or card, and if the scan can't run you aren't charged</p></details>
     <details><summary>Can my own agent pay?</summary><p>Yes, any agent with an x402 wallet can call the Full Audit link and pay for itself</p></details>
+    <details><summary>What do you keep about me?</summary><p>No accounts, no cookies and no trackers, request codes expire after 24 hours, and for each paid Full Audit the Log shows the market, the verdict and the public onchain payment with the wallet shortened</p></details>
     <details><summary>Does Foresyte place trades or hold my money?</summary><p>No, it only reads public data, it never places trades, never asks for keys and never holds funds</p></details>
   </div>
 </section>

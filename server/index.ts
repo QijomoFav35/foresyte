@@ -22,6 +22,30 @@ import { brandKitPage } from "./brand.ts";
 
 const app = express();
 app.set("trust proxy", true); // correct https:// URLs behind Render's proxy
+app.disable("x-powered-by");
+
+// Security headers (OWASP Secure Headers). The page uses inline script and style, Google Fonts, and calls only this server.
+const CSP = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline'",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "font-src 'self' https://fonts.gstatic.com",
+  "img-src 'self' data:",
+  "connect-src 'self'",
+  "frame-ancestors 'none'",
+  "base-uri 'none'",
+  "form-action 'self'",
+  "object-src 'none'",
+].join("; ");
+app.use((_req, res, next) => {
+  res.setHeader("Content-Security-Policy", CSP);
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+  res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=()");
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  next();
+});
 app.set("case sensitive routing", true); // /API/DEEP-SCAN can't slip past the paywall
 app.set("strict routing", true); // /api/deep-scan/ can't slip past the paywall
 app.use(express.json({ limit: "20kb" }));
@@ -73,7 +97,7 @@ function sendError(res: express.Response, error: unknown) {
 
 const manifest = () => ({
   name: "Foresyte",
-  tagline: "Know if a Polymarket bet is a trap before you place it.",
+  tagline: "Know if a Polymarket contract is a trap before you buy it.",
   network: CHAIN_NAME,
   endpoints: {
     check: { method: "GET", url: `${PUBLIC_URL}/api/check?market=<polymarket link>&outcome=<Yes|No|...>&stake=<usd>`, price: "free" },
@@ -82,7 +106,7 @@ const manifest = () => ({
     proof: { method: "GET", url: `${PUBLIC_URL}/api/proof`, price: "free" },
   },
   agentInstructions:
-    "Call /api/check for a free verdict. For the full deep scan (exit ladder, biggest bet you can get out of, sell-by date, plan), call /api/deep-scan with x402. Show the person the 'report' field exactly as written.",
+    "Call /api/check for a free verdict. For the full deep scan (exit ladder, largest size that can still exit, deadline window, risk read), call /api/deep-scan with x402. Show the person the 'report' field exactly as written.",
 });
 
 app.get("/", (req, res) => {
@@ -143,7 +167,7 @@ app.get("/api/proof", async (_req, res) => {
 
 type WithScan = express.Request & { scanRequest?: ScanRequest };
 
-app.use("/api/deep-scan", async (req: WithScan, res, next) => {
+app.use("/api/deep-scan", freeLimit, async (req: WithScan, res, next) => {
   if (req.method !== "GET") return res.status(405).json({ error: "Use GET" });
   if (req.path !== "/") return res.status(404).json({ error: "Not found" });
   try {
@@ -194,7 +218,7 @@ app.use(
     {
       "GET /api/deep-scan": {
         accepts,
-        description: "Foresyte deep scan: exit ladder, biggest bet you can still get out of, sell-by date and a plain-English plan for one Polymarket market",
+        description: "Foresyte deep scan: exit ladder, largest size that can still exit, deadline window and a plain-English risk read for one Polymarket market",
         mimeType: "application/json",
       },
     },

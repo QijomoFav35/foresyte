@@ -271,7 +271,7 @@ export function analyzeHistory(closed: ClosedBet[], trades: Trade[]): HistoryRep
         members: memberSet((b) => b.band === g.name),
         where: `at ${g.name.split(" (")[0]?.toLowerCase()} prices`,
         dollars: g.net,
-        finding: `${g.name.split(" (")[0]}s are where you beat the price: ${pct(actual)} won against ${pct(g.avgEntry)} priced in, ${signed(g.net)} over ${g.bets} bets.`,
+        finding: `${g.name.split(" (")[0]}s are where you beat the price: ${pct(actual)} won against ${pct(g.avgEntry)} priced in, ${signed(g.net)} over ${g.bets} positions.`,
       });
     }
   }
