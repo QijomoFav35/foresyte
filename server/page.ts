@@ -303,6 +303,7 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
   .log{padding:22px}
   .steps{grid-template-columns:repeat(4,1fr)}
   .cases{grid-template-columns:repeat(3,1fr)}
+  #traps h2{max-width:none;white-space:nowrap}
   .card{padding:28px}
 }
 </style>
