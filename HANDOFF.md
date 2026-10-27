@@ -1,6 +1,6 @@
 # Foresyte: handoff (read this first)
 
-Any model or person continuing this work: start here. Last updated Oct 26, 2026, 18:35 (UTC+1), by Claude.
+Any model or person continuing this work: start here. Last updated Oct 26, 2026, 18:35 (UTC+1).
 
 ## What Foresyte is
 A PayBox (MoonPay) plugin that tells you if a Polymarket bet is a trap before you place it, and when to get out.
@@ -8,7 +8,7 @@ Finals: demo video on X tagging @PayBox by **Wed Oct 28**; winners revealed **Fr
 
 The two traps (real stories, the whole pitch rests on them):
 1. **Liquidity trap: you can't get out.** The founder's $50 basketball bet: winning at halftime, nobody buying, couldn't cash out, lost it.
-2. **Rules trap: you can be right and still lose.** Strategy (MicroStrategy) "sells any bitcoin by May 31, 2026": sale happened, deadline was a Sunday, 8-K filed Monday June 1, market resolved No. ~$500k lost by one trader, ~$6M total. Site glitched, no buyers near the end.
+2. **Rules trap: you can be right and still lose.** Strategy (MicroStrategy) "sells any bitcoin by May 31, 2026", sale happened, deadline was a Sunday, 8-K filed Monday June 1, market resolved No. ~$500k lost by one trader, ~$6M total. Site glitched, no buyers near the end.
 
 ## State of the code
 - `main` = v1.1.0 (commit 5c3c4e4), live on PayBox.
