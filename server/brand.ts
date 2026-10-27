@@ -48,6 +48,11 @@ p.sub{color:#a9b2c8;max-width:60ch}
 figure{margin:28px 0 0;border:1px solid rgba(200,169,106,.25);border-radius:10px;overflow:hidden;background:#0a1228}
 figure img{display:block;width:100%;height:auto}
 figcaption{padding:12px 16px;font-size:13.5px;color:#a9b2c8;border-top:1px solid rgba(200,169,106,.18)}
+.cast{display:grid;gap:12px;margin-top:24px}
+.cast div{border:1px solid rgba(200,169,106,.25);border-radius:10px;padding:14px 16px;background:#0a1228}
+.cast b{display:block;font:600 22px/1.1 "Cormorant Garamond",serif;letter-spacing:.12em;color:${GOLD}}
+.cast span{display:block;margin-top:6px;color:#a9b2c8;font-size:14px}
+@media (min-width:720px){.cast{grid-template-columns:repeat(3,1fr)}}
 .sw{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
 .sw div{display:flex;align-items:center;gap:10px;font-size:14px}
 .sw i{width:34px;height:34px;border-radius:8px;border:1px solid rgba(255,255,255,.15)}
@@ -56,7 +61,13 @@ figcaption{padding:12px 16px;font-size:13.5px;color:#a9b2c8;border-top:1px solid
 <body><div class="wrap">
 <header><a href="/">${seal(40, "h")}<span class="word">FORESYTE</span></a><a class="back" href="/">Back to Foresyte</a></header>
 <h1>Brand Kit</h1>
-<p class="sub">The Foresyte mark joins the augur, who reads the omen before you act, with the seer, who sees past the person looking</p>
+<p class="sub">Three characters stand behind the Foresyte mark: Augur, who reads the omen before you act, Pythia, who speaks what she sees, and Seer, who sees past the person looking</p>
+<div class="cast">
+  <div><b>Augur</b><span>The blue bird. Reads the omen before you act</span></div>
+  <div><b>Pythia</b><span>The oracle behind Augur. Speaks what she sees</span></div>
+  <div><b>Seer</b><span>The sculpted face. Sees past the person looking</span></div>
+</div>
+<figure><img src="/hero-1280.webp" width="1280" height="757" alt="Augur, the blue bird, with Pythia, the oracle behind him, playing a golden flute"><figcaption>Augur and Pythia, the Foresyte hero</figcaption></figure>
 <figure><img src="/brand-story.webp" width="1148" height="727" alt="Augur plus Seer equals Foresyte: a blue bird engraving, a sculpted face filled with a mountain landscape, and the Foresyte seal"><figcaption>Augur + Seer = Foresyte</figcaption></figure>
 <figure><img src="/brand-logos.webp" width="1280" height="960" alt="Foresyte logo sheet: horizontal dark and light lockups, the stacked lockup with the line See deeper than the market, and the app icon at 128, 64, 32 and 16 pixels"><figcaption>Logo lockups and app icon</figcaption></figure>
 <div class="sw"><div><i style="background:${GOLD}"></i>Gold ${GOLD}</div><div><i style="background:${NAVY}"></i>Navy ${NAVY}</div><div><i style="background:#F3EFE6"></i>Ivory #F3EFE6</div></div>
