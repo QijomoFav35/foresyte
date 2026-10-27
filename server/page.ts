@@ -486,9 +486,9 @@ footer .fine{margin-top:28px;padding-top:18px;border-top:1px solid var(--line)}
     <details><summary>Is this financial advice?</summary><p>No, Foresyte shows how a market looks right now (who is buying, what you'd get back, how the rules decide it) and the call is yours, you can still lose your whole stake</p></details>
     <details><summary>Polymarket already shows a price, why isn't that enough?</summary><p>That price is for a small amount, a bigger buy eats through the cheap contracts and costs more, and selling pays less when few people are buying, Foresyte works it out at your exact amount</p></details>
     <details><summary>Where do the numbers come from?</summary><p>Polymarket's public data, read the moment you ask, nothing is cached and the AI never makes up a number</p></details>
-    <details><summary>What is the 3-day rule?</summary><p>In the last 3 days of a market buyers tend to vanish and the rules start deciding it, so if a risky market is in that window Foresyte tells you to get out</p></details>
+    <details><summary>What is the 3-day rule?</summary><p>In the last 3 days of a market buyers tend to vanish and the rules start deciding it, so Foresyte flags any risky market inside that window</p></details>
     <details><summary>Will it alert me while I hold a position?</summary><p>Not in the background yet, ask your agent to check your positions any time and always before you sell</p></details>
-    <details><summary>How do I pay ${price}?</summary><p>Right in your PayBox chat, your agent shows the price, you approve and USDC moves on ${chain} over x402, no account or card, and if the scan can't run you aren't charged</p></details>
+    <details><summary>How do I pay ${price}?</summary><p>Paste the prompt in your AI chat with PayBox connected, it shows the price, you approve in PayBox and USDC moves on ${chain} over x402, no account or card, and if the scan can't run you aren't charged</p></details>
     <details><summary>Can my own agent pay?</summary><p>Yes, any agent with an x402 wallet can call the Full Audit link and pay for itself</p></details>
     <details><summary>Does Foresyte place trades or hold my money?</summary><p>No, it only reads public data, it never places trades, never asks for keys and never holds funds</p></details>
   </div>
@@ -663,7 +663,7 @@ async function deepScanCode(btn) {
     wait.innerHTML =
       "<p>Here's your Full Audit code</p>" +
       '<p class="code-big">' + esc(d.code) + "</p>" +
-      '<ol class="paysteps"><li>Copy the prompt</li><li>Paste it in your PayBox chat</li><li>Approve ' + esc(d.price) + ' and the Full Audit comes back right there</li></ol>' +
+      '<ol class="paysteps"><li>Copy the prompt</li><li>Paste it in your AI chat with PayBox connected (ChatGPT, Claude or Grok)</li><li>Approve ' + esc(d.price) + ' and the Full Audit comes back right there</li></ol>' +
       '<div class="prompt"><output>' + esc(d.prompt) + '</output><button class="pill blue small" type="button">Copy prompt</button></div>' +
       '<div class="paybox"><a class="pill blue small" href="https://app.paybox.sh" target="_blank" rel="noopener">Open PayBox&#8202;${ARROW_OUT}</a><a class="newpb" href="https://paybox.sh" target="_blank" rel="noopener">New to PayBox? Set it up&#8202;${ARROW_OUT}</a></div>' +
       '<p class="meta">Code works for 24 hours<br>Agents with their own x402 wallet can pay directly at ' + esc(d.payUrl) + "</p>";
