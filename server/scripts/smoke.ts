@@ -22,7 +22,7 @@ const h = await get("/health");
 ok("health answers", h.res.ok && h.body?.ok === true, h.body?.network);
 
 const page = await fetch(base + "/", { headers: { accept: "text/html" } });
-ok("page serves HTML", page.ok && (await page.text()).includes("Is this bet a trap?"));
+ok("page serves HTML", page.ok && (await page.text()).includes("Know if a contract is a trap"));
 
 const bad = await get("/api/deep-scan?code=FSY-ZZZZZZ");
 ok("unknown code refused for free (404, not 402)", bad.res.status === 404);
@@ -42,7 +42,7 @@ if (!market) {
     c = await get(`/api/check?${new URLSearchParams({ market: target, stake: "50" })}`);
   }
   ok("free check returns a verdict", c.res.ok && typeof c.body?.verdict === "string", c.body?.verdict ?? c.body?.error);
-  if (c.res.ok) console.log(`      ${c.body.headline}\n      What to do: ${c.body.whatToDo}`);
+  if (c.res.ok) console.log(`      ${c.body.headline}\n      Risk read: ${c.body.whatToDo}`);
 
   const code = await get("/api/code", { method: "POST", headers: { "content-type": "application/json", accept: "application/json" }, body: JSON.stringify({ market: target, stake: 50 }) });
   ok("request code created", code.res.status === 201 && /^FSY-[A-Z2-9]{6}$/.test(code.body?.code ?? ""), code.body?.code ?? code.body?.error);
