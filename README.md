@@ -37,7 +37,7 @@ More cases, each with its source, are on the site under **Previously Recorded Tr
 The prompt the site hands out:
 
 ```
-@PayBox run the Foresyte plugin's deep_scan with code FSY-XXXXXX. Show me the 0.10 USDC payment on Solana to approve, then call get_request until it finishes and show the report exactly as written.
+@PayBox run the Foresyte plugin's deep_scan with code FSY-XXXXXX. Show me the 0.10 USDC payment on Solana to approve. When I say done, call get_request until it finishes and show the report exactly as written.
 ```
 
 ### What the Full Audit adds

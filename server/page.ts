@@ -672,7 +672,7 @@ async function deepScanCode(btn) {
     wait.innerHTML =
       "<p>Here's your Full Audit code</p>" +
       '<p class="code-big">' + esc(d.code) + "</p>" +
-      '<ol class="paysteps"><li>Copy the prompt</li><li>Paste it in your AI chat with PayBox connected (ChatGPT, Claude or Grok)</li><li>Approve ' + esc(d.price) + ' and the Full Audit comes back right there</li></ol>' +
+      '<ol class="paysteps"><li>Copy the prompt</li><li>Paste it in your AI chat with PayBox connected (ChatGPT, Claude or Grok)</li><li>Approve ' + esc(d.price) + ' in PayBox</li><li>Back in the chat, say <b>done</b> and the Full Audit comes back</li></ol>' +
       (chains.length > 1 ? '<div class="chain" role="group" aria-label="Pay with"><span>Pay USDC on</span>' + chains.map((c, i) => '<button type="button" data-chain="' + esc(c) + '" aria-pressed="' + (i === 0) + '">' + esc(c) + "</button>").join("") + "</div>" : "") +
       '<div class="prompt"><output>' + esc(prompt) + '</output><button class="pill blue small" type="button">Copy prompt</button></div>' +
       '<div class="paybox"><a class="pill blue small" href="https://app.paybox.sh" target="_blank" rel="noopener">Open PayBox&#8202;${ARROW_OUT}</a><a class="newpb" href="https://paybox.sh" target="_blank" rel="noopener">New to PayBox? Set it up&#8202;${ARROW_OUT}</a></div>' +
