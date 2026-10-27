@@ -1,4 +1,4 @@
-# Render Blueprint: New > Blueprint, pick this repo. Then fill in PUBLIC_URL and PAY_TO.
+# Render Blueprint: New > Blueprint, pick this repo, then fill in PAY_TO_SOLANA. The public URL is read from Render automatically.
 services:
   - type: web
     name: foresyte
@@ -14,8 +14,6 @@ services:
         value: mainnet
       - key: SCAN_PRICE
         value: "$0.10"
-      - key: PUBLIC_URL
-        sync: false # e.g. https://foresyte.onrender.com
       - key: PAY_TO_SOLANA
         sync: false # your Solana wallet that receives the $0.10 (must hold or have held USDC)
       - key: UPSTASH_REDIS_REST_URL

@@ -24,6 +24,7 @@ export function explorerFor(network: string | undefined, tx: string): string {
   if (network?.startsWith("eip155:")) return (network === "eip155:8453" ? "https://basescan.org/tx/" : "https://sepolia.basescan.org/tx/") + tx;
   return `https://solscan.io/tx/${tx}${main ? "" : "?cluster=devnet"}`;
 }
-export const PUBLIC_URL = required("PUBLIC_URL").replace(/\/+$/, "");
+// Render sets RENDER_EXTERNAL_URL for every web service, so PUBLIC_URL is only needed elsewhere
+export const PUBLIC_URL = (process.env.PUBLIC_URL || process.env.RENDER_EXTERNAL_URL || required("PUBLIC_URL")).replace(/\/+$/, "");
 export const SCAN_PRICE = process.env.SCAN_PRICE || "$0.10";
 export const PORT = Number(process.env.PORT || "3000");
