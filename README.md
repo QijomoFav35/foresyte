@@ -4,7 +4,7 @@ Know if a Polymarket contract is a trap before you buy it.
 
 Live: "[foresyte.onrender.com](https://foresyte.onrender.com)" · PayBox plugin `foresyte` v1.2.1 · Full Audit $0.10 USDC on Solana or Base over x402 · 61 unit tests
 
-Paste a Polymarket link. Foresyte reads the live order book and the market's rules and tells you, in plain English, whether you could get back out and whether the rules could make you lose even if you're right. The free check gives the verdict. The Full Audit, paid in your AI chat and approved in PayBox, gives the numbers.
+Paste a Polymarket link. Foresyte reads the live order book and the market's resolution rules and tells you, in plain English, whether there's enough liquidity to exit and whether the resolution rules could make you lose even if you're right. The free check gives the verdict. The Full Audit, paid in your AI chat and approved in PayBox, gives the numbers.
 
 Analysis, not financial advice. Foresyte never places, blocks or signs a trade.
 
@@ -22,9 +22,9 @@ Analysis, not financial advice. Foresyte never places, blocks or signs a trade.
 
 < The two traps >
 
-"You can't get out." The app shows what a position is worth, but worth is not cash. If nobody is buying near the price, you can't sell, or you sell far below it.
+"You can't get out." Your portfolio shows a position value, but position value is not cash out. If there are no bids near the price, you can't sell, or you take heavy slippage selling into the bids.
 
-< You can be right > and still lose. In May 2026, Strategy sold 32 BTC before the market's May 31 deadline, but the filing came out on Monday, June 1. A note added to the rules said late confirmation didn't count, and Yes went from 81% to almost zero. One trader reports losing $500K ([The Block](https://theblock.co/post/403312/polymarket-faces-backlash-strategy-bitcoin-sale)).
+< You can be right > and still lose. In May 2026, Strategy sold 32 BTC before the market's May 31 deadline, but the filing came out on Monday, June 1. A clarification added to the market rules said late confirmation didn't count, and Yes went from 81% to almost zero. One trader reports losing $500K ([The Block](https://theblock.co/post/403312/polymarket-faces-backlash-strategy-bitcoin-sale)).
 
 More cases, each with its source, are on the site under **Previously Recorded Traps**.
 
@@ -42,22 +42,22 @@ The prompt the site hands out:
 
  What the Full Audit adds
 
-- "Exit ladder:" buy $10, $50, $100, $250, $1,000, $5,000, $25,000 and sell straight back. What comes back at each size.
+- "Exit ladder:" buy $10, $50, $100, $250, $1,000, $5,000, $25,000 and sell straight back into the bids. What you'd receive at each size.
 - "Largest size that can still exit", losing at most 10% on the way out.
-- "Deadline window:" the day the last 3 days begin, when buyers tend to disappear and the rules decide the result.
-- "The other side" of the market, checked the same way.
+- "Deadline window:" the day the last 3 days begin, when bids tend to dry up and the resolution rules decide the outcome.
+- "The other side": the opposite outcome, checked the same way.
 - "Risk read:" a short numbered summary in plain English.
 
 < PayBox plugin tools >
 
 | Tool | What it does | Cost |
 | --- | --- | --- |
-| `trap_check` | Is this contract a trap at this size? Exit liquidity, fill price, spread, and how the rules settle it | free |
+| `trap_check` | Is this contract a trap at this size? Exit liquidity, fill price, spread, and how the market resolves | free |
 | `deep_scan` | The Full Audit above, paid over x402 through PayBox | $0.10 |
-| `trap_watch` | For positions you hold: what selling now returns, buyers thinning out, the deadline window | free |
-| `pattern_summary` | A wallet's history: where it loses, judged against the odds it paid, and habits like bigger buys after losses | free |
-| `check_unclaimed` | Winnings never collected, with links | free |
-| `propose_claim` | Prepares a claim for PayBox approval when the winnings sit in the PayBox wallet | free |
+| `trap_watch` | For positions you hold: what selling now returns, bids thinning out, the deadline window | free |
+| `pattern_summary` | A wallet's history: where it loses, judged against the implied probability it paid, and habits like bigger buys after losses | free |
+| `check_unclaimed` | Winning shares never redeemed, with links | free |
+| `propose_claim` | Prepares a redemption for PayBox approval when the winning shares sit in the PayBox wallet | free |
 
 < How a verdict is decided >
 
@@ -65,19 +65,19 @@ Any trap-level finding makes the verdict *This is a trap*; otherwise any warning
 
 | Check | Rule | Level |
 | --- | --- | --- |
-| Can't fill | not enough contracts for sale at this size | trap |
-| No buyers | nobody is bidding | trap |
-| Exit thinner than the size | buyers within 5¢ of the best bid hold less than the amount checked | trap |
+| Can't fill | not enough asks to fill this size | trap |
+| No bids | the order book has no bids | trap |
+| Exit thinner than the size | bids within 5¢ of the best bid total less than the amount checked | trap |
 | Deadline window | a risky market inside its last 3 days | trap |
 | Reporting deadline near a weekend or holiday | the market pays on what is reported by a deadline that falls on a Friday to Sunday or next to a US market holiday (New York time) | trap |
-| Exit thin | buyers hold less than 2× the amount | warning |
+| Exit thin | bids near the price total less than 2× the amount | warning |
 | Slippage | the average fill is more than 5% worse than the shown price | warning |
-| Wide spread | buy and sell prices more than 5¢ apart | warning |
-| Settled by reporting | the same reporting rule on an ordinary weekday | warning |
-| Note added to the rules | the rules carry added context or an update | warning |
+| Wide spread | bid-ask spread wider than 5¢ | warning |
+| Resolves on reporting | the same reporting rule on an ordinary weekday | warning |
+| Clarification added | the market rules carry a clarification or additional context | warning |
 | Vague wording | discretion, ambiguous, unclear, subjective, interpretation | warning |
 
-The rules check follows the split Galaxy Research proposed after the Strategy dispute: is a market **event-based** (pays on what happens) or **confirmation-based** (pays on what is reported by a deadline)? Sports results and price-feed markets are event-based and aren't flagged.
+The resolution rules check follows the split Galaxy Research proposed after the Strategy dispute: is a market **event-based** (pays on what happens) or **confirmation-based** (pays on what is reported by a deadline)? Sports results and price-feed markets are event-based and aren't flagged.
 
 ## Where every number comes from
 
@@ -138,6 +138,5 @@ test/                  unit tests and saved Polymarket data
 < How this was built >
 
 Designed and built by emelu for the PayBox × MoonPay Hackathon.
-security and compliance audit by Claude Code 
 
 Foresyte is analysis only, not financial advice.
