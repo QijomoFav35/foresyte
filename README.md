@@ -137,7 +137,7 @@ test/                  unit tests and saved Polymarket data
 
 < How this was built >
 
-Designed and built by emelu for the PayBox × MoonPay Hackathon
-code security audit by Claude Code 
+Designed and built by emelu for the PayBox × MoonPay Hackathon.
+security and compliance audit by Claude Code 
 
 Foresyte is analysis only, not financial advice.
