@@ -2,7 +2,7 @@
 
 Know if a Polymarket contract is a trap before you buy it.
 
-Live: "[foresyte.onrender.com](https://foresyte.onrender.com)" · PayBox plugin `foresyte` v1.2.1 · Full Audit $0.10 USDC on Solana or Base over x402 · 61 unit tests
+Live: **[foresyte.onrender.com](https://foresyte.onrender.com)** · PayBox plugin `foresyte` v1.2.1 · Full Audit $0.10 USDC on Solana or Base over x402 · 61 unit tests
 
 Paste a Polymarket link. Foresyte reads the live order book and the market's resolution rules and tells you, in plain English, whether there's enough liquidity to exit and whether the resolution rules could make you lose even if you're right. The free check gives the verdict. The Full Audit, paid in your AI chat and approved in PayBox, gives the numbers.
 
@@ -10,7 +10,7 @@ Analysis, not financial advice. Foresyte never places, blocks or signs a trade.
 
 ---
 
-< Proof it works >
+## Proof it works
 
 | What | Where |
 | --- | --- |
@@ -20,19 +20,19 @@ Analysis, not financial advice. Foresyte never places, blocks or signs a trade.
 | No charge when a scan can't run: the server returns an error and the payment is never settled | [`server/index.ts`](server/index.ts), the guard before the paywall and the paid handler |
 | The trap math, on saved order books and rules | `pnpm unit` (61 tests) |
 
-< The two traps >
+## The two traps
 
-"You can't get out." Your portfolio shows a position value, but position value is not cash out. If there are no bids near the price, you can't sell, or you take heavy slippage selling into the bids.
+**You can't get out.** Your portfolio shows a position value, but position value is not cash out. If there are no bids near the price, you can't sell, or you take heavy slippage selling into the bids.
 
-< You can be right > and still lose. In May 2026, Strategy sold 32 BTC before the market's May 31 deadline, but the filing came out on Monday, June 1. A clarification added to the market rules said late confirmation didn't count, and Yes went from 81% to almost zero. One trader reports losing $500K ([The Block](https://theblock.co/post/403312/polymarket-faces-backlash-strategy-bitcoin-sale)).
+**You can be right and still lose.** In May 2026, Strategy sold 32 BTC before the market's May 31 deadline, but the filing came out on Monday, June 1. A clarification added to the market rules said late confirmation didn't count, and Yes went from 81% to almost zero. One trader reports losing $500K ([The Block](https://theblock.co/post/403312/polymarket-faces-backlash-strategy-bitcoin-sale)).
 
 More cases, each with its source, are on the site under **Previously Recorded Traps**.
 
 ## How it works
 
-1. Free check. Paste a link with an amount and a side ("$50 on Yes"). Foresyte gives the verdict (*Looks safe at this size, "Be careful" or "This is a trap") and names the risks it found.
-2. "Full Audit, $0.10." Click Unlock. The site gives a code and a short prompt, plus a choice of Solana or Base. Paste the prompt in the AI chat that has PayBox connected (ChatGPT, Claude or Grok), approve 0.10 USDC in PayBox, comment done and the report comes back in the chat.
-3. "Agents pay directly." Any agent with an x402 wallet can call `/api/deep-scan` and pay for itself.
+1. **Free check.** Paste a link with an amount and a side ("$50 on Yes"). Foresyte gives the verdict (*Looks safe at this size*, *Be careful* or *This is a trap*) and names the risks it found.
+2. **Full Audit, $0.10.** Click Unlock. The site gives a code and a short prompt, plus a choice of Solana or Base. Paste the prompt in the AI chat that has PayBox connected (ChatGPT, Claude or Grok), approve 0.10 USDC in PayBox, comment done and the report comes back in the chat.
+3. **Agents pay directly.** Any agent with an x402 wallet can call `/api/deep-scan` and pay for itself.
 
 The prompt the site hands out:
 
@@ -40,15 +40,15 @@ The prompt the site hands out:
 @PayBox run the Foresyte plugin's deep_scan with code FSY-XXXXXX. Show me the 0.10 USDC payment on Solana to approve. When I say done, call get_request until it finishes and show the report exactly as written.
 ```
 
- What the Full Audit adds
+### What the Full Audit adds
 
-- "Exit ladder:" buy $10, $50, $100, $250, $1,000, $5,000, $25,000 and sell straight back into the bids. What you'd receive at each size.
-- "Largest size that can still exit", losing at most 10% on the way out.
-- "Deadline window:" the day the last 3 days begin, when bids tend to dry up and the resolution rules decide the outcome.
-- "The other side": the opposite outcome, checked the same way.
-- "Risk read:" a short numbered summary in plain English.
+- **Exit ladder:** buy $10, $50, $100, $250, $1,000, $5,000, $25,000 and sell straight back into the bids. What you'd receive at each size.
+- **Largest size that can still exit**, losing at most 10% on the way out.
+- **Deadline window:** the day the last 3 days begin, when bids tend to dry up and the resolution rules decide the outcome.
+- **The other side:** the opposite outcome, checked the same way.
+- **Risk read:** a short numbered summary in plain English.
 
-< PayBox plugin tools >
+## PayBox plugin tools
 
 | Tool | What it does | Cost |
 | --- | --- | --- |
@@ -59,9 +59,9 @@ The prompt the site hands out:
 | `check_unclaimed` | Winning shares never redeemed, with links | free |
 | `propose_claim` | Prepares a redemption for PayBox approval when the winning shares sit in the PayBox wallet | free |
 
-< How a verdict is decided >
+## How a verdict is decided
 
-Any trap-level finding makes the verdict *This is a trap*; otherwise any warning makes it <Be careful>; otherwise <Looks safe at this size>. Thresholds live in [`src/lib/traps.ts`](src/lib/traps.ts), [`src/lib/book.ts`](src/lib/book.ts) and [`src/lib/rules.ts`](src/lib/rules.ts).
+Any trap-level finding makes the verdict *This is a trap*; otherwise any warning makes it *Be careful*; otherwise *Looks safe at this size*. Thresholds live in [`src/lib/traps.ts`](src/lib/traps.ts), [`src/lib/book.ts`](src/lib/book.ts) and [`src/lib/rules.ts`](src/lib/rules.ts).
 
 | Check | Rule | Level |
 | --- | --- | --- |
@@ -89,14 +89,14 @@ The resolution rules check follows the split Galaxy Research proposed after the 
 
 Fetched live on every call. Nothing is estimated: if Polymarket doesn't answer in time, Foresyte says so instead of guessing. The free check on the site reuses an answer for at most 20 seconds.
 
- Payments
+## Payments
 
 - x402 v2 with `@x402/express`, the `exact` scheme and the PayAI facilitator
 - USDC on Solana (default) and Base, $0.10 per Full Audit
 - The server never holds keys or funds. Payment is settled only after the scan succeeds, so a scan that fails costs nothing
 - Request codes (`FSY-XXXXXX`) expire after 24 hours. The paid scan also accepts the market link directly
 
-< Security and privacy >
+## Security and privacy
 
 - No accounts, no cookies, no trackers
 - Security headers (CSP, HSTS, nosniff, frame blocking), per-visitor rate limits on free and paid routes, request size limits
@@ -105,7 +105,7 @@ Fetched live on every call. Nothing is estimated: if Polymarket doesn't answer i
 
 **Known issue:** `npm audit` reports a high-severity advisory in `zod` ([GHSA-mrhx-c7xc-m3w5](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5)), pulled in by the `@x402/*` packages, with no upstream fix yet. Exposure is low here: the only input it validates is the payment header, which Node caps at 16 KB. It will be updated when the x402 packages ship the fix.
 
-< Run it >
+## Run it
 
 Node.js 24 and pnpm 11.11.0 (Windows: WSL2).
 
@@ -135,7 +135,7 @@ server/                the website, the free API and the x402 paywall
 test/                  unit tests and saved Polymarket data
 ```
 
-< How this was built >
+## How this was built
 
 Designed and built by emelu for the PayBox × MoonPay Hackathon.
 
